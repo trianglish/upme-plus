@@ -53,7 +53,7 @@ class __CreateTaskCard extends React.Component {
     instagram.start()
 
     const params = this.script.params
-      .map(item => `${item.name}: ${this.state[item.name]}`)
+      .map(item => `${item.name} = ${this.state[item.name]}`)
       .join(`, `)
 
     this.props.printLog(`Running script ${scriptName}: ${params}`)
