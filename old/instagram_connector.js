@@ -84,24 +84,39 @@ class InstagramConnector {
   })
 
   request_generator = async function * ({ method, params }, limit = Infinity) {
-
-    let _params = params
     let _users = []
+    let generator = this.page_generator({ method, params })
 
     do {
-
-      const payload = { method, params: _params }
-      const { users, big_list, next_max_id } = await instagram.request(payload)
+      const { users } = generator.next()
 
       console.log('users', users)
-      console.log('list', big_list, next_max_id)
 
       _users = [ ..._users, ...users ]
 
       const shouldStop = yield users
 
-      if (shouldStop || !next_max_id || _users.length > limit) {
+      if (_users.length > limit) {
         return _users
+      }
+
+    } while(true)
+
+  }
+
+  page_generator = async function * ({ method, params }) {
+    let _params = params
+
+    do {
+      const payload = { method, params: _params }
+      const { big_list, next_max_id, ...rest } = await instagram.request(payload)
+
+      console.log('big_list', big_list, 'next_max_id', next_max_id)
+
+      const shouldStop = yield rest
+
+      if (shouldStop || !next_max_id) {
+        return
       }
 
       _params = [ ...params, next_max_id ]
