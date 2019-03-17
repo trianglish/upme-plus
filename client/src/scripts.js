@@ -319,6 +319,39 @@ const scripts = {
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
 
+      // Phase 1: set up feed generator
+      const follower_list = instagram.page_generator({
+        method: 'get_user_followers',
+        params: [ pk ]
+      })
+
+      // Phase 2: pages to list
+      const users = new Lazy(follower_list)
+        .peek((page, index) => printLog(`Batch ${index} of followers for @${username} loaded: ${page.users.length}`))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(page => makeGenerator(page.users))
+        .flat()
+
+
+      if (!isFullInfo) {
+        const followers = await users.unwrap({ accumulate: true })
+
+        printLog(`Followers for @${username} loaded: ${followers.length}`)
+        printLog(`You can access them in window.followers or download using`)
+        // printLog(`\t\tdownloadCSV()`)
+        // printLog(`or`)
+        printLog(`\t\tdownload('followers_${username}.csv', getCSV(followers))`)
+
+        localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
+
+        window.followers = followers
+        window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
+
+        downloadCSV()
+
+        return
+      }
+
       const followers_paging_generator = instagram.request_generator({ method: 'get_user_followers', params: [ pk ] })
 
       const safe_paging = safeGenerator(followers_paging_generator, printLog, timeout)
