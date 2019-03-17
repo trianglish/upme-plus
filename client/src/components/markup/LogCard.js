@@ -5,6 +5,20 @@ class LogCard extends React.Component {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" })
   }
 
+  convertTextURL = text => {
+    const [ _, head, protocol, url, tail ] = text.match(/^(.*)(https:\/\/)(.*?)\s(.*)$/)
+
+    return (
+      <span>
+        {head}
+        <a href={`https://${url}`} target="_blank">
+          {`https://${url}`}
+        </a>
+        {tail}
+      </span>
+    )
+  }
+
   convertRawURL = (text) => {
     const [ _, head, url, params, link_text, tail ] = text.match(/^(.*)<a href="(.*?)"(.*)>(.*)<\/a>(.*)$/)
 
@@ -59,7 +73,13 @@ class LogCard extends React.Component {
                ? <br key={index} />
                : (
                  <span key={index}>
-                   {piece.includes('<a href') ? this.convertRawURL(piece) : piece}
+                   {piece.includes('<a href')
+                      ? this.convertRawURL(piece)
+                      : (
+                        piece.includes('https://')
+                          ? this.convertTextURL(piece)
+                          : piece
+                      )}
                  </span>
                )
           ))}
