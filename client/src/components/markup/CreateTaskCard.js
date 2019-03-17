@@ -186,7 +186,7 @@ class __CreateTaskCard extends React.Component {
                     {(values || [1, 2, 3, 5, 10]).map((num, index) => (
                       <Button
                         id={`${scriptName}-${name}`}
-                        className="btn-secondary"
+                        className={num == this.state[name] ? `btn-primary` : `btn-secondary`}
                         key={index}
                         data-value={num}
                         ymParams={{num}}
