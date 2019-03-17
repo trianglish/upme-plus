@@ -67,6 +67,10 @@ export const unfollow = (self, user_id) => {
   return self.send_request(`friendships/destroy/${user_id}/`, {})
 }
 
+export const user_friendship = (self, user_id) => {
+  return self.send_request(`friendships/show/${user_id}/`, { user_id })
+}
+
 export const comment = (self, media_id, comment_text) => {
   return self.send_request(`media/${media_id}/comment/`, { comment_text })
 }
