@@ -343,7 +343,7 @@ const scripts = {
           return true
         })
         .peek(user => printLog(`user: @${user.username}... `))
-        .peek(() => sleep(randomTimeout(3)))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
         .map(user =>
             instagram.request({ method: 'user_friendship', params: [ user.pk ] })
                 .then(info => ({ friendship: info, ...user }))
