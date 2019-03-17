@@ -46,7 +46,7 @@ const scripts = {
     description: 'Infinity like available!',
     params: [
       { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
-      { name: 'nPhotos', type: 'number', labelText: 'Number of photos (sorry)', values: [Infinity] },
+      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,3,10,20,50,200,Infinity] },
     ],
     run: async ({ hashtag, nPhotos }, printLog = console.log) => {
       if (!hashtag) {
@@ -70,6 +70,7 @@ const scripts = {
 
       // Phase 3: like each from List
       const liked = items
+        .take(nPhotos)
         .filter(item => instagram.isStopped ? printLog(`Skipping ${instagramUrl(item)}: Request was killed`) : true)
         .filter(item => item.has_liked ? printLog(`Skipping ${instagramUrl(item)}: Already liked`) : true)
         .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))

@@ -19,14 +19,6 @@ class Lazy {
         this.callback = callback
     }
 
-    take(n) {
-        if (!isNaN(n)) {
-            return this.filter((_, index) => index <= n)
-        } else {
-            return this
-        }
-    }
-
     flatMap(callback) {
         return new LazyMap(this, callback).flat()
     }
@@ -57,6 +49,14 @@ class Lazy {
         } else {
             const flattened = new LazyFlat(this)
             return flattened.flat(depth - 1)
+        }
+    }
+
+    take(n) {
+        if (!isNaN(n)) {
+            return new LazySlice(this, (_, index) => index <= n)
+        } else {
+            return this
         }
     }
 
@@ -135,6 +135,29 @@ class LazyFilter extends Lazy {
     }
 }
 
+class LazySlice extends Lazy {
+
+    get index () {
+      return this.iterable.index
+    }
+
+    async next() {
+        while (true) {
+            const item = await this.iterable.next()
+
+            if (item.done) {
+                return item
+            }
+
+            if (await this.callback(item.value, this.iterable.index)) {
+                return item
+            } else {
+                return { done: true, value: item.value }
+            }
+        }
+    }
+}
+
 class LazyMap extends Lazy {
 
     get index () {
@@ -162,20 +185,18 @@ class LazyFlat extends Lazy {
 
     async next() {
         if (!this.generator) {
-          const page = await this.iterable.next()
+            const page = await this.iterable.next()
 
-          if (page.done) {
-              return page
-          }
+            if (page.done) {
+                return page
+            }
 
-          this.generator = page.value
+            this.generator = page.value
 
-          // return { value: page.value, done: page.done }
+            // return { value: page.value, done: page.done }
         }
 
         const item = await this.generator.next()
-
-        this._index += 1
 
         if (item.done) {
             const page = await this.iterable.next()
@@ -188,6 +209,8 @@ class LazyFlat extends Lazy {
 
             return { value: page.value, done: page.done }
         }
+
+        this._index += 1
 
         return item
     }
