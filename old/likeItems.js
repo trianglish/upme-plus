@@ -17,8 +17,8 @@ const getURL = (item) => {
 window._sleep_timeout = 5
 window._sleep_amp = 0.9
 
-const randomTimeout = () =>
-  Math.max(0.5, window._sleep_timeout * (1 + window._sleep_amp * (0.5 - Math.random())))
+const randomTimeout = (mean_t = window._sleep_timeout) =>
+  Math.max(0.5, (mean_t) * (1 + window._sleep_amp * (0.5 - Math.random())))
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 

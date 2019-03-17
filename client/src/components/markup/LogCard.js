@@ -68,7 +68,7 @@ class LogCard extends React.Component {
         </div>
         {/* <!-- Card Body  --> */}
         <div className="card-body" style={{ height: "70vh", overflowY: "scroll" }}>
-          {this.props.log.slice(-300).map((piece, index) => (
+          {this.props.log.slice(-500).map((piece, index) => (
              piece == `<br>`
                ? <br key={index} />
                : (

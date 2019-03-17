@@ -296,6 +296,80 @@ const scripts = {
     }
   },
 
+  find_nondual_followings: {
+    name: 'Load users who you follow and who doesnt follow back',
+    params: [
+      {
+        name: 'username',
+        type: 'text',
+        prefix: '@',
+        labelText: 'Your Username',
+        defaultValue: 'caffeinum',
+      },
+      {
+        name: 'doUnfollow',
+        type: 'checkbox',
+        prefix: '',
+        labelText: 'Unfollow them automatically ???',
+        defaultValue: false,
+      },
+    ],
+    run: async ({ username, doUnfollow = false }, printLog = console.log) => {
+      const { user: { pk } } = await instagram.request({ method: 'get_user_info', params: [username] }, true)
+
+      if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
+
+      // Phase 1: set up feed generator
+      const following_list = instagram.page_generator({
+        method: 'get_user_followings',
+        params: [ pk ]
+      })
+
+      // Phase 2: paging
+      const followings = new Lazy(following_list)
+        .peek((page, index) => printLog(`Batch ${index} of followings for @${username} loaded: ${page.users.length}`))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(page => makeGenerator(page.users))
+        .flat()
+
+      // Phase 3: search each in followers
+      const follows = followings
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${item.username}: Request was killed`)
+            return false
+          }
+
+          return true
+        })
+        .peek(user => printLog(`user: @${user.username}... `))
+        .peek(() => sleep(randomTimeout(3)))
+        .map(user =>
+            instagram.request({ method: 'user_friendship', params: [ user.pk ] })
+                .then(info => ({ friendship: info, ...user }))
+        )
+        .peek(user => printLog(user.friendship.followed_by ? 'follows you' : 'doesnt follow you', false))
+
+      const full_info = await follows.unwrap()
+
+      const non_dual = full_info.filter(user => !user.friendship.followed_by)
+
+      window.full_info = full_info
+      window.non_dual = non_dual
+
+      printLog(`Loaded!`)
+      printLog(`You follow ${full_info.length} people.`)
+      printLog(`${non_dual.length} of them dont follow you back.`)
+      printLog(`Here they are:`)
+      printLog(``)
+
+      non_dual.map(user => printLog(`@${user.username}: https://instagram.com/${user.username}`))
+
+
+
+    }
+  },
+
   load_followers: {
     name: 'Load full list of user followers',
     params: [
