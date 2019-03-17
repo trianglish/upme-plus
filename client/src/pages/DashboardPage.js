@@ -196,7 +196,7 @@ class __DashboardPage extends React.Component {
 
           {/* <!-- Area Chart  --> */}
           <div className="col-xl-6 col-lg-6">
-            <LogCard log={this.props.log} clearLog={this.props.clearLog} />
+            <LogCard log={this.props.log.slice(-300)} clearLog={this.props.clearLog} />
           </div>
         </div>
       </div>
