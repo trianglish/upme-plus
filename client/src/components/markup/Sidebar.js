@@ -41,10 +41,14 @@ const Sidebar = () => (
         <div className="bg-white py-2 collapse-inner rounded">
           {/* <!-- <h6 className="collapse-header">Custom Components:</h6>  --> */}
           <Link className="collapse-item" to="/like/hashtag">Hashtag</Link>
-          <Link className="collapse-item" to="/like/user-medias">User Medias</Link>
-          <Link className="collapse-item" to="/like/user-medias">User Medias</Link>
+          <Link className="collapse-item" to="/script/like_user">User Media</Link>
           <Link className="collapse-item" to="/script/like_followers">Followers</Link>
+          <Link className="collapse-item" to="/script/like_by_hashtag">
+            Infinity Like Hashtag
+            <i className="fas fa-fw fa-star"></i>
+          </Link>
 
+          {/* <Link className="collapse-item" to="/like">All</Link> */}
           {/* <a className="collapse-item" href="like/hashtag.html">Hashtag</a> */}
           {/* <a className="collapse-item" href="like/user-medias.html">User Medias</a> */}
         </div>

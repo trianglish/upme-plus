@@ -1,5 +1,4 @@
 const { connect } = ReactRedux
-const { Redirect } = ReactRouterDOM
 
 class __ScriptPage extends React.Component {
 
@@ -7,7 +6,9 @@ class __ScriptPage extends React.Component {
     const scriptName = this.props.match.params.name
 
     return (
-      <CreateTask name={scriptName} />
+      <div className="container-fluid">
+        <CreateTaskCard name={scriptName} />
+      </div>
     )
   }
 }

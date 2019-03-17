@@ -74,9 +74,10 @@ class __LikePage extends React.Component {
 
     return (
       <div className="container-fluid">
-        <CreateTask name="like_by_hashtag" />
-        <CreateTask name="like_location" />
-        <CreateTask name="like_by_user" />
+        <CreateTaskCard name="like_by_hashtag" />
+        <CreateTaskCard name="like_location" />
+        <CreateTaskCard name="like_user" />
+        <CreateTaskCard name="like_followers" />
       </div>
     )
   }

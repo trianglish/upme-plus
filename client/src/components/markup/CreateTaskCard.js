@@ -1,7 +1,7 @@
 const { connect } = ReactRedux
 const { Redirect } = ReactRouterDOM
 
-class __CreateTask extends React.Component {
+class __CreateTaskCard extends React.Component {
 
   scriptName () {
     return this.props.name
@@ -51,6 +51,12 @@ class __CreateTask extends React.Component {
     }
 
     instagram.start()
+
+    const params = this.script.params
+      .map(item => `${item.name}: ${this.state[item.name]}`)
+      .join(`, `)
+
+    this.props.printLog(`Running script ${scriptName}: ${params}`)
 
     this.script.run(this.state, this.props.printLog)
       .then(res => this.props.sendMetrikaEvent(`task-success-${scriptName}`))
@@ -140,7 +146,7 @@ class __CreateTask extends React.Component {
                   <div className="input-group mb-3">
                     {prefix && (
                       <div className="input-group-prepend">
-                        <span className="input-group-text" id={`prefix-symbol-${prefix}`}>
+                        <span className="input-group-text" id={`${scriptName}-prefix-symbol-${prefix}`}>
                           {prefix}
                         </span>
                       </div>
@@ -149,9 +155,9 @@ class __CreateTask extends React.Component {
                     <input
                       type="text"
                       className="form-control form-control-lg"
-                      id={name}
+                      id={`${scriptName}-${name}`}
                       name={name}
-                      aria-describedby={`prefix-symbol-${prefix}`}
+                      aria-describedby={`${scriptName}-prefix-symbol-${prefix}`}
                       value={this.state[name]}
                       onChange={this.handleChange}
                     />
@@ -164,7 +170,7 @@ class __CreateTask extends React.Component {
                     <input
                       type="checkbox"
                       className="form-check-input"
-                      id={name}
+                      id={`${scriptName}-${name}`}
                       name={name}
                       value={this.state[name]}
                       onChange={this.handleCheckboxChange}
@@ -179,7 +185,7 @@ class __CreateTask extends React.Component {
                   <div className="btn-group d-block">
                     {(values || [1, 2, 3, 5, 10]).map((num, index) => (
                       <Button
-                        id={name}
+                        id={`${scriptName}-${name}`}
                         className="btn-secondary"
                         key={index}
                         data-value={num}
@@ -229,7 +235,7 @@ class __CreateTask extends React.Component {
               <input
                 type="checkbox"
                 className="form-check-input"
-                id="showAlertAfterFinish"
+                id={`${scriptName}-showAlertAfterFinish`}
                 name="showAlertAfterFinish"
                 value={showAlertAfterFinish}
                 onChange={this.handleChange}
@@ -247,7 +253,7 @@ class __CreateTask extends React.Component {
   }
 }
 
-const CreateTask = connect(
+const CreateTaskCard = connect(
   null,
   { notifyWhenQueueFinished, showLoader, hideLoader, printLog, sendMetrikaEvent }
-)(__CreateTask)
+)(__CreateTaskCard)

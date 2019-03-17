@@ -45,8 +45,8 @@ const scripts = {
     name: 'Like photos from hashtag feed',
     description: 'Infinity like available!',
     params: [
-      { name: 'Hashtag', type: 'text', prefix: '#', defaultValue: 'cats' },
-      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,2,5,10,20,50,Infinity] },
+      { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
+      { name: 'nPhotos', type: 'number', labelText: 'Number of photos (sorry)', values: [Infinity] },
     ],
     run: async ({ hashtag, nPhotos }, printLog = console.log) => {
       if (!hashtag) {
@@ -86,6 +86,17 @@ const scripts = {
         Errors: ${results.filter(item => item.status == 'error').length} items`)
 
       return results
+    }
+  },
+
+  like_user: {
+    name: 'Like User Media',
+    params: [
+      { name: 'username', type: 'text', prefix: '@', defaultValue: 'robertdowneyjr' },
+      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,2,5,10,20,50,Infinity] },
+    ],
+    run: async ({ username, nPhotos } = {}, printLog = console.log) => {
+      return likePhotosByUsername(username, nPhotos, printLog)
     }
   },
 
