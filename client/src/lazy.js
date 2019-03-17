@@ -6,11 +6,15 @@ class Lazy {
     }
 
     static of (...arr) {
-        return new Lazy(makeGenerator(...arr))
+        return new Lazy(makeGenerator(arr))
+    }
+
+    get index () {
+      return this._index
     }
 
     constructor(iterable, callback) {
-        this.index = 0
+        this._index = 0
         this.iterable = iterable
         this.callback = callback
     }
@@ -42,7 +46,7 @@ class Lazy {
     next() {
         const item = this.iterable.next()
 
-        this.index += 1
+        this._index += 1
 
         return item
     }
@@ -111,6 +115,11 @@ class Lazy {
 }
 
 class LazyFilter extends Lazy {
+
+    get index () {
+      return this.iterable.index
+    }
+
     async next() {
         while (true) {
             const item = await this.iterable.next()
@@ -127,6 +136,11 @@ class LazyFilter extends Lazy {
 }
 
 class LazyMap extends Lazy {
+
+    get index () {
+      return this.iterable.index
+    }
+
     async next() {
         const item = await this.iterable.next()
 
@@ -141,6 +155,11 @@ class LazyMap extends Lazy {
 }
 
 class LazyFlat extends Lazy {
+
+    get index() {
+      return this._index
+    }
+
     async next() {
         if (!this.generator) {
           const page = await this.iterable.next()
@@ -155,6 +174,8 @@ class LazyFlat extends Lazy {
         }
 
         const item = await this.generator.next()
+
+        this._index += 1
 
         if (item.done) {
             const page = await this.iterable.next()
@@ -173,6 +194,11 @@ class LazyFlat extends Lazy {
 }
 
 class LazyAccumulated extends Lazy {
+
+    get index () {
+      return this.iterable.index
+    }
+
     accumulator = []
 
     async next() {
@@ -195,6 +221,11 @@ class LazyAccumulated extends Lazy {
 }
 
 class LazyCatchError extends Lazy {
+
+    get index () {
+      return this.iterable.index
+    }
+
     async next() {
         while (true) {
             try {

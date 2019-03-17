@@ -72,13 +72,13 @@ const scripts = {
       const liked = items
         .filter(item => instagram.isStopped ? printLog(`Skipping ${instagramUrl(item)}: Request was killed`) : true)
         .filter(item => item.has_liked ? printLog(`Skipping ${instagramUrl(item)}: Already liked`) : true)
-        .peek(item => printLog(`Liking item ${instagramUrl(item)} ...`))
+        .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
         .map(item => instagram.request({ method: 'like', params: [item.id] }))
         .peek(({ status }) => printLog(status, false))
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
       // Phase 4: run. if nPhotos is given, take only that much
-      const results = await liked.take(nPhotos).unwrap({ accumulate: true })
+      const results = await liked.unwrap({ accumulate: true })
 
       printLog(`FINISHED,
         Total requests: ${results.length},
