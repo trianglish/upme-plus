@@ -300,13 +300,6 @@ const scripts = {
     name: 'Load users who you follow and who doesnt follow back',
     params: [
       {
-        name: 'username',
-        type: 'text',
-        prefix: '@',
-        labelText: 'Your Username',
-        defaultValue: 'caffeinum',
-      },
-      {
         name: 'doUnfollow',
         type: 'checkbox',
         prefix: '',
@@ -314,12 +307,12 @@ const scripts = {
         defaultValue: false,
       },
     ],
-    run: async ({ username, doUnfollow = false }, printLog = console.log) => {
-      const { user: { pk } } = await instagram.request({ method: 'get_user_info', params: [username] }, true)
+    run: async ({ doUnfollow = false }, printLog = console.log) => {
+      const { user: { pk } } = await instagram.request({ method: 'check_login', params: [] })
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
 
-      // Phase 1: set up feed generator
+      // Phase 1: set up generator
       const following_list = instagram.page_generator({
         method: 'get_user_followings',
         params: [ pk ]
@@ -327,7 +320,7 @@ const scripts = {
 
       // Phase 2: paging
       const followings = new Lazy(following_list)
-        .peek((page, index) => printLog(`Batch ${index} of followings for @${username} loaded: ${page.users.length}`))
+        .peek((page, index) => printLog(`Batch ${index} of followings loaded: ${page.users.length}`))
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
         .map(page => makeGenerator(page.users))
         .flat()
@@ -342,19 +335,21 @@ const scripts = {
 
           return true
         })
-        .peek(user => printLog(`user: @${user.username}... `))
-        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .peek(user => printLog(`user: @${user.username}: `))
         .map(user =>
             instagram.request({ method: 'user_friendship', params: [ user.pk ] })
                 .then(info => ({ friendship: info, ...user }))
         )
         .peek(user => printLog(user.friendship.followed_by ? 'follows you' : 'doesnt follow you', false))
+        .peek(user => console.log('user', user))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
       const full_info = await follows.unwrap()
 
-      const non_dual = full_info.filter(user => !user.friendship.followed_by)
-
       window.full_info = full_info
+
+      const non_dual = full_info.filter(user => user && user.friendship && !user.friendship.followed_by)
+
       window.non_dual = non_dual
 
       printLog(`Loaded!`)
@@ -365,7 +360,16 @@ const scripts = {
 
       non_dual.map(user => printLog(`@${user.username}: https://instagram.com/${user.username}`))
 
+      if (doUnfollow && confirm(`You sure you want to unfollow ${non_dual.length} people?`)) {
+        const uf = new Lazy.from(non_dual)
+          .peek(user => printLog(`Unfollow ${getURL(user)}`))
+          .map(user => instagram.request({ method: 'unfollow', params: [ user.pk ] }))
+          .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
+        return uf.unwrap()
+      }
+
+      return non_dual
 
     }
   },
