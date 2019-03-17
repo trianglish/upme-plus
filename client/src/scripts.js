@@ -358,10 +358,11 @@ const scripts = {
       printLog(`Here they are:`)
       printLog(``)
 
-      non_dual.map(user => printLog(`@${user.username}: https://instagram.com/${user.username}`))
+      non_dual
+        .map(user => printLog(`@${user.username}: https://instagram.com/${user.username}`))
 
       if (doUnfollow && confirm(`You sure you want to unfollow ${non_dual.length} people?`)) {
-        const uf = new Lazy.from(non_dual)
+        const uf = new Lazy.from(non_dual.map(({ pk, username }) => ({ pk, username })))
           .peek(user => printLog(`Unfollow ${getURL(user)}`))
           .map(user => instagram.request({ method: 'unfollow', params: [ user.pk ] }))
           .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
