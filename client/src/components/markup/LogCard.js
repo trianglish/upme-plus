@@ -6,7 +6,7 @@ class LogCard extends React.Component {
   }
 
   convertTextURL = text => {
-    const [ _, head, protocol, url, tail ] = text.match(/^(.*)(https:\/\/)(.*?)(\s.*)$/)
+    const [ _, head, protocol, url, tail ] = text.match(/^(.*)(https:\/\/)(.*?)(\s.*)?$/)
 
     return (
       <span>
