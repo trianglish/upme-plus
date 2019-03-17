@@ -70,9 +70,20 @@ const scripts = {
 
       // Phase 3: like each from List
       const liked = items
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${instagramUrl(item)}: Request was killed`)
+            return false
+          }
+
+          if (item.has_liked) {
+            printLog(`Skipping ${index} ${instagramUrl(item)}: Already liked`)
+            return false
+          }
+
+          return true
+        })
         .take(nPhotos)
-        .filter(item => instagram.isStopped ? printLog(`Skipping ${instagramUrl(item)}: Request was killed`) : true)
-        .filter(item => item.has_liked ? printLog(`Skipping ${instagramUrl(item)}: Already liked`) : true)
         .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
         .map(item => instagram.request({ method: 'like', params: [item.id] }))
         .peek(({ status }) => printLog(status, false))
