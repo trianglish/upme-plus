@@ -358,6 +358,8 @@ const scripts = {
       // printLog(`or`)
       printLog(`\t\tdownload('followers_${username}.csv', getCSV(followers))`)
 
+      localStorage.setItem(`followers_${username}`, followers)
+
       window.followers = followers
       window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
 
