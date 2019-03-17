@@ -45,7 +45,7 @@ const scripts = {
     name: 'Like photos from hashtag feed',
     description: 'Infinity like available!',
     params: [
-      { name: 'hashtag', type: 'text', prefix: '#', defaultValue: 'cats' },
+      { name: 'Hashtag', type: 'text', prefix: '#', defaultValue: 'cats' },
       { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,2,5,10,20,50,Infinity] },
     ],
     run: async ({ hashtag, nPhotos }, printLog = console.log) => {
@@ -66,30 +66,18 @@ const scripts = {
         .peek((page, index) => printLog(`Page ${index}: Fetched ${page.num_results} items.`))
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
         .map(page => makeGenerator(page.items))
-        // .map((page, index) => makeGenerator([ { index, ...page }, ...page.items ]))
         .flat()
 
       // Phase 3: like each from List
       const liked = items
         .filter(item => instagram.isStopped ? printLog(`Skipping ${instagramUrl(item)}: Request was killed`) : true)
         .filter(item => item.has_liked ? printLog(`Skipping ${instagramUrl(item)}: Already liked`) : true)
-        // .map(async (item, index) => {
-        //   console.log('item', item)
-        //   if (!item.id) {
-        //     printLog(`Page ${item.index + 1}, ${item.num_results} items.`)
-        //     return item
-        //   } else {
-        //     printLog(`Liking item ${instagramUrl(item)}...`)
-        //     const { status } = await instagram.request({ method: 'like', params: [ item.id ] })
-        //     printLog(status, false)
-        //     return { status }
-        //   }
-        // })
         .peek(item => printLog(`Liking item ${instagramUrl(item)} ...`))
         .map(item => instagram.request({ method: 'like', params: [item.id] }))
         .peek(({ status }) => printLog(status, false))
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
+      // Phase 4: run. if nPhotos is given, take only that much
       const results = await liked.take(nPhotos).unwrap({ accumulate: true })
 
       printLog(`FINISHED,

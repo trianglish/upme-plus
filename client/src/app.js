@@ -39,7 +39,7 @@ class __App extends React.Component {
             <Route path='/logs' component={LogsPage}/>
             <Route path='/like/user-medias' component={LikeUserPage}/>
             <Route path='/like/hashtag' component={LikeHashtagPage}/>
-            <Route path='/like' component={LikeHashtagPage}/>
+            <Route path='/like' component={LikePage}/>
             <Route path='/follow/followers' component={FollowUserPeersPage}/>
             <Route path='/follow/followings' component={FollowUserPeersPage}/>
             <Route path='/script/:name' component={ScriptPage}/>

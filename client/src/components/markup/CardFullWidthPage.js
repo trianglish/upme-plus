@@ -1,9 +1,11 @@
+const { Fragment } = React
+
 class CardFullWidthPage extends React.Component {
 
   render () {
 
     return (
-      <div className="container-fluid">
+      <Fragment>
         {this.props.heading && (
           <div className="d-sm-flex align-items-center justify-content-between mb-4">
             {/* <!-- Page Heading  --> */}
@@ -14,7 +16,7 @@ class CardFullWidthPage extends React.Component {
         )}
 
         {/* <!-- Content Row  --> */}
-        <div className="row">
+        <div className="row mb-4">
 
           <div className="col-xl-12 col-md-12 mb-12">
             <div className="card border-left-primary shadow h-150 py-2">
@@ -27,7 +29,7 @@ class CardFullWidthPage extends React.Component {
           </div>
 
         </div>
-      </div>
+      </Fragment>
     )
   }
 }

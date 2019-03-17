@@ -72,6 +72,7 @@ class __LikeUserPage extends React.Component {
     }
 
     return (
+      <div className="container-fluid">
       <CardFullWidthPage>
                 <div className="row no-gutters align-items-center">
                   <div className="col mr-12">
@@ -157,6 +158,7 @@ class __LikeUserPage extends React.Component {
                 </div>
 
       </CardFullWidthPage>
+      </div>
     )
   }
 }

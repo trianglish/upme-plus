@@ -108,7 +108,8 @@ class __FollowUserPeersPage extends React.Component {
     }
 
     return (
-      <CardFullWidthPage>
+      <div className="container-fluid">
+        <CardFullWidthPage>
                 <div className="row no-gutters align-items-center">
                   <div className="col mr-12">
                     <div className="text-xs font-weight-bold text-primary text-uppercase mb-12">
@@ -194,7 +195,8 @@ class __FollowUserPeersPage extends React.Component {
                   </div>
                 </div>
 
-      </CardFullWidthPage>
+        </CardFullWidthPage>
+      </div>
     )
   }
 }
