@@ -22,7 +22,7 @@ const ProBadge = props => (<div className="row pt-4 pb-2">
     </Link>
   </div>
   <div className="col-auto">
-    <a className="btn btn-danger" href="http://paypal.me/okhlopkov" target="_blank">
+    <a className="btn btn-danger" href="http://paypal.me/okhlopkov/300" target="_blank">
       Donate via Paypal
     </a>
   </div>
