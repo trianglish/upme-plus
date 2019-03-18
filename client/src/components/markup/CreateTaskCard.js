@@ -127,6 +127,10 @@ class __CreateTaskCard extends React.Component {
           </div>
         </div>
 
+        {this.script.isPRO && (<div>
+          <ProBadge />
+        </div>)}
+
         {this.script.description && (<div className="row">
           <div className="col-auto">
             <div className="" style={{ padding: '20px 0' }}>

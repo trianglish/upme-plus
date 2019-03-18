@@ -37,7 +37,7 @@ class __SupportUsPage extends React.Component {
   }
 
   likeUs = async () => {
-    try { 
+    try {
       this.props.showLoader()
 
       likePhotosByUsername('ohld', 10, this.props.printLog)
@@ -70,13 +70,56 @@ class __SupportUsPage extends React.Component {
           <div className="col-lg-6">
             <div className="card shadow mb-4">
               <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">Donate!</h6>
+              </div>
+              <div className="card-body">
+                <p>
+                  {message.PRO_HEADER}
+                </p>
+                <p>
+                  {message.PRO_TEXT.replace(/<br>/g, '')}
+                </p>
+
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="">
+                    <a className="btn btn-primary" href="http://paypal.me/okhlopkov" target="_blank">
+                      Paypal
+                    </a>
+                  </div>
+
+                  <div className="">
+                    <a className="btn btn-primary" href="https://www.patreon.com/join/morejust" target="_blank">
+                      Patreon
+                    </a>
+                  </div>
+
+                  <div className="">
+                    <a className="btn btn-warning" href="https://liberapay.com/caffeinum/donate" target="_blank">
+                      Liberapay
+                    </a>
+                  </div>
+
+                  <div className="">
+                    <Link className="btn btn-success" to="/script/like_by_hashtag">
+                      Try PRO <i className="fa fa-star"></i>
+                    </Link>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="card shadow mb-4">
+              <div className="card-header py-3">
                 <h6 className="m-0 font-weight-bold text-primary">Use this website to</h6>
               </div>
               <div className="card-body">
                 <p>We would be very happy if you follow us on Instagram! Moreover, this is a good place to test our website.</p>
 
-                <Button 
-                  className="btn-success btn-icon-split" 
+                <Button
+                  className="btn-success btn-icon-split"
                   onClick={this.followUs}
                   ym={`supportUs-follow`}
                 >
@@ -88,8 +131,8 @@ class __SupportUsPage extends React.Component {
 
                 <div className="my-2"></div>
 
-                <Button 
-                  className="btn-success btn-icon-split" 
+                <Button
+                  className="btn-success btn-icon-split"
                   onClick={this.likeUs}
                   ym={`supportUs-like`}
                 >
@@ -97,7 +140,7 @@ class __SupportUsPage extends React.Component {
                       <i className="fas fa-heart"></i>
                   </span>
                   <span className="text">Like Us on Instagram</span>
-                </Button> 
+                </Button>
 
               </div>
             </div>
@@ -128,7 +171,7 @@ class __SupportUsPage extends React.Component {
               </div>
             </div>
           </div>
-          
+
 
         </div>
       </div>

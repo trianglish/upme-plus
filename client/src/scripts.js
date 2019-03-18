@@ -44,6 +44,7 @@ const scripts = {
   like_by_hashtag: {
     name: 'Like photos from hashtag feed',
     description: 'Infinity like available!',
+    isPRO: true,
     params: [
       { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
       { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,3,10,20,50,200,Infinity] },
