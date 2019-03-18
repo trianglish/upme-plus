@@ -60,6 +60,9 @@ class __CreateTaskCard extends React.Component {
 
     this.script.run(this.state, this.props.printLog)
       .then(res => this.props.sendMetrikaEvent(`task-success-${scriptName}`))
+      .then(res => this.props.printLog(message.PRO_HEADER))
+      .then(res => this.props.printLog(message.PRO_TEXT.replace(/<br>/g, '')))
+      .then(res => this.props.printLog(`https://instagrambot.github.io/web/#/support-us`))
       .catch(err => {
           console.error(err)
           this.props.printLog(`Error: ${err.message}`)
@@ -123,13 +126,12 @@ class __CreateTaskCard extends React.Component {
           <div className="col mr-12">
             <div className="text-xs font-weight-bold text-primary text-uppercase mb-12">
               {this.script.name || scriptName}
+              &nbsp;
+              {this.script.isPRO && (<ProBadge className="badge badge-pill badge-success text-xs" />)}
+              {/* this.script.isPRO && (<ProBadge className="btn btn-sm text-xs" />) */}
             </div>
           </div>
         </div>
-
-        {this.script.isPRO && (<div>
-          <ProBadge />
-        </div>)}
 
         {this.script.description && (<div className="row">
           <div className="col-auto">
@@ -220,19 +222,20 @@ class __CreateTaskCard extends React.Component {
 
         <div className="row">
           <div className="col-auto">
-            <div className="btn-group d-inline-block">
+            {this.script.isPRO && (
+              <div className="d-inline-block mr-2">
+                <ProBadge>
+                  Unlock PRO
+                </ProBadge>
+              </div>
+            )}
+            <div className="btn-group d-inline-block mr-3">
               <Button
                 className="btn-primary"
                 ym={`${scriptName}-submit`}
                 onClick={this.handleSubmit}>
                 Run!
               </Button>
-            </div>
-            <div className="d-inline-block">
-              &nbsp;
-            </div>
-            <div className="d-inline-block">
-              &nbsp;
             </div>
 
             <div className="form-check d-inline-block">

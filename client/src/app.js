@@ -53,6 +53,7 @@ class __App extends React.Component {
         </Wrapper>
         <ScrollToTop />
         <LogoutModal />
+        <ReactTooltip />
       </div>
     )
   }

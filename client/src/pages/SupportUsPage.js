@@ -70,7 +70,11 @@ class __SupportUsPage extends React.Component {
           <div className="col-lg-6">
             <div className="card shadow mb-4">
               <div className="card-header py-3">
-                <h6 className="m-0 font-weight-bold text-primary">Donate!</h6>
+                <h6 className="m-0 font-weight-bold text-primary">
+                    Donate!
+                    &nbsp;
+                    <i className="fas fa-donate"></i>
+                </h6>
               </div>
               <div className="card-body">
                 <p>
@@ -83,7 +87,8 @@ class __SupportUsPage extends React.Component {
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="">
                     <a className="btn btn-primary" href="http://paypal.me/okhlopkov" target="_blank">
-                      Paypal
+
+                      <span class="text">Paypal</span>
                     </a>
                   </div>
 
@@ -101,7 +106,8 @@ class __SupportUsPage extends React.Component {
 
                   <div className="">
                     <Link className="btn btn-success" to="/script/like_by_hashtag">
-                      Try PRO <i className="fa fa-star"></i>
+                      <span class="text">Try PRO</span>
+                      <i className="fas fa-star"></i>
                     </Link>
                   </div>
                 </div>

@@ -43,7 +43,7 @@ const scripts = {
 
   like_by_hashtag: {
     name: 'Like photos from hashtag feed',
-    description: 'Infinity like available!',
+    description: 'Will like photos by given hashtag, sleeping ~5 sec between likes. Infinity like available! Launch and leave a tab open.',
     isPRO: true,
     params: [
       { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
