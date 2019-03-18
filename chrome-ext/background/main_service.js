@@ -62,8 +62,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'check_login') {
-        if (!instagram.user) {
-          instagram.user = instagram.user
+        try {
+          const info = await instagram.callMethod('get_user_info', instagram.user.username)
+
+          instagram.user = info.user
+        } catch (error) {
+          console.log(`Needs relogin`, error)
+
+          const { username, password } = await getCredentials()
+          instagram.user = await instagram.login(username, password, true)
         }
 
         return sendResponse({ status: 'ok', user: instagram.user })

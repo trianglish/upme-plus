@@ -91,3 +91,11 @@ export const search_location = (self, query, lat = '', lng = '') => {
   const rank_token = self.rank_token()
   return self.send_request(`fbsearch/places/?rank_token=${rank_token}&query=${query}&lat=${lat}&lng=${lng}`)
 }
+
+export const get_timeline = (self) => {
+  return self.send_request(`feed/timeline/?rank_token=${self.rank_token()}&ranked_content=true`)
+}
+
+export const get_popular_feed = (self) => {
+  return self.send_request(`feed/popular/?people_teaser_supported=1&rank_token=${self.rank_token()}&ranked_content=true`)
+}
