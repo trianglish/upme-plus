@@ -10,14 +10,44 @@ class __CreateTaskCard extends React.Component {
   constructor(props) {
     super(props)
 
-    const script = scripts[this.scriptName()]
+    this.state = {
+      showAlertAfterFinish: false,
+      shouldRedirectToLogs: false,
+    }
+
+    const { script, params, state } = this.findScript(this.scriptName())
+
+    this.script = script
+
+    if (!script) return
+
+    this.state = {
+      ...this.state,
+      ...state,
+      params,
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('will receive props', nextProps)
+
+    const { script, params, state } = this.findScript(nextProps.name)
+
+    this.script = script
+
+    if (!script) return
+
+    this.setState({
+      ...state,
+      params,
+    })
+  }
+
+  findScript = name => {
+    const script = scripts[name]
 
     if (!script) {
-      this.state = {
-        showAlertAfterFinish: false,
-        shouldRedirectToLogs: false,
-      }
-      return
+      return { script: null }
     }
 
     const params = script.params
@@ -28,12 +58,10 @@ class __CreateTaskCard extends React.Component {
         }),
       {})
 
-    this.script = script
-    this.state = {
-      showAlertAfterFinish: false,
-      shouldRedirectToLogs: false,
+    return {
+      script,
       params: script.params,
-      ...params,
+      state: params,
     }
   }
 
