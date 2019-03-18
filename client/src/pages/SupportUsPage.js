@@ -88,7 +88,7 @@ class __SupportUsPage extends React.Component {
                   <div className="">
                     <a className="btn btn-primary" href="http://paypal.me/okhlopkov" target="_blank">
 
-                      <span class="text">Paypal</span>
+                      <span className="text">Paypal</span>
                     </a>
                   </div>
 
@@ -106,7 +106,7 @@ class __SupportUsPage extends React.Component {
 
                   <div className="">
                     <Link className="btn btn-success" to="/script/like_by_hashtag">
-                      <span class="text">Try PRO</span>
+                      <span className="text">Try PRO</span>
                       <i className="fas fa-star"></i>
                     </Link>
                   </div>

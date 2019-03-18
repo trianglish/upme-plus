@@ -250,21 +250,22 @@ class __CreateTaskCard extends React.Component {
 
         <div className="row">
           <div className="col-auto">
-            {this.script.isPRO && (
-              <div className="d-inline-block mr-2">
-                <ProBadge>
-                  Unlock PRO
-                </ProBadge>
-              </div>
-            )}
-            <div className="btn-group d-inline-block mr-3">
+            <div className="btn-group d-inline-block mr-2">
               <Button
-                className="btn-primary"
+                className={this.script.isPRO ? "btn-outline-primary" : "btn-primary"}
                 ym={`${scriptName}-submit`}
                 onClick={this.handleSubmit}>
                 Run!
               </Button>
             </div>
+
+            {this.script.isPRO && (
+              <div className="d-inline-block mr-3">
+                <ProBadge>
+                  Unlock PRO
+                </ProBadge>
+              </div>
+            )}
 
             <div className="form-check d-inline-block">
               <input
