@@ -41,6 +41,71 @@ const scripts = {
     }
   },
 
+  like_my_feed: {
+    name: 'Like photos from your own feed',
+    description:
+    `Will like photos from your feed, sleeping ~5 sec between likes.
+    Will not work for Chrome extension version lower than 1.2.1.
+    Infinity like available! Launch and leave a tab open.`,
+    isPRO: true,
+    params: [
+      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', defaultValue: Infinity, values: [1,3,10,20,50,200,Infinity] },
+    ],
+    run: async ({ nPhotos }, printLog = console.log) => {
+
+      printLog(`Fetching feed ... `)
+
+      // Phase 1: set up feed generator
+      const feed = instagram.page_generator({
+        method: 'get_timeline',
+        params: []
+      })
+
+      // Phase 2: page
+
+      const items = new Lazy(feed)
+        .peek((page, index) => printLog(`Page ${index}: Fetched ${page.num_results} items.`))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(page => makeGenerator(page.feed_items))
+        .flat()
+
+      // Phase 3: Map each photo into like
+
+      const liked = items
+        .filter(item => item.media_or_ad)
+        .map(item => item.media_or_ad)
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${instagramUrl(item)}: Request was killed`)
+            return false
+          }
+
+          if (item.has_liked) {
+            printLog(`Skipping ${index} ${instagramUrl(item)}: Already liked`)
+            return false
+          }
+
+          return true
+        })
+        .take(nPhotos)
+        .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
+        .map(item => instagram.request({ method: 'like', params: [item.id] }))
+        .peek(({ status }) => printLog(status, false))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+
+
+      // Phase 4: run. if nPhotos is given, take only that much
+      const results = await liked.unwrap({ accumulate: true })
+
+      printLog(`FINISHED,
+        Total requests: ${results.length},
+        Success: ${results.filter(item => item.status == 'ok').length} items,
+        Errors: ${results.filter(item => item.status == 'error').length} items`)
+
+      return results
+    }
+  },
+
   like_by_hashtag: {
     name: 'Like photos from hashtag feed',
     description: 'Will like photos by given hashtag, sleeping ~5 sec between likes. Infinity like available! Launch and leave a tab open.',

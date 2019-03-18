@@ -162,8 +162,8 @@ class __CreateTaskCard extends React.Component {
         </div>
 
         {this.script.description && (<div className="row">
-          <div className="col-auto">
-            <div className="" style={{ padding: '20px 0' }}>
+          <div className="col-8">
+            <div className="pl-2 pb-2 pt-2" style={{ whiteSpace: 'pre-line' }}>
               {this.script.description}
             </div>
           </div>
