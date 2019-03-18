@@ -557,13 +557,13 @@ const scripts = {
       {
         name: 'nFollowers',
         type: 'number',
-        values: [1, 2, 3, 5, 10],
+        values: [1, 2, 5, 10, 20, 50, Infinity],
         labelText: 'Number of followers',
       },
       {
         name: 'nLikePhotos',
         type: 'number',
-        values: [1],
+        values: [1,2,3],
         labelText: 'How many photos to like',
       },
     ],
@@ -572,42 +572,59 @@ const scripts = {
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
 
-      const followers_paging_generator = instagram.request_generator({ method: 'get_user_followers', params: [ pk ] }, nFollowers)
+      // set up request
+      const followers_list = instagram.page_generator({ method: 'get_user_followers', params: [ pk ] })
 
-      const followers_g = safeGenerator(followers_paging_generator, async followers => {
+      // configure paging
 
-        printLog(`Followers for @${username} loaded: ${followers.length}`)
+      const followers = new Lazy(followers_list)
+        .peek((page, index) => printLog(`Batch ${index} of followings loaded: ${page.users.length}`))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(page => makeGenerator(page.users))
+        .flat()
 
-        if (!followers || !followers.length) throw new Error(`No followers: ${followers}`)
+      // if (!followers || !followers.length) throw new Error(`No followers: ${followers}`)
 
-        printLog(`Will like ${followers.length} followers`)
+      const first_photos = followers
+        .take(nFollowers)
+        .peek(user => printLog(`Fetching feed for ${getURL(user)} ... `))
+        .map(user => instagram.request({ method: 'get_user_feed', params: [user.pk] }))
+        .peek(feed => printLog(`loaded first ${feed.items && feed.items.length} items.`, false))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(feed => feed.items)
+        .filter(items => !!items)
+        .map(items => new Lazy(makeGenerator(items)).take(nLikePhotos))
+        .flat()
 
-        const photos = await safeMap(followers, user => instagram.request({ method: 'get_user_feed', params: [user.pk] }), printLog)
+      // like each from List
+      const liked = first_photos
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Request was killed`)
+            return false
+          }
 
-        const first_photos = photos.map(feed => feed.items && feed.items[0]).filter(item => !!item)
+          if (item.has_liked) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
+            return false
+          }
 
-        return await safeMap(first_photos, item => instagram.request({ method: 'like', params: [item.id] }), printLog)
+          return true
+        })
+        .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
+        .map(item => instagram.request({ method: 'like', params: [item.id] }))
+        .peek(({ status }) => printLog(status, false))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
-      }, printLog)
+      // Phase 4: run. if nPhotos is given, take only that much
+      const results = await liked.unwrap({ accumulate: true })
 
-      const followers = await unwrapGenerator(followers_g)
+      printLog(`FINISHED,
+        Total requests: ${results.length},
+        Success: ${results.filter(item => item.status == 'ok').length} items,
+        Errors: ${results.filter(item => item.status == 'error').length} items`)
 
-      printLog(`Followers for @${username} loaded: ${followers.length}`)
-
-      if (!followers || !followers.length) throw new Error(`No followers: ${followers}`)
-
-      printLog(`Will like ${followers.slice(0, nFollowers).length} followers`)
-
-      // const followers_generator = makeGenerator(followers)
-
-      // const photos_g = safeGenerator(followers_generator, user => instagram.request({ method: 'get_user_feed', params: [user.pk] }), printLog)
-      //
-      // const photos = await unwrapGenerator(photos_g)
-      const photos = await safeMap(followers.slice(0, nFollowers), user => instagram.request({ method: 'get_user_feed', params: [user.pk] }), printLog)
-
-      const first_photos = photos.map(feed => feed.items && feed.items[0]).filter(item => !!item)
-
-      return await safeMap(first_photos, item => instagram.request({ method: 'like', params: [item.id] }), printLog)
+      return results
     },
   },
 }
