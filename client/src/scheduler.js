@@ -2,6 +2,7 @@ class Scheduler {
   tasks = []
   _key = 'schedule'
   timers = {}
+  printLog = console.log
 
   _store() {
     console.log(`Stored ${this.tasks.length} tasks.`)
@@ -18,12 +19,12 @@ class Scheduler {
     this.tasks.map(task => this._schedule(task))
   }
 
-  add(task) {
+  add(task, callback) {
     const { startAt, scriptName, params } = task
 
     this.tasks.push(task)
     this._store()
-    this._schedule(task)
+    this._schedule(task, callback)
   }
 
   remove(task) {
@@ -48,21 +49,22 @@ class Scheduler {
     this._store()
   }
 
-  _schedule(task) {
+  _schedule(task, callback) {
     const { startAt, scriptName, params } = task
     const now = Date.now()
+
     if (startAt <= now) {
-      this._run(task)
+      this._run(task, callback)
     } else {
       const key = `${startAt}-${scriptName}`
 
-      this.timers[key] = setTimeout(() => this._run(task), startAt - now)
+      this.timers[key] = setTimeout(() => this._run(task, callback), startAt - now)
 
-      console.log(`Scheduled to run ${key} at ${new Date(startAt)}, in ${startAt - now}`)
+      this.printLog(`Scheduled to run ${key} at ${new Date(startAt)}, in ${startAt - now}`)
     }
   }
 
-  _run(task) {
+  _run(task, callback) {
     const { startAt, scriptName, params } = task
 
     if (startAt > Date.now) throw new Error(`Task is not ready yet. Wait until ${new Date(startAt)}`)
@@ -76,7 +78,10 @@ class Scheduler {
     clearTimeout(timerID)
 
     console.log(`${new Date()}: Running ${key}`)
-    scripts[scriptName].run(params)
+
+    scripts[scriptName].run(params, this.printLog)
+      .then(res => callback(null, res))
+      .catch(err => callback(err, null))
 
     this._remove(task)
   }

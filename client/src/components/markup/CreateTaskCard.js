@@ -10,9 +10,12 @@ class __CreateTaskCard extends React.Component {
   constructor(props) {
     super(props)
 
+    console.log(props)
+
     this.state = {
       showAlertAfterFinish: false,
       shouldRedirectToLogs: false,
+      delay: 5, // minutes
     }
 
     const { script, params, state } = this.findScript(this.scriptName())
@@ -63,6 +66,58 @@ class __CreateTaskCard extends React.Component {
       params: script.params,
       state: params,
     }
+  }
+
+  handleSchedule = async () => {
+    this.props.showLoader()
+
+    const scriptName = this.scriptName()
+
+    const wasStopped = instagram.isStopped
+
+    wasStopped && instagram.start()
+
+    const params = this.script.params
+      .map(item => `${item.name} = ${this.state[item.name]}`)
+      .join(`, `)
+
+    this.props.printLog(`Scheduling script ${scriptName}: ${params}`)
+
+    const startAt = Number(this.state.delay) * 60 * 1000 + Date.now()
+
+    // this.props.printLog(`Start at: ${new Date(startAt)}`)
+
+    if (!wasStopped) {
+      alert(`
+        Service indicates there is something else running.
+        Be careful: Keep track manually if two different scripts don't overlap.
+        If you're not sure, stop all other scripts before scheduling!
+      `)
+    }
+
+    schedule.printLog = this.props.printLog
+    schedule.add({ startAt, scriptName, params: this.state }, (err, res) => {
+      this.props.printLog(`Scheduled task finished running!`)
+
+      if (err) {
+        this.props.printLog(`Error: ${err.message}`)
+        alert(err.message)
+      }
+
+      if (res) {
+        this.props.printLog(`Success: ${!!res}`)
+      }
+
+      console.log('error', err)
+      console.log('result', res)
+
+      wasStopped && instagram.kill()
+      this.props.hideLoader()
+    })
+
+    this.props.printLog(`Task scheduled successfully. Please wait until it launches`)
+
+    this.handleRedirectToLogs()
   }
 
   handleSubmit = async () => {
@@ -283,6 +338,35 @@ class __CreateTaskCard extends React.Component {
             </div>
           </div>
         </div>
+
+        {this.props.BETA_TEST && (
+        <div className="row mt-2">
+          <div className="col-auto">
+              <input
+                type="number"
+                className="form-control"
+                id={`${scriptName}-delay`}
+                name='delay'
+                value={this.state.delay}
+                onChange={this.handleChange}
+              />
+          </div>
+
+          <div className="col-auto">
+            <div className="btn-group d-inline-block mr-2"
+              data-tip="NOT STABLE YET! Use at your own risk"
+              data-type="error"
+              data-effect="solid">
+              <Button
+                className={"btn-outline-warning"}
+                ym={`${scriptName}-schedule`}
+                onClick={this.handleSchedule}>
+                <i className="fas fa-plus"></i>&nbsp;
+                Schedule for {this.state.delay} minutes
+              </Button>
+              </div>
+          </div>
+        </div>)}
 
         <ReactTooltip />
       </CardFullWidthPage>
