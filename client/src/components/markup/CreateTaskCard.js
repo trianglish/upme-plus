@@ -216,7 +216,7 @@ class __CreateTaskCard extends React.Component {
                 )}
 
                 {type === 'number' && (
-                  <div className="btn-group d-block">
+                  <div className="btn-group d-block mb-2">
                     {(values || [1, 2, 3, 5, 10]).map((num, index) => (
                       <Button
                         id={`${scriptName}-${name}`}
