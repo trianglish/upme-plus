@@ -632,4 +632,99 @@ const scripts = {
       return results
     },
   },
+
+  like_fans: {
+    name: 'Like people who like some user',
+    description:
+    `
+      Fetch user pictures, take his pictures and like 1-2-3 photos of people who liked it.
+      NEEDS extension version 1.2.2!
+      Infinity mode will work until the list of likers and then until the list of pictures.
+    `,
+    params: [
+      {
+        name: 'username',
+        type: 'text',
+        prefix: '@',
+        labelText: 'Username',
+      },
+      {
+        name: 'nPhotos',
+        type: 'number',
+        values: [1, 2, 5, 10, 20, 50, Infinity],
+        labelText: 'Number of user pictures to look into',
+      },
+      {
+        name: 'nLikePhotos',
+        type: 'number',
+        values: [1,2,3],
+        labelText: 'How many photos from each fan to like',
+      },
+    ],
+    run: async ({ username, nPhotos = 3, nLikePhotos = 1 } = {}, printLog = console.log) => {
+      if (!username) throw new Error(`No user id: ${pk}`)
+
+      const { user: { pk } } = await instagram.request({ method: 'get_user_info', params: [username] }, true)
+
+      if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
+
+      // set up request
+
+      const media = instagram.page_generator({ method: 'get_user_feed', params: [ pk ] })
+
+      // configure paging
+      const photos = new Lazy(media)
+        .peek((page, index) => printLog(`Batch ${index} of photos loaded: ${page.items.length} items.`))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(page => makeGenerator(page.items))
+        .flat()
+        .take(nPhotos)
+
+      const fans = photos
+        .map(item => instagram.request({ method: 'get_media_likers', params: [ item.id ] }))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(item => makeGenerator(item.users))
+        .flat()
+
+      const first_photos = fans
+        .peek(user => printLog(`Fetching feed for ${getURL(user)} ... `))
+        .map(user => instagram.request({ method: 'get_user_feed', params: [user.pk] }))
+        .peek(feed => printLog(`loaded first ${feed.items && feed.items.length} items.`, false))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(feed => feed.items)
+        .filter(items => !!items)
+        .map(items => new Lazy(makeGenerator(items)).take(nLikePhotos))
+        .flat()
+
+      // like each from List
+      const liked = first_photos
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Request was killed`)
+            return false
+          }
+
+          if (item.has_liked) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
+            return false
+          }
+
+          return true
+        })
+        .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
+        .map(item => instagram.request({ method: 'like', params: [item.id] }))
+        .peek(({ status }) => printLog(status, false))
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+
+      // Phase 4: run. if nPhotos is given, take only that much
+      const results = await liked.unwrap({ accumulate: true })
+
+      printLog(`FINISHED,
+        Total requests: ${results.length},
+        Success: ${results.filter(item => item.status == 'ok').length} items,
+        Errors: ${results.filter(item => item.status == 'error').length} items`)
+
+      return results
+    },
+  },
 }
