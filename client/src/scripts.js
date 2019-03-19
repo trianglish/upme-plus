@@ -108,7 +108,14 @@ const scripts = {
 
   like_by_hashtag: {
     name: 'Like photos from hashtag feed',
-    description: 'Will like photos by given hashtag, sleeping ~5 sec between likes. Infinity like available! Launch and leave a tab open.',
+    description: `
+    Will like photos by given hashtag, sleeping ~5 sec between likes.
+
+    Infinity like available! Launch and leave a tab open.
+
+    WARNING!
+    Users report that running Infinity like for 24 hours can get you banned. We don't recommend running it for more than 6-8 hours then.
+    `,
     isPRO: true,
     params: [
       { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
