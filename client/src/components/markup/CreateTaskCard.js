@@ -284,6 +284,7 @@ class __CreateTaskCard extends React.Component {
           </div>
         </div>
 
+        <ReactTooltip />
       </CardFullWidthPage>
     )
   }
