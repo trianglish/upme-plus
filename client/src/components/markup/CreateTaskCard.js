@@ -341,19 +341,9 @@ class __CreateTaskCard extends React.Component {
 
         {this.props.BETA_TEST && (
         <div className="row mt-2">
-          <div className="col-auto">
-              <input
-                type="number"
-                className="form-control"
-                id={`${scriptName}-delay`}
-                name='delay'
-                value={this.state.delay}
-                onChange={this.handleChange}
-              />
-          </div>
 
           <div className="col-auto">
-            <div className="btn-group d-inline-block mr-2"
+            <div className="btn-group d-inline-block"
               data-tip="NOT STABLE YET! Use at your own risk"
               data-type="error"
               data-effect="solid">
@@ -364,8 +354,20 @@ class __CreateTaskCard extends React.Component {
                 <i className="fas fa-plus"></i>&nbsp;
                 Schedule for {this.state.delay} minutes
               </Button>
-              </div>
+            </div>
           </div>
+
+          <div className="col-auto">
+            <input
+              type="number"
+              className="form-control"
+              id={`${scriptName}-delay`}
+              name='delay'
+              value={this.state.delay}
+              onChange={this.handleChange}
+            />
+          </div>
+
         </div>)}
 
         <ReactTooltip />
