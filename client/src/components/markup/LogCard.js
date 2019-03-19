@@ -1,8 +1,20 @@
 class LogCard extends React.Component {
-  scrollToBottom = (force = false) => {
-    if (!this.props.autoScroll && !force) return
+  state = {
+    autoScroll: this.props.autoScroll,
+  }
 
-    this.messagesEnd.scrollIntoView({ behavior: "smooth" })
+  scrollToBottom = (force = false) => {
+    if (!this.state.autoScroll && !force) return
+
+    this.messagesEnd.scrollIntoView()
+  }
+
+  toggleAutoScroll = () => {
+    !this.state.autoScroll && this.scrollToBottom()
+
+    this.setState({
+      autoScroll: !this.state.autoScroll
+    })
   }
 
   convertTextURL = text => {
@@ -64,6 +76,18 @@ class LogCard extends React.Component {
             onClick={() => this.scrollToBottom(true)}
           >
             Scroll to End
+          </InlineButton>
+
+          <InlineButton
+            className="m-0 text-warning"
+            onClick={() => this.toggleAutoScroll()}
+          >
+            {this.state.autoScroll
+              ? (<i className="fas fa-toggle-on"></i>)
+              : (<i className="fas fa-toggle-off"></i>)}
+            &nbsp;
+            {/*' '*/}
+            Autoscroll
           </InlineButton>
         </div>
         {/* <!-- Card Body  --> */}
