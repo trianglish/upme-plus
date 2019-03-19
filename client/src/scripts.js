@@ -76,12 +76,12 @@ const scripts = {
         .map(item => item.media_or_ad)
         .filter((item, index) => {
           if (instagram.isStopped) {
-            printLog(`Skipping ${index} ${instagramUrl(item)}: Request was killed`)
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Request was killed`)
             return false
           }
 
           if (item.has_liked) {
-            printLog(`Skipping ${index} ${instagramUrl(item)}: Already liked`)
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
             return false
           }
 
@@ -138,12 +138,12 @@ const scripts = {
       const liked = items
         .filter((item, index) => {
           if (instagram.isStopped) {
-            printLog(`Skipping ${index} ${instagramUrl(item)}: Request was killed`)
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Request was killed`)
             return false
           }
 
           if (item.has_liked) {
-            printLog(`Skipping ${index} ${instagramUrl(item)}: Already liked`)
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
             return false
           }
 
@@ -547,6 +547,11 @@ const scripts = {
 
   like_followers: {
     name: 'Like first photos of user followers',
+    description:
+    `
+      Fetch user followers, take 1-2-3 first photos from each, and put like.
+      Infinity mode will work until the list of followers.
+    `,
     params: [
       {
         name: 'username',
