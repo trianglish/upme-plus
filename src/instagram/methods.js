@@ -99,3 +99,11 @@ export const get_timeline = (self) => {
 export const get_popular_feed = (self) => {
   return self.send_request(`feed/popular/?people_teaser_supported=1&rank_token=${self.rank_token()}&ranked_content=true`)
 }
+
+export const get_comment_likers = (self, comment_id) => {
+  return self.send_request(`media/${comment_id}/comment_likers`)
+}
+
+export const get_media_likers = (self, media_id) => {
+  return self.send_request(`media/${media_id}/likers`)
+}
