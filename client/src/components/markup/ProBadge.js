@@ -26,7 +26,7 @@ class ProBadge extends React.Component {
 
     if (!isBanner) {
       return (
-        <Link className={className || 'btn btn-success'} to="/support-us"
+        <div className={className || 'btn btn-success'}
           data-tip={`${message.PRO_HEADER}<br><br><br>${message.PRO_TEXT}`}
           data-multiline="true"
           data-place="top"
@@ -36,11 +36,11 @@ class ProBadge extends React.Component {
         >
           {children
             ? children
-            : (<span>
+            : (<Link className="text-decoration-none text-white" to="/support-us">
                 <i className="fa fa-star"></i>
                 <span>PRO</span>
-              </span>)}
-        </Link>
+              </Link>)}
+        </div>
       )
     }
 

@@ -315,10 +315,25 @@ class __CreateTaskCard extends React.Component {
             </div>
 
             {this.script.isPRO && (
-              <div className="d-inline-block mr-3">
-                <ProBadge>
-                  Unlock PRO
-                </ProBadge>
+              <div className="d-inline-block">
+                {/*
+                <div className="d-inline-block mr-2">
+                  <a href="https://paypal.me/okhlopkov/300" target="_blank">
+                    <ProBadge className="btn btn-success btn-icon-split">
+                      <span class="icon">Unlock PRO</span>
+                      <span class="text">5$/month</span>
+                    </ProBadge>
+                  </a>
+                </div>
+                */}
+
+                <div className="d-inline-block mr-2">
+                  <Link to="/support-us">
+                    <ProBadge className="btn btn-success">
+                      <span>Unlock PRO</span>
+                    </ProBadge>
+                  </Link>
+                </div>
               </div>
             )}
 

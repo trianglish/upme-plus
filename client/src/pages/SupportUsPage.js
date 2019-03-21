@@ -67,7 +67,7 @@ class __SupportUsPage extends React.Component {
         {/* <!-- Content Row  --> */}
         <div className="row">
 
-          <div className="col-lg-6">
+          <div className="col-lg-12">
             <div className="card shadow mb-4">
               <div className="card-header py-3">
                 <h6 className="m-0 font-weight-bold text-primary">
@@ -86,27 +86,26 @@ class __SupportUsPage extends React.Component {
 
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="">
-                    <a className="btn btn-primary" href="http://paypal.me/okhlopkov" target="_blank">
-
-                      <span className="text">Paypal</span>
+                    <a className="btn btn-lg btn-success" href="http://paypal.me/okhlopkov" target="_blank">
+                      <span className="text">Paypal: 5$/month</span>
                     </a>
                   </div>
 
                   <div className="">
-                    <a className="btn btn-primary" href="https://www.patreon.com/join/morejust" target="_blank">
+                    <a className="btn btn-lg btn-primary" href="https://www.patreon.com/join/morejust" target="_blank">
                       Patreon
                     </a>
                   </div>
 
                   <div className="">
-                    <a className="btn btn-warning" href="https://liberapay.com/caffeinum/donate" target="_blank">
+                    <a className="btn btn-lg btn-primary" href="https://liberapay.com/caffeinum/donate" target="_blank">
                       Liberapay
                     </a>
                   </div>
 
                   <div className="">
-                    <Link className="btn btn-success" to="/script/like_by_hashtag">
-                      <span className="text">Try PRO</span>
+                    <Link className="btn btn-lg btn-primary" to="/script/like_by_hashtag">
+                      <span className="text">Check out PRO</span>
                       <i className="fas fa-star"></i>
                     </Link>
                   </div>
@@ -125,7 +124,7 @@ class __SupportUsPage extends React.Component {
                 <p>We would be very happy if you follow us on Instagram! Moreover, this is a good place to test our website.</p>
 
                 <Button
-                  className="btn-success btn-icon-split"
+                  className="btn-warning btn-icon-split"
                   onClick={this.followUs}
                   ym={`supportUs-follow`}
                 >
@@ -138,7 +137,7 @@ class __SupportUsPage extends React.Component {
                 <div className="my-2"></div>
 
                 <Button
-                  className="btn-success btn-icon-split"
+                  className="btn-warning btn-icon-split"
                   onClick={this.likeUs}
                   ym={`supportUs-like`}
                 >
@@ -159,7 +158,7 @@ class __SupportUsPage extends React.Component {
               </div>
               <div className="card-body">
                 <p>Just other links that you'd like to like, follow, donate, inspect, love, hate, ... you name it. Enjoy!</p>
-                <a href="https://twitter.com/caffeinum" className="btn btn-primary btn-icon-split" target="_blank">
+                <a href="https://twitter.com/caffeinum" className="btn btn-warning btn-icon-split" target="_blank">
                   <span className="icon text-white-50">
                     <i className="fab fa-twitter"></i>
                   </span>
@@ -168,7 +167,7 @@ class __SupportUsPage extends React.Component {
 
                 <div className="my-2"></div>
 
-                <a href="https://buymeacoff.ee/okhlopkov" className="btn btn-warning btn-icon-split" target="_blank">
+                <a href="https://buymeacoff.ee/okhlopkov" className="btn btn-primary btn-icon-split" target="_blank">
                   <span className="icon text-white-50">
                     <i className="fas fa-coffee"></i>
                   </span>
