@@ -1,4 +1,4 @@
-window.SKIP_PROBABILITY = 0
+window.SKIP_PROBABILITY = 0.1
 
 const scripts = {
 
@@ -121,9 +121,10 @@ const scripts = {
     isPRO: true,
     params: [
       { name: 'hashtag', type: 'text', labelText: 'Hashtag', prefix: '#', defaultValue: 'cats' },
-      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,3,10,20,50,200,Infinity] },
+      { name: 'nPhotos', type: 'number', labelText: 'Number of photos', values: [1,3,10,20,50,200,Infinity], defaultValue: Infinity },
+      { name: 'randomSkip', type: 'checkbox', labelText: 'Randomly skip 10% photos' },
     ],
-    run: async ({ hashtag, nPhotos }, printLog = console.log) => {
+    run: async ({ hashtag, nPhotos, randomSkip }, printLog = console.log) => {
       if (!hashtag) {
         throw new Error(`Empty hashtag field!`)
       }
@@ -156,9 +157,9 @@ const scripts = {
             return false
           }
 
-          const skip_prob = window.SKIP_PROBABILITY || 0
+          const skip_prob = window.SKIP_PROBABILITY || 0.1
 
-          if (Math.random() < skip_prob) {
+          if (randomSkip && Math.random() < skip_prob) {
             printLog(`Skipping ${index} ${instagramUrl(item)} : Random skip ${Math.round(skip_prob * 100)}% (bad idea? Send us feedback @instabotproject)`)
             return false
           }
