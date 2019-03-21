@@ -1,10 +1,12 @@
 # Gram Up!
 
-<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">
+[<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
 
 ## Automate your Instagram with your browser!
 
 > Yes, we moved [Instabot](https://github.com/instagrambot/instabot) to the browser. No coding skills needed!
+>
+> [Download](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
 
 ## Features
 
