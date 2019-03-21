@@ -1,3 +1,5 @@
+window.SKIP_PROBABILITY = 0
+
 const scripts = {
 
   test: {
@@ -151,6 +153,13 @@ const scripts = {
 
           if (item.has_liked) {
             printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
+            return false
+          }
+
+          const skip_prob = window.SKIP_PROBABILITY || 0
+
+          if (Math.random() < skip_prob) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Random skip ${Math.round(skip_prob * 100)}% (bad idea? Send us feedback @instabotproject)`)
             return false
           }
 
