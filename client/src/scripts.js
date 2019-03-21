@@ -136,8 +136,8 @@ const scripts = {
 
       // Phase 2: pages to list
       const items = new Lazy(feed)
-        .peek((page, index) => printLog(`Page ${index}: Fetched ${page.num_results} items.`))
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .peek((page, index) => printLog(`Page ${index}: Fetched ${page.num_results} items.`))
         .map(page => makeGenerator(page.items))
         .flat()
 
@@ -157,10 +157,10 @@ const scripts = {
           return true
         })
         .take(nPhotos)
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
         .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
         .map(item => instagram.request({ method: 'like', params: [item.id] }))
         .peek(({ status }) => printLog(status, false))
-        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
       // Phase 4: run. if nPhotos is given, take only that much
       const results = await liked.unwrap({ accumulate: true })
@@ -182,6 +182,56 @@ const scripts = {
     ],
     run: async ({ username, nPhotos } = {}, printLog = console.log) => {
       return likePhotosByUsername(username, nPhotos, printLog)
+    }
+  },
+
+  ultimate_like: {
+    name: 'Ultimate Liker',
+    description: `
+      Set up the will run FOREVER! Stop other tasks before running.
+      It will like all the media from given accounts and hashtags.
+    `,
+    params: [
+      {
+        name: 'usernames',
+        type: 'text',
+        labelText: 'List of usernames, comma separated',
+        defaultValue: 'ohld,caffeinum',
+      },
+      {
+        name: 'hashtags',
+        type: 'text',
+        labelText: 'List of hashtags, comma separated',
+        defaultValue: 'cats,dogs,pups',
+      },
+      {
+        name: 'startEveryMinutes',
+        type: 'text',
+        labelText: '',
+        defaultValue: '60',
+      },
+    ],
+    run: async ({ usernames, hashtags } = {}, printLog = console.log) => {
+      const parseCommaArray = (str) => str.replace(/\s#@/g, '').split(',')
+
+      const _usernames = parseCommaArray(usernames)
+      const _hashtags = parseCommaArray(hashtags)
+
+      // Phase 1: set up feed generators
+      const user_feed = _usernames.map(user => instagram.page_generator({
+        method: 'get_user_info',
+        params: [ user ]
+      }))
+
+      const hashtag_feed = _hashtags.map(hashtag => instagram.page_generator({
+        method: 'get_hashtag_feed',
+        params: [ hashtag ]
+      }))
+
+
+
+
+      return
     }
   },
 
