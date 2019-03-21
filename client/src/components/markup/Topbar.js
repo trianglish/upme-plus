@@ -125,11 +125,11 @@ const __Topbar = (props) => (
                 <i className="fab fa-instagram fa-md fa-fw mr-2 text-gray-400"></i>
                 Your Instagram
               </a>
-              {/* <a className="dropdown-item" href="#">
-                <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                Settings
+              <a className="dropdown-item" href="https://chrome.google.com/webstore/detail/gram-up/njonkbhnmmjgancfbncekpgkmidhbbpo">
+                <i className="fab fa-chrome fa-sm fa-fw mr-2 text-gray-400"></i>
+                Rate Extension
               </a>
-              <a className="dropdown-item" href="#">
+              {/* <a className="dropdown-item" href="#">
                 <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                 Activity Log
               </a>
