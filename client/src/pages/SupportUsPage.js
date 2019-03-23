@@ -86,7 +86,7 @@ class __SupportUsPage extends React.Component {
 
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="">
-                    <a className="btn btn-lg btn-success" href="http://paypal.me/okhlopkov" target="_blank">
+                    <a className="btn btn-lg btn-success" href="http://paypal.me/okhlopkov/300" target="_blank">
                       <span className="text">Paypal: 5$/month</span>
                     </a>
                   </div>
