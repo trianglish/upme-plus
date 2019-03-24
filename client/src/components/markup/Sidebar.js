@@ -141,10 +141,17 @@ const Sidebar = () => (
 
     {/* <!-- Nav Item -   --> */}
     <li className="nav-item">
-        <a className="nav-link" href="https://github.com/instagrambot/web#installing-extension" target="_blank">
-          <i className="fas fa-fw fa-question"></i>
-          <span>FAQ</span></a>
-      </li>
+      <a className="nav-link" href="https://paypal.me/okhlopkov/300" target="_blank">
+        <i className="fas fa-fw fa-donate"></i>
+        <span>Donate</span></a>
+    </li>
+
+    {/* <!-- Nav Item -   --> */}
+    {/* <li className="nav-item">
+      <a className="nav-link" href="https://github.com/instagrambot/web#installing-extension" target="_blank">
+        <i className="fas fa-fw fa-question"></i>
+        <span>FAQ</span></a>
+    </li> */}
 
     {/* <!-- Divider  --> */}
     <hr className="sidebar-divider d-none d-md-block" />
