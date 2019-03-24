@@ -430,13 +430,13 @@ const scripts = {
   },
 
   find_nondual_followings: {
-    name: 'Load users who you follow and who doesnt follow back',
+    name: 'Show users who you follow and who doesnt follow back',
     params: [
       {
         name: 'doUnfollow',
         type: 'checkbox',
         prefix: '',
-        labelText: 'Unfollow them automatically ???',
+        labelText: 'Unfollow them automatically?',
         defaultValue: false,
       },
     ],
