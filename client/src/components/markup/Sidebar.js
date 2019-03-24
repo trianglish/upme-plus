@@ -72,6 +72,19 @@ const Sidebar = () => (
       </div>
     </li>
 
+    {/* <!-- Nav Item - Unfollow Collapse Menu  --> */}
+    <li className="nav-item">
+      <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUnfollow" aria-expanded="true" aria-controls="collapseUnfollow">
+        <i className="fas fa-fw fa-user"></i>
+        <span>Unfollow</span>
+      </a>
+      <div id="collapseUnfollow" className="collapse" aria-labelledby="headingUnollow" data-parent="#accordionSidebar">
+        <div className="bg-white py-2 collapse-inner rounded">
+          <Link className="collapse-item" to="/script/find_nondual_followings">Non-mutual followers</Link>
+        </div>
+      </div>
+    </li>
+
 
     {/* <!-- Nav Item - Download Collapse Menu  --> */}
     <li className="nav-item">
@@ -101,6 +114,14 @@ const Sidebar = () => (
       <Link className="nav-link" to="/support-us">
         <i className="fas fa-fw fa-grin-hearts"></i>
         <span>Support us</span>
+      </Link>
+    </li>
+
+    {/* <!-- Nav Item -   --> */}
+    <li className="nav-item">
+      <Link className="nav-link" to="https://chrome.google.com/webstore/detail/gram-up/njonkbhnmmjgancfbncekpgkmidhbbpo" target="_blank">
+        <i className="fab fa-fw fa-chrome"></i>
+        <span>Rate extension</span>
       </Link>
     </li>
 
