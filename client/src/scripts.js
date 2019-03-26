@@ -575,7 +575,7 @@ const scripts = {
           .peek(user => printLog(`user: @${user.username}: `))
           .map(user =>
               instagram.request({ method: 'get_user_info', params: [ user.pk ]})
-                // .then(({ user }) => user)
+                .then(({ user }) => user)
           )
           .peek(user => printLog(`ok`, false))
           .peek(user => console.log('user', user))
