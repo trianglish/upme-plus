@@ -562,7 +562,43 @@ const scripts = {
         localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
 
         return
+      } else {
+        const followers_container = users
+          .filter((item, index) => {
+            if (instagram.isStopped) {
+              printLog(`Skipping ${index} ${item.username}: Request was killed`)
+              return false
+            }
+
+            return true
+          })
+          .peek(user => printLog(`user: @${user.username}: `))
+          .map(user =>
+              instagram.request({ method: 'get_user_info', params: [ user.pk ]})
+                // .then(({ user }) => user)
+          )
+          .peek(user => printLog(`ok`, false))
+          .peek(user => console.log('user', user))
+          .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+
+        const followers = await followers_container.unwrap()
+
+        printLog(`Followers for @${username} loaded: ${followers.length}`)
+        printLog(`You can access them in window.followers or download using`)
+        // printLog(`\t\tdownloadCSV()`)
+        // printLog(`or`)
+        printLog(`\t\tdownload('followers_${username}.csv', getCSV(followers))`)
+
+        window.followers = followers
+        window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
+
+        downloadCSV()
+
+        localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
+
+        return
       }
+
 
       const followers_paging_generator = instagram.request_generator({ method: 'get_user_followers', params: [ pk ] })
 
