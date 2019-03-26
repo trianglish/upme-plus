@@ -607,8 +607,12 @@ const scripts = {
       window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
 
       downloadCSV()
-      
-      localStorage.setItem(`followers_${username}`, followers)
+
+      try {
+        localStorage.setItem(`followers_${username}`, followers)
+      } catch (err) {
+        printLog(`Cant save to localStorage: file too big.`)
+      }
 
     },
   },
