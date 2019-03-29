@@ -522,11 +522,18 @@ const scripts = {
         name: 'isFullInfo',
         type: 'checkbox',
         prefix: '',
-        labelText: 'Download full profile for each followers (takes much longer)',
+        labelText: 'Download full profile for each follower (takes much longer)',
+        defaultValue: false,
+      },
+      {
+        name: 'shouldFindEmail',
+        type: 'checkbox',
+        prefix: '',
+        labelText: 'Fetch emails (works only if Download full profile is activated)',
         defaultValue: false,
       },
     ],
-    run: async ({ username, isFullInfo = false }, printLog = console.log, timeout) => {
+    run: async ({ username, isFullInfo = false, shouldFindEmail = false }, printLog = console.log, timeout) => {
       const { user: { pk } } = await instagram.request({ method: 'get_user_info', params: [username] }, true)
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
@@ -544,7 +551,6 @@ const scripts = {
         .map(page => makeGenerator(page.users))
         .flat()
 
-
       if (!isFullInfo) {
         const followers = await users.unwrap({ accumulate: true })
 
@@ -559,10 +565,26 @@ const scripts = {
 
         downloadCSV()
 
-        localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
+        try {
+          localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
+        } catch (err) {
+          printLog(`Cant save to localStorage: file too big.`)
+        }
 
         return
       } else {
+        const populateEmail = user => {
+          const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
+
+          const [ email, ...others ] = Object.values(user).filter(value => typeof value == 'string').flatMap(value => value.match(emailRegexp) || [])
+          console.log('found emails (using only first):', [ email, ...others ])
+
+          return {
+            ...user,
+            email,
+          }
+        }
+
         const followers_container = users
           .filter((item, index) => {
             if (instagram.isStopped) {
@@ -578,6 +600,8 @@ const scripts = {
                 .then(({ user }) => user)
           )
           .peek(user => printLog(`ok`, false))
+          .map(user => (shouldFindEmail ? populateEmail(user) : user))
+          .peek(user => shouldFindEmail && printLog(`, email: ${user.email || 'none'}`, false))
           .peek(user => console.log('user', user))
           .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
@@ -594,60 +618,12 @@ const scripts = {
 
         downloadCSV()
 
-        localStorage.setItem(`followers_${username}`, JSON.stringify(followers))
-
-        return
-      }
-
-
-      const followers_paging_generator = instagram.request_generator({ method: 'get_user_followers', params: [ pk ] })
-
-      const safe_paging = safeGenerator(followers_paging_generator, printLog, timeout)
-
-      const full_follower_list = mapGenerator(safe_paging, async (followers, batchIndex) => {
-        printLog(`Batch ${batchIndex+1} of followers for @${username} loaded: ${followers.length}`)
-
-        if (!isFullInfo) {
-          return followers
+        try {
+          localStorage.setItem(`followers_${username}`, followers)
+        } catch (err) {
+          printLog(`Cant save to localStorage: file too big.`)
         }
 
-        const safe_batch = safeGenerator(makeGenerator(followers), printLog, timeout)
-
-        const batch = await unwrapAccumulateGenerator(mapGenerator(safe_batch, async (follower, index) => {
-          const { user } = await instagram.request({ method: 'get_user_info', params: [follower.pk]})
-
-          printLog(`Batch ${batchIndex+1}: ${index+1}/${followers.length}: Loaded info for @${user.username}`)
-
-          return user
-        }))
-        // const users = mapGenerator(infos, ({ user }) => user)
-        //
-        // const and_print = watchGenerator(users, user => printLog(`Loaded info for @${user.username}`))
-
-        // return unwrapAccumulateGenerator(and_print)
-
-        printLog(`Loaded batch. ${batch.length}`)
-
-        return batch
-      })
-
-      const followers = await unwrapGenerator(reduceGenerator(full_follower_list, (arr, batch) => [ ...arr, ...batch ], []))
-
-      printLog(`Followers for @${username} loaded: ${followers.length}`)
-      printLog(`You can access them in window.followers or download using`)
-      // printLog(`\t\tdownloadCSV()`)
-      // printLog(`or`)
-      printLog(`\t\tdownload('followers_${username}.csv', getCSV(followers))`)
-
-      window.followers = followers
-      window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
-
-      downloadCSV()
-
-      try {
-        localStorage.setItem(`followers_${username}`, followers)
-      } catch (err) {
-        printLog(`Cant save to localStorage: file too big.`)
       }
 
     },
