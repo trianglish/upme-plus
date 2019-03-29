@@ -522,18 +522,11 @@ const scripts = {
         name: 'isFullInfo',
         type: 'checkbox',
         prefix: '',
-        labelText: 'Download full profile for each follower (takes much longer)',
-        defaultValue: false,
-      },
-      {
-        name: 'shouldFindEmail',
-        type: 'checkbox',
-        prefix: '',
-        labelText: 'Fetch emails (works only if Download full profile is activated)',
+        labelText: 'Download full profile for each follower, including email, if there is one (takes much longer)',
         defaultValue: false,
       },
     ],
-    run: async ({ username, isFullInfo = false, shouldFindEmail = false }, printLog = console.log, timeout) => {
+    run: async ({ username, isFullInfo = false }, printLog = console.log, timeout) => {
       const { user: { pk } } = await instagram.request({ method: 'get_user_info', params: [username] }, true)
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
@@ -600,8 +593,8 @@ const scripts = {
                 .then(({ user }) => user)
           )
           .peek(user => printLog(`ok`, false))
-          .map(user => (shouldFindEmail ? populateEmail(user) : user))
-          .peek(user => shouldFindEmail && printLog(`, email: ${user.email || 'none'}`, false))
+          .map(user => populateEmail(user))
+          .peek(user => printLog(`, email: ${user.email || 'none'}`, false))
           .peek(user => console.log('user', user))
           .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
 
