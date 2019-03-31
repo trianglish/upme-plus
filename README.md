@@ -1,6 +1,8 @@
 # [Gram Up!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
 
 [<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+<img width="200" alt="Instagrambot Gif" src="https://raw.githubusercontent.com/instagrambot/web/master/client/img/gif.gif">
+
 
 ## Automate your Instagram with your browser!
 
