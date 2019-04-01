@@ -15,7 +15,8 @@ const whenLogged = async () => {
 }
 
 const openControlPanel = () => {
-  window.open(`https://instagrambot.github.io/web`)
+  const WEBSITE_URL = `https://insta.gramup.me/`
+  window.open(WEBSITE_URL)
 }
 
 const updateView = async () => {
