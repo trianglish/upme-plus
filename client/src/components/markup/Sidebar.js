@@ -119,7 +119,7 @@ const Sidebar = () => (
 
     {/* <!-- Nav Item -   --> */}
     <li className="nav-item">
-      <Link className="nav-link" to="https://chrome.google.com/webstore/detail/gram-up/njonkbhnmmjgancfbncekpgkmidhbbpo" target="_blank">
+      <Link className="nav-link" href="https://chrome.google.com/webstore/detail/gram-up/njonkbhnmmjgancfbncekpgkmidhbbpo" target="_blank">
         <i className="fab fa-fw fa-chrome"></i>
         <span>Rate extension</span>
       </Link>
