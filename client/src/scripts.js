@@ -196,7 +196,7 @@ const scripts = {
     `,
     isPRO: true,
     params: [
-      { name: 'username', type: 'text', labelText: 'Username', prefix: '@', defaultValue: 'mlmyllyoja' },
+      { name: 'username', type: 'text', labelText: 'Username', prefix: '@', defaultValue: 'ohld' },
       { name: 'nPhotos', type: 'number', labelText: 'Total number of photos to like', values: [1,3,10,20,50,200,Infinity], defaultValue: Infinity },
       { name: 'nLikePhotos', type: 'number', labelText: 'Number of photos to like for each user', values: [1,2,3], defaultValue: 3 },
       { name: 'randomSkip', type: 'checkbox', labelText: 'Randomly skip 10% photos' },
