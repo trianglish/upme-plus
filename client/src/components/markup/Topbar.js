@@ -46,7 +46,6 @@ class __Topbar extends React.Component {
       xhr.send();
     }
 
-    debugger;
     try {
       var targetElement = this.codefundAdRef;
 
