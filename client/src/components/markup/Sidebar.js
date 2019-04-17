@@ -48,8 +48,12 @@ const Sidebar = () => (
             Like Hashtag
             <i className="fas fa-fw fa-star"></i>
           </Link>
-          <Link className="collapse-item" to="/script/like_by_user">
-            Fans
+          <Link className="collapse-item" to="/script/like_user_fans">
+            User Fans
+            <i className="fas fa-fw fa-star"></i>
+          </Link>
+          <Link className="collapse-item" to="/script/like_hashtag_fans">
+            Hashtag Fans
             <i className="fas fa-fw fa-star"></i>
           </Link>
 

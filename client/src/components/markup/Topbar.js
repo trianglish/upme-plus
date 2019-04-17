@@ -13,6 +13,14 @@ const __Topbar = (props) => (
     {/* <!-- Topbar Navbar  --> */}
     <ul className="navbar-nav ml-auto">
 
+      <li className="nav-item">
+        <span className="nav-link">
+          <div id="codefund" className="">CODEFUND AD</div>
+        </span>
+      </li>
+
+      <div className="topbar-divider d-none d-sm-block"></div>
+
       {props.isLoading && (
         <li className="nav-item dropdown no-arrow">
           <span className="nav-link">
