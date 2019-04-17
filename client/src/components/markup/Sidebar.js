@@ -40,11 +40,16 @@ const Sidebar = () => (
       <div id="collapseLike" className="collapse" aria-labelledby="headingLike" data-parent="#accordionSidebar">
         <div className="bg-white py-2 collapse-inner rounded">
           {/* <!-- <h6 className="collapse-header">Custom Components:</h6>  --> */}
-          <Link className="collapse-item" to="/like/hashtag">Hashtag</Link>
           <Link className="collapse-item" to="/script/like_user">User Media</Link>
           <Link className="collapse-item" to="/script/like_followers">Followers</Link>
+          <Link className="collapse-item" to="/script/like_my_feed">Your Feed</Link>
+          <Link className="collapse-item" to="/script/like_location">Location</Link>
           <Link className="collapse-item" to="/script/like_by_hashtag">
-            Infinity Like Hashtag
+            Like Hashtag
+            <i className="fas fa-fw fa-star"></i>
+          </Link>
+          <Link className="collapse-item" to="/script/like_by_user">
+            Fans
             <i className="fas fa-fw fa-star"></i>
           </Link>
 
@@ -97,6 +102,21 @@ const Sidebar = () => (
           {/* <!-- <h6 className="collapse-header">Custom Utilities:</h6>  --> */}
           <Link className="collapse-item" to="/script/load_followers">Followers</Link>
           <Link className="collapse-item" to="/script/load_stories">Stories</Link>
+        </div>
+      </div>
+    </li>
+
+    {/* <!-- Nav Item - Comment Collapse Menu  --> */}
+    <li className="nav-item">
+      <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseComment" aria-expanded="true" aria-controls="collapseDownload">
+        <i className="fas fa-fw fa-file-download"></i>
+        <span>Comment</span>
+      </a>
+      <div id="collapseComment" className="collapse" aria-labelledby="headingDownload" data-parent="#accordionSidebar">
+        <div className="bg-white py-2 collapse-inner rounded">
+          {/* <!-- <h6 className="collapse-header">Custom Utilities:</h6>  --> */}
+          <Link className="collapse-item" to="/script/comment_by_hashtag">Hashtag</Link>
+          <Link className="collapse-item" to="/script/comment_by_user">User</Link>
         </div>
       </div>
     </li>
