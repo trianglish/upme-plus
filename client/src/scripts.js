@@ -239,7 +239,7 @@ const scripts = {
 
       const photos = fans
         .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
-        .peek((user, index) => printLog(`Fan: @${user.username} ${instagramUrl(user)}`))
+        .peek((user, index) => printLog(`Fan: @${user.username} ${getURL(user)}`))
         .map(user => instagram.request({ method: 'get_user_feed', params: [user.pk] }))
         .map(user_feed => makeGenerator(user_feed.items.slice(0, nLikePhotos)))
         .flat()
