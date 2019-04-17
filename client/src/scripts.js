@@ -607,7 +607,11 @@ const scripts = {
         printLog(`\t\tdownload('followers_${username}.csv', getCSV(followers))`)
 
         window.followers = followers
-        window.downloadCSV = () => download(`followers_${username}.csv`, getCSV(followers))
+        window.downloadCSV = (chunk_size = 1, arr = followers) => {
+          for (let page = 0; page <= arr.length / chunk_size; page++) {
+            download(`followers_${username}_page_${page}.csv`, getCSV(arr.slice( page * chunk_size, (page + 1) * chunk_size )))
+          }
+        }
 
         downloadCSV()
 
