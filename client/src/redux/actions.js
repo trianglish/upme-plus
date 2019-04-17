@@ -84,8 +84,8 @@ const showErrorMessage = (error) => {
 }
 
 const sendMetrikaEvent = (target, data = {}) => {
-  console.log('ym', 52144714, 'reachGoal', target, data)
-  ym(52144714, 'reachGoal', target, data)
+  console.log('ym', 53083903, 'reachGoal', target, data)
+  ym(53083903, 'reachGoal', target, data)
 
   return {
     type: 'METRIKA',
