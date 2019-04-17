@@ -184,6 +184,107 @@ const scripts = {
     }
   },
 
+  like_by_user: {
+    name: 'Like photos from user fans',
+    description: `
+    Will like people who liked given user, sleeping ~5 sec between likes.
+
+    Infinity like available! Launch and leave a tab open.
+
+    WARNING!
+    Users report that running Infinity like for 24 hours can get you banned. We don't recommend running it for more than 6-8 hours then.
+    `,
+    isPRO: true,
+    params: [
+      { name: 'username', type: 'text', labelText: 'Username', prefix: '@', defaultValue: 'mlmyllyoja' },
+      { name: 'nPhotos', type: 'number', labelText: 'Total number of photos to like', values: [1,3,10,20,50,200,Infinity], defaultValue: Infinity },
+      { name: 'nLikePhotos', type: 'number', labelText: 'Number of photos to like for each user', values: [1,2,3], defaultValue: 3 },
+      { name: 'randomSkip', type: 'checkbox', labelText: 'Randomly skip 10% photos' },
+    ],
+    run: async ({ username, nPhotos, nLikePhotos, randomSkip }, printLog = console.log) => {
+      if (!username) {
+        throw new Error(`Empty hashtag field!`)
+      }
+
+      printLog(`Fetching photos by user: @${username} ... `)
+
+      const { user } = await instagram.request({
+        method: 'get_user_info',
+        params: [username]
+      })
+
+      // Phase 1: set up feed generator
+      const feed = instagram.page_generator({
+        method: 'get_user_feed',
+        params: [ user.pk ]
+      })
+
+      // Phase 2: pages to list
+      const items = new Lazy(feed)
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .peek((page, index) => printLog(`Page ${index}: Fetched ${page.num_results} photos.`))
+        .map(page => makeGenerator(page.items))
+        .flat()
+
+      // Phase 3: find likers from each photo
+      const fans = items
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .map(item => instagram.page_generator({ method: 'get_media_likers', params: [item.id] }))
+        .map(feed => new Lazy(feed)
+          .map(page => makeGenerator(page.users))
+          .flat())
+        .flat()
+
+      // Phase 4: fetch fans' photos
+
+      const photos = fans
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .peek((user, index) => printLog(`Fan: @${user.username} ${instagramUrl(user)}`))
+        .map(user => instagram.request({ method: 'get_user_feed', params: [user.pk] }))
+        .map(user_feed => makeGenerator(user_feed.items.slice(0, nLikePhotos)))
+        .flat()
+
+      // Phase 5: like!
+
+      const liked = photos
+        .filter((item, index) => {
+          if (instagram.isStopped) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Request was killed`)
+            return false
+          }
+
+          if (item.has_liked) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Already liked`)
+            return false
+          }
+
+          const skip_prob = window.SKIP_PROBABILITY || 0.1
+
+          if (randomSkip && Math.random() < skip_prob) {
+            printLog(`Skipping ${index} ${instagramUrl(item)} : Random skip ${Math.round(skip_prob * 100)}% (bad idea? Send us feedback @instabotproject)`)
+            return false
+          }
+
+          return true
+        })
+        .take(nPhotos)
+        .sleep(sec => printLog(`Sleeping ${sec.toFixed(1)} sec`))
+        .peek((item, index) => printLog(`Liking item ${index}, ${instagramUrl(item)} ... `))
+        .map(item => instagram.request({ method: 'like', params: [item.id] }))
+        .peek(({ status }) => printLog(status, false))
+
+      // Phase 4: run. if nPhotos is given, take only that much
+      const results = await liked.unwrap({ accumulate: true })
+
+      printLog(`FINISHED,
+        Total requests: ${results.length},
+        Success: ${results.filter(item => item.status == 'ok').length} items,
+        Errors: ${results.filter(item => item.status == 'error').length} items`)
+
+      return results
+    }
+  },
+
   like_user: {
     name: 'Like User Media',
     params: [
