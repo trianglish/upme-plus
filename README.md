@@ -1,8 +1,12 @@
-# [Gram Up!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+# [Gram Up!](https://gramup.me/)
 
 [<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
 <img width="200" alt="Instagrambot Gif" src="https://raw.githubusercontent.com/instagrambot/web/master/client/img/gif.gif">
 
+
+# [Download the extension!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+
+----
 
 ## Automate your Instagram with your browser!
 
@@ -17,9 +21,11 @@
 - Follow users' followers
 - Follow users' followings
 - Follow users' who posted to hashtag
-- Download users' followers
+- Follow likers of a hashtag or a user
+- Comment medias by hashtag
+- Download users' followers and stories
 - Stop any task at any moment – results will still be available
-- ... And many more are coming! Drop us a line into Telegram: https://t.me/instabotproject
+- ... And many more are coming! Drop us a line into [Telegram](https://t.me/instabotproject)
 
 ## Minimal Requirements
 
