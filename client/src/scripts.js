@@ -546,6 +546,10 @@ const scripts = {
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
 
+      if (!confirm(`You sure you want to unfollow automatically?`)) {
+        doUnfollow = false
+      }
+
       // Phase 1: set up generator
       const following_list = instagram.page_generator({
         method: 'get_user_followings',
@@ -595,7 +599,7 @@ const scripts = {
       non_dual
         .map(user => printLog(`@${user.username}: https://instagram.com/${user.username}`))
 
-      if (doUnfollow && confirm(`You sure you want to unfollow ${non_dual.length} people?`)) {
+      if (doUnfollow) {
         const uf = new Lazy.from(non_dual.map(({ pk, username }) => ({ pk, username })))
           .peek(user => printLog(`Unfollow ${getURL(user)}`))
           .map(user => instagram.request({ method: 'unfollow', params: [ user.pk ] }))
