@@ -546,7 +546,7 @@ const scripts = {
 
       if (!pk || isNaN(pk)) throw new Error(`No user id: ${pk}`)
 
-      if (!confirm(`You sure you want to unfollow automatically?`)) {
+      if (doUnfollow && !confirm(`You sure you want to unfollow automatically?`)) {
         doUnfollow = false
       }
 
