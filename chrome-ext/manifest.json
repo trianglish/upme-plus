@@ -1,6 +1,6 @@
 {
   "name": "Gram Up!",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Extension helps you Instagram effectively!",
   "icons": {
     "192": "images/icon.png"
@@ -39,6 +39,7 @@
       "http://localhost/*",
       "https://insta.gramup.me/*",
       "https://api.gramup.me/*",
+      "https://dm.gramup.me/*",
       "https://gramup.me/*",
       "https://instagrambot.github.io/*"
     ]
