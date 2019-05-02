@@ -1,7 +1,8 @@
 {
-  "name": "instaweb",
+  "name": "gram-up",
   "version": "0.1.0",
-  "description": "",
+  "repository": "https://github.com/instagrambot/GramUp",
+  "description": "Smart Automation for your Instagram inside your browser for free. https://gramup.me",
   "main": "src/index.js",
   "dependencies": {
     "axios": "^0.18.0",
