@@ -1,14 +1,27 @@
-# [Gram Up!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+# [Gram Up!](https://gramup.me/)
+
+Gram Up - We Automate boring Instagram stuff for you like mass liking, commenting, parsing etc. 
 
 [<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
-<img width="200" alt="Instagrambot Gif" src="https://raw.githubusercontent.com/instagrambot/web/master/client/img/gif.gif">
+<img width="200" alt="Instagrambot Gif" src="https://raw.githubusercontent.com/instagrambot/gramup/master/client/img/gif.gif">
 
+# [Download the extension!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+
+## [Video demo](https://www.youtube.com/watch?v=CPFkPjB0lzQ)
+
+<a href="https://www.producthunt.com/posts/gram-up?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-gram-up" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=152224&theme=light" alt="Gram Up! - Automate boring Instagram stuff with your browser for free. | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+
+----
 
 ## Automate your Instagram with your browser!
 
-> Yes, we moved [Instabot](https://github.com/instagrambot/instabot) to the browser. No coding skills needed!
->
-> [Download](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+> Yes, we moved [Instabot](https://github.com/instagrambot/instabot) to the browser. No coding skills needed! Just our [extension](https://get.gramup.me).
+
+There are a lot of similar products but you have to give them your Instagram credentials to allow them perform in-app activity for you. As a result you can eventually found yourself being subscribed to unknown people.
+
+We found a hack that allowed to insert all automation scripts into a browsers. As a result, we don’t need a backend and your private data - your passwords never left your browser. And we made this tool completely free. Miracle? Reality! 
+
+If you find our free tool useful or just want more features available, please donate [Paypal](https://paypal.me/okhlopkov/500) or become our [Patron](https://patreon.com/join/morejust).
 
 ## Features
 
@@ -17,9 +30,11 @@
 - Follow users' followers
 - Follow users' followings
 - Follow users' who posted to hashtag
-- Download users' followers
+- Follow likers of a hashtag or a user
+- Comment medias by hashtag
+- Download users' followers and stories
 - Stop any task at any moment – results will still be available
-- ... And many more are coming! Drop us a line into Telegram: https://t.me/instabotproject
+- ... And many more are coming! Drop us a line into [Telegram](https://t.me/instabotproject)
 
 ## Minimal Requirements
 
@@ -33,10 +48,9 @@ While we are in early alpha version, to use our service you should fit these req
 ## How to start automating your Instagram
 
 1. Install and update your [Google Chrome browser](https://chrome.google.com)
-2. Install our extension from the [Official store](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+2. Install our extension from the [Official store](https://get.gramup.me/)
 3. Press our pink icon and login with your Instagram account
-<img width="200" alt="Developer mode" src="https://user-images.githubusercontent.com/1909384/53411632-0ae4d980-39d8-11e9-8a2a-c313faa7495b.png">
-4. Open https://instagrambot.github.io/web/
+4. Open [Dashboard](https://insta.gramup.me/)
 5. Enjoy!
 
 
@@ -54,7 +68,7 @@ During the work, task prints all the relevant information to the log. If one of 
 
 If some error happens and all the requests fail, you can stop the task manually. You'll need to wait until it will unwind to it's end, though. However, don't worry, **the data you've already downloaded should be safe and sound.**
 
-If you feel the need for some custom task, you can drop us a feature request into [Issues](https://github.com/instagrambot/web/issues/new), [Telegram](https://t.me/instabotproject) or contribute here: [build custom task (Javascript)](https://github.com/instagrambot/web/blob/master/client/src/scripts.js).
+If you feel the need for some custom task, you can drop us a feature request into [Issues](https://github.com/instagrambot/gramup/issues/new), [Telegram](https://t.me/instabotproject) or contribute here: [build custom task (Javascript)](https://github.com/instagrambot/gramup/blob/master/client/src/scripts.js).
 
 ## Updating the extension
 
@@ -73,7 +87,7 @@ If you passed all steps in Installation guide and you sure that you satisfied al
 3. Logout and login again in the extension
 4. Delete extension and reinstall it
 
-If it still fails, please follow [the guide](https://github.com/instagrambot/web/issues/1) to provide us with all data we may need to fix this. Send all screenshots to [GitHub Issues](https://github.com/instagrambot/web/issues/new). Thanks!
+If it still fails, please follow [the guide](https://github.com/instagrambot/gramup/issues/1) to provide us with all data we may need to fix this. Send all screenshots to [GitHub Issues](https://github.com/instagrambot/gramup/issues/new). Thanks!
 
 
 # For developers Only
@@ -97,7 +111,7 @@ npm run build
 
 
 ----------
-*authors: [@caffeinum](https://github.com/caffeinum), [@ohld](https://github.com/ohld).*
+*authors: [@caffeinum](https://github.com/caffeinum), [@ohld](https://github.com/ohld). Love [Morejust](https://morejust.foundation).*
 
 <a href="https://www.buymeacoffee.com/okhlopkov" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 ----------

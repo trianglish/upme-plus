@@ -22,6 +22,7 @@
   },
   "scripts": {
     "dev": "webpack --watch --mode=development --output chrome-ext/background/main.js",
+    "start": "open http://localhost:8000 && python -m SimpleHTTPServer",
     "build": "webpack --mode=production --output chrome-ext/background/main.js",
     "build:chrome": "npm run build && npm run zip",
     "postbuild:chrome": "npm run open-chrome-store",

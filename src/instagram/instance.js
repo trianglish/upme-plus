@@ -47,6 +47,13 @@ export default class Instagram {
     // }
   }
 
+  async default_data () {
+    return {
+      '_uuid': this.uuid,
+      '_uid': this.user_id,
+    }
+  }
+
   async login(username, password, forceLogin = false) {
     if (this.is_logged_in && !forceLogin) {
       throw new Error(`Already logged in`)
@@ -92,7 +99,7 @@ export default class Instagram {
     const signed_data = generate_signature(data)
     print("Final POST DATA after signing:\n", signed_data)
 
-    const response = await this.send_request('accounts/login/', data, true)
+    const response = await this.send_request('accounts/login/', data, { doLogin: true })
 
     if (response['message'] == 'checkpoint_required') {
       // In case of 'suspicious activity'
@@ -102,12 +109,22 @@ export default class Instagram {
     return response
   }
 
-  async _request(endpoint, method = 'GET', post_data, extra_headers = {}) {
+  async _request(endpoint, method = 'GET', post_data, extra_headers = {}, { form = false } = {}) {
     const headers = prefixUnsecureHeaders({
       'User-Agent': this.user_agent,
       ...REQUEST_HEADERS,
       ...extra_headers,
     }, 'replace')
+
+    if (form) {
+      const bodyFormData = new FormData();
+
+      Object.keys(post_data).forEach(key => {
+        bodyFormData.set(key, post_data[key])
+      })
+
+      post_data = bodyFormData
+    }
 
     const response = await axios({
       url: API_URL + endpoint,
@@ -152,15 +169,15 @@ export default class Instagram {
     return false
   }
 
-  _get(endpoint, extra_headers = {}) {
-    return this._request(endpoint, 'GET', null, extra_headers)
+  _get(endpoint, extra_headers = {}, options = {}) {
+    return this._request(endpoint, 'GET', null, extra_headers, options)
   }
 
-  _post(endpoint, data, extra_headers = {}) {
-    return this._request(endpoint, 'POST', data, extra_headers)
+  _post(endpoint, data, extra_headers = {}, options = {}) {
+    return this._request(endpoint, 'POST', data, extra_headers, options)
   }
 
-  send_request(endpoint, data = null, doLogin = false) {
+  send_request(endpoint, data = null, { doLogin = false, with_signature = true, ...options } = {}) {
     if (!this.is_logged_in && !doLogin) {
       throw new Error(`Not logged in! Tried to call ${endpoint}`)
     }
@@ -169,11 +186,13 @@ export default class Instagram {
       console.warn(`'user_id' is undefined! Endpoints that need rank_token will not work. Try to relogin.`)
     }
 
+    const _data = with_signature ? generate_signature(data) : data
+
     try {
       if (data) {
-        return this._post(endpoint, generate_signature(data))
+        return this._post(endpoint, _data, {}, { ...options })
       } else {
-        return this._get(endpoint)
+        return this._get(endpoint, {}, { ...options })
       }
     } catch (err) {
       console.error(`Request failed:`, err, `Data:`, endpoint, data, )
