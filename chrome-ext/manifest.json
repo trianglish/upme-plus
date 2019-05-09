@@ -1,6 +1,7 @@
 {
-  "name": "Gram Up!",
-  "version": "1.4.2",
+  "name": "Gram Up! – Free Instagram Bot by Instabot",
+  "short_name": "Gram Up! Bot",
+  "version": "1.4.3",
   "description": "Extension helps you Instagram effectively!",
   "icons": {
     "192": "images/icon.png"
