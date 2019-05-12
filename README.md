@@ -1,6 +1,6 @@
 # [Gram Up!](https://gramup.me/)
 
-Gram Up - We Automate boring Instagram stuff for you like mass liking, commenting, parsing etc. 
+Gram Up - We Automate boring Instagram stuff for you. Start to get followers for free without any coding skills. 
 
 [<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
 <img width="200" alt="Instagrambot Gif" src="https://user-images.githubusercontent.com/5613295/57079066-41044980-6cf8-11e9-8c5d-1d2f8a1dcbc4.gif">
@@ -10,6 +10,9 @@ Gram Up - We Automate boring Instagram stuff for you like mass liking, commentin
 ## [Video demo](https://www.youtube.com/watch?v=CPFkPjB0lzQ)
 
 <a href="https://www.producthunt.com/posts/gram-up?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-gram-up" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=152224&theme=light" alt="Gram Up! - Automate boring Instagram stuff with your browser for free. | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+
+[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/okhlopkov/10)
+[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://patreon.com/join/morejust)
 
 ----
 
@@ -25,16 +28,14 @@ If you find our free tool useful or just want more features available, please do
 
 ## Features
 
-- Like posts by hashtag
-- Like posts by user
-- Follow users' followers
-- Follow users' followings
+- Like posts by hashtag, by user, by location
+- Follow users' followers, followees
 - Follow users' who posted to hashtag
 - Follow likers of a hashtag or a user
 - Comment medias by hashtag
 - Download users' followers and stories
 - Stop any task at any moment – results will still be available
-- ... And many more are coming! Drop us a line into [Telegram](https://t.me/instabotproject)
+- ... And many more are coming! Drop us a line into [Telegram](https://t.me/instabotproject) for feature request!
 
 ## Minimal Requirements
 
@@ -49,7 +50,7 @@ While we are in early alpha version, to use our service you should fit these req
 
 1. Install and update your [Google Chrome browser](https://chrome.google.com)
 2. Install our extension from the [Official store](https://get.gramup.me/)
-3. Press our pink icon and login with your Instagram account
+3. Press our pink extension icon and login with your Instagram account
 4. Open [Dashboard](https://insta.gramup.me/)
 5. Enjoy!
 
@@ -110,8 +111,15 @@ npm run build
 <img width="391" alt="Load unpacked button" src="https://user-images.githubusercontent.com/1909384/52903494-53a9cf00-322f-11e9-9c29-29540586cecb.png">
 
 
+# Final words
+
+Get free real instagram followers and free likes with our instagram bot like app. We've developed a really good growth strategies for you. Join now: https://get.gramup.me.
+
 ----------
 *authors: [@caffeinum](https://github.com/caffeinum), [@ohld](https://github.com/ohld). Love [Morejust](https://morejust.foundation).*
 
 <a href="https://www.buymeacoffee.com/okhlopkov" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+
+[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/okhlopkov/10)
+[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://patreon.com/join/morejust)
 ----------
