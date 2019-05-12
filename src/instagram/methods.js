@@ -183,3 +183,92 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
 
   return self.send_request(`direct_v2/threads/broadcast/${item_type}/`, _data, { with_signature: false, form: true })
 }
+
+
+const get_user_reel = (self, user_id) => {
+  url = `feed/user/${user_id}/reel_media/`.format()
+  return self.send_request(url)
+}
+
+const get_users_reel = async (self, user_ids) => {
+  /*
+  Input: user_ids - a list of user_id
+  Output: dictionary: user_id - stories data.
+  Basically, for each user output the same as after self.get_user_reel
+  */
+  const url = `feed/reels_media/`
+  const user_ids = user_ids.map(id => `${id}`)
+  const res = await self.send_request(url, { user_ids })
+
+  return (res && res.reels) ? res.reels : []
+}
+  //
+  // if (res) {
+  //   if (res.reels) {
+  //     return res.reels
+  //   } else {
+  //     return []
+  //   }
+  // } else {}
+  // if res:
+  //     if "reels" in self.last_json:
+  //         return self.last_json["reels"]
+  //     return []
+  // return []
+
+const see_reels = (self, reels) => {
+  /*
+  Input - the list of reels jsons
+  They can be aquired by using get_users_reel() or get_user_reel() methods
+  */
+  if (reels && !reels.join) {
+    reels = [reels]
+  }
+  //
+  // if not isinstance(reels, list):
+  //     reels = [reels]
+
+  const story_seen = {}
+  // now = int(time.time())
+  const now = Date.now()
+
+  for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
+      story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
+      story_seen[
+        `${story['id']}_${story['user']['pk']}`
+        // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
+      ] = [
+        `${story['taken_at']}_${story_seen_at}`
+        // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
+      ]
+
+  data = self.json_data({
+      'reels': story_seen,
+      '_csrftoken': self.token,
+      '_uuid': self.uuid,
+      '_uid': self.user_id
+  })
+  data = self.generate_signature(data)
+  return self.session.post('https://i.instagram.com/api/v2/' + 'media/seen/', data=data).ok
+}
+
+const get_user_stories = (self, user_id) => {
+  const url = `feed/user/${user_id}/story/`
+  return self.send_request(url)
+}
+
+const get_self_story_viewers = (self, story_id) => {
+  const config = {} // ???
+  const url = `media/${story_id}/list_reel_media_viewer/?supported_capabilities_new=${config.SUPPORTED_CAPABILITIES}`
+  return self.send_request(url)
+}
+
+const get_tv_suggestions = (self) => {
+  const url = 'igtv/tv_guide/'
+  return self.send_request(url)
+}
+
+const get_hashtag_stories = (self, hashtag) => {
+  const url = `tags/${hashtag}/story/`
+  return self.send_request(url)
+}
