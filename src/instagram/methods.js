@@ -119,6 +119,18 @@ export const get_direct_share = (self) => {
   return self.send_request(`direct_share/inbox/?`)
 }
 
+
+export const get_pending_inbox = (self) => {
+  return self.send_request(`direct_v2/pending_inbox/?persistentBadging=true&use_unified_inbox=true`)
+}
+
+export const approve_pending_thread = async (self, thread_id) => {
+  const data = await self.default_data()
+
+  return self.send_request(`direct_v2/threads/${thread_id}/approve/`, data)
+}
+
+
 const _prepare_recipients = (users, thread_id = null, use_quotes = false) => {
   const result = {}
 
