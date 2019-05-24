@@ -9,6 +9,7 @@
   "background": {
     "scripts": [
       "shared/credentials.js",
+      "shared/notification_service.js",
       "background/services/insecure_headers.js",
       "background/services/on_install.js",
       "background/main.js",
@@ -25,8 +26,9 @@
     "default_icon": "images/icon.png"
   },
   "permissions": [
-    "storage",
     "background",
+    "notifications",
+    "storage",
     "webRequest",
     "webRequestBlocking",
     "https://i.instagram.com/*",
