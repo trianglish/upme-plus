@@ -51,7 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           return sendResponse({ status: 'ok', user })
         } catch (err) {
           console.error(err)
-          return sendResponse({ status: 'error', error: err.message })
+          const { message, response } = err
+          const { data, headers } = response
+          return sendResponse({ status: 'error', error: { message, response: data, headers }})
         }
       }
 
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (!instagram) {
-        return sendResponse({ status: 'error', error: 'Not initialized' })
+        return sendResponse({ status: 'error', error: { message: 'Not initialized' } })
       }
 
       const res = await instagram.callMethod(method, ...params)
@@ -91,7 +93,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       return sendResponse(res)
     } catch (err) {
       console.error(err)
-      return sendResponse({ status: 'error', error: err.message })
+      const { message, response } = err
+      const { data, headers } = response
+      return sendResponse({ status: 'error', error: { message, response: data, headers }})
     }
 
   });
@@ -112,14 +116,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           return replyToRequest(sender, req_id, { status: 'ok', user })
         } catch (err) {
           console.error(err)
-          return replyToRequest(sender, req_id, { status: 'error', error: err.message })
+          const { message, response } = err
+          const { data, headers } = response
+          return replyToRequest(sender, req_id, { status: 'error', error: { message, response: data, headers }})
         }
       }
 
       if (method === 'exit') {
         // TODO: logout
-        instagram.user = {}
-        return replyToRequest(sender, req_id, { status: 'ok', user: instagram.user })
+        // instagram.user = {}
+        const logout = await instagram.callMethod('logout')
+        return replyToRequest(sender, req_id, { status: 'ok', user: instagram.user, logout })
       }
 
       if (method === 'check_login') {
@@ -131,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (!instagram) {
-        return replyToRequest(sender, req_id, { status: 'error', error: 'Not initialized' })
+        return replyToRequest(sender, req_id, { status: 'error', error: { message: 'Not initialized' } })
       }
 
       const res = await instagram.callMethod(method, ...params)
@@ -139,7 +146,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       return replyToRequest(sender, req_id, res)
     } catch (err) {
       console.error(err)
-      return replyToRequest(sender, req_id, { status: 'error', error: err.message })
+      const { message, response } = err
+      const { data, headers } = response
+      return replyToRequest(sender, req_id, { status: 'error', error: { message, response: data, headers }})
     }
 
   })

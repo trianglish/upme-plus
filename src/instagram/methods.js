@@ -16,6 +16,17 @@ export const get_user_info = (self, user_id_or_username) => {
   }
 }
 
+export const logout = async (self) => {
+  if (!self.is_logged_in) {
+    return true
+  }
+
+  const result = await self.send_request('accounts/logout/')
+
+  self.is_logged_in = !result
+  return result
+}
+
 export const get_user_followers = (self, user_id, max_id='') => {
   const rank_token = self.rank_token()
   const url = `friendships/${user_id}/followers/?max_id=${max_id}&rank_token=${rank_token}&`
