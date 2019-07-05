@@ -91,8 +91,13 @@ export const search_location = (self, query, lat = '', lng = '') => {
   return self.send_request(`fbsearch/places/?rank_token=${rank_token}&query=${query}&lat=${lat}&lng=${lng}`)
 }
 
-export const get_timeline = (self) => {
+export const __DEPRECATED__get_timeline = (self) => {
   return self.send_request(`feed/timeline/?rank_token=${self.rank_token()}&ranked_content=true`)
+}
+
+export const get_timeline = (self) => {
+  const data = {is_prefetch: '0', is_pull_to_refresh: '0'}
+  return self.send_request('feed/timeline/', data, { with_signature: false })
 }
 
 export const get_popular_feed = (self) => {
@@ -118,6 +123,18 @@ export const get_thread = (self, thread_id, cursor_id = '') => {
 export const get_direct_share = (self) => {
   return self.send_request(`direct_share/inbox/?`)
 }
+
+
+export const get_pending_inbox = (self) => {
+  return self.send_request(`direct_v2/pending_inbox/?persistentBadging=true&use_unified_inbox=true`)
+}
+
+export const approve_pending_thread = async (self, thread_id) => {
+  const data = await self.default_data()
+
+  return self.send_request(`direct_v2/threads/${thread_id}/approve/`, data)
+}
+
 
 const _prepare_recipients = (users, thread_id = null, use_quotes = false) => {
   const result = {}

@@ -29,6 +29,7 @@ If you find our free tool useful or just want more features available, please do
 ## Features
 
 - Like posts by hashtag, by user, by location
+- [Send and receive](https://github.com/instagrambot/gramup-dm) Instagram Direct messages
 - Follow users' followers, followees
 - Follow users' who posted to hashtag
 - Follow likers of a hashtag or a user

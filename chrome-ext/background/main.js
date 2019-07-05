@@ -3489,7 +3489,7 @@ class Instagram {
 /*!**********************************!*\
   !*** ./src/instagram/methods.js ***!
   \**********************************/
-/*! exports provided: get_user_info, get_user_followers, get_user_followings, get_user_feed, get_hashtag_feed, get_location_feed, media_info, like, unlike, follow, unfollow, user_friendship, comment, reply_to_comment, delete_comment, get_user_story_feed, search_location, get_timeline, get_popular_feed, get_comment_likers, get_media_likers, get_inbox, get_thread, get_direct_share, _prepare_recipients, send_direct_item, get_user_reel, get_users_reel, see_reels, get_user_stories, get_self_story_viewers, get_tv_suggestions, get_hashtag_stories */
+/*! exports provided: get_user_info, get_user_followers, get_user_followings, get_user_feed, get_hashtag_feed, get_location_feed, media_info, like, unlike, follow, unfollow, user_friendship, comment, reply_to_comment, delete_comment, get_user_story_feed, search_location, __DEPRECATED__get_timeline, get_timeline, get_popular_feed, get_comment_likers, get_media_likers, get_inbox, get_thread, get_direct_share, get_pending_inbox, approve_pending_thread, send_direct_item, get_user_reel, get_users_reel, see_reels, get_user_stories, get_self_story_viewers, get_tv_suggestions, get_hashtag_stories */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3511,6 +3511,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_comment", function() { return delete_comment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_user_story_feed", function() { return get_user_story_feed; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "search_location", function() { return search_location; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__DEPRECATED__get_timeline", function() { return __DEPRECATED__get_timeline; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_timeline", function() { return get_timeline; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_popular_feed", function() { return get_popular_feed; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_comment_likers", function() { return get_comment_likers; });
@@ -3518,7 +3519,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_inbox", function() { return get_inbox; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_thread", function() { return get_thread; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_direct_share", function() { return get_direct_share; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_prepare_recipients", function() { return _prepare_recipients; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_pending_inbox", function() { return get_pending_inbox; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "approve_pending_thread", function() { return approve_pending_thread; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "send_direct_item", function() { return send_direct_item; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_user_reel", function() { return get_user_reel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_users_reel", function() { return get_users_reel; });
@@ -3621,8 +3623,13 @@ const search_location = (self, query, lat = '', lng = '') => {
   return self.send_request(`fbsearch/places/?rank_token=${rank_token}&query=${query}&lat=${lat}&lng=${lng}`)
 }
 
-const get_timeline = (self) => {
+const __DEPRECATED__get_timeline = (self) => {
   return self.send_request(`feed/timeline/?rank_token=${self.rank_token()}&ranked_content=true`)
+}
+
+const get_timeline = (self) => {
+  const data = {is_prefetch: '0', is_pull_to_refresh: '0'}
+  return self.send_request('feed/timeline/', data, { with_signature: false })
 }
 
 const get_popular_feed = (self) => {
@@ -3648,6 +3655,18 @@ const get_thread = (self, thread_id, cursor_id = '') => {
 const get_direct_share = (self) => {
   return self.send_request(`direct_share/inbox/?`)
 }
+
+
+const get_pending_inbox = (self) => {
+  return self.send_request(`direct_v2/pending_inbox/?persistentBadging=true&use_unified_inbox=true`)
+}
+
+const approve_pending_thread = async (self, thread_id) => {
+  const data = await self.default_data()
+
+  return self.send_request(`direct_v2/threads/${thread_id}/approve/`, data)
+}
+
 
 const _prepare_recipients = (users, thread_id = null, use_quotes = false) => {
   const result = {}
