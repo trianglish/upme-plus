@@ -2,6 +2,7 @@ const print = console.log
 
 import {
   API_URL,
+  API_URL_v2,
   DEVICE,
   USER_AGENT_BASE,
   IG_SIG_KEY,
@@ -109,7 +110,7 @@ export default class Instagram {
     return response
   }
 
-  async _request(endpoint, method = 'GET', post_data, extra_headers = {}, { form = false } = {}) {
+  async _request(endpoint, method = 'GET', post_data, extra_headers = {}, { v2 = false, form = false } = {}) {
     const headers = prefixUnsecureHeaders({
       'User-Agent': this.user_agent,
       ...REQUEST_HEADERS,
@@ -126,8 +127,10 @@ export default class Instagram {
       post_data = bodyFormData
     }
 
+    const root = v2 ? API_URL_v2 : API_URL
+
     const response = await axios({
-      url: API_URL + endpoint,
+      url: root + endpoint,
       method,
       data: post_data,
       headers,

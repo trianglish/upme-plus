@@ -185,19 +185,19 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
 }
 
 
-const get_user_reel = (self, user_id) => {
+export const get_user_reel = (self, user_id) => {
   url = `feed/user/${user_id}/reel_media/`.format()
   return self.send_request(url)
 }
 
-const get_users_reel = async (self, user_ids) => {
+export const get_users_reel = async (self, user_ids) => {
   /*
   Input: user_ids - a list of user_id
   Output: dictionary: user_id - stories data.
   Basically, for each user output the same as after self.get_user_reel
   */
   const url = `feed/reels_media/`
-  const user_ids = user_ids.map(id => `${id}`)
+  user_ids = user_ids.map(id => `${id}`)
   const res = await self.send_request(url, { user_ids })
 
   return (res && res.reels) ? res.reels : []
@@ -216,7 +216,7 @@ const get_users_reel = async (self, user_ids) => {
   //     return []
   // return []
 
-const see_reels = (self, reels) => {
+export const see_reels = async (self, reels = []) => {
   /*
   Input - the list of reels jsons
   They can be aquired by using get_users_reel() or get_user_reel() methods
@@ -232,43 +232,63 @@ const see_reels = (self, reels) => {
   // now = int(time.time())
   const now = Date.now()
 
-  for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
-      story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
-      story_seen[
-        `${story['id']}_${story['user']['pk']}`
-        // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
-      ] = [
-        `${story['taken_at']}_${story_seen_at}`
-        // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
-      ]
-
-  data = self.json_data({
-      'reels': story_seen,
-      '_csrftoken': self.token,
-      '_uuid': self.uuid,
-      '_uid': self.user_id
+  reels.forEach((story, i) => {
+    const story_seen_at = now - Math.min(i + 1 + Math.floor(3*Math.random()), Math.max(0, now - story['taken_at']))
+    story_seen[
+      `${story['id']}_${story['user']['pk']}`
+      // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
+    ] = [
+      `${story['taken_at']}_${story_seen_at}`
+      // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
+    ]
   })
-  data = self.generate_signature(data)
-  return self.session.post('https://i.instagram.com/api/v2/' + 'media/seen/', data=data).ok
+  //
+  // for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
+  //     story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
+  //     story_seen[
+  //       `${story['id']}_${story['user']['pk']}`
+  //       // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
+  //     ] = [
+  //       `${story['taken_at']}_${story_seen_at}`
+  //       // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
+  //     ]
+
+  const default_data = await self.default_data()
+
+  const _data = {
+    reels: story_seen,
+    _csrftoken: self.rank_token(),
+    ...default_data,
+  }
+
+  // data = self.json_data({
+  //     'reels': story_seen,
+  //     '_csrftoken': self.token,
+  //     '_uuid': self.uuid,
+  //     '_uid': self.user_id
+  // })
+
+  // const data = self.generate_signature(_data)
+  return self.send_request('media/seen/', _data, {}, { with_signature: true, v2: true })
 }
 
-const get_user_stories = (self, user_id) => {
+export const get_user_stories = (self, user_id) => {
   const url = `feed/user/${user_id}/story/`
   return self.send_request(url)
 }
 
-const get_self_story_viewers = (self, story_id) => {
+export const get_self_story_viewers = (self, story_id) => {
   const config = {} // ???
   const url = `media/${story_id}/list_reel_media_viewer/?supported_capabilities_new=${config.SUPPORTED_CAPABILITIES}`
   return self.send_request(url)
 }
 
-const get_tv_suggestions = (self) => {
+export const get_tv_suggestions = (self) => {
   const url = 'igtv/tv_guide/'
   return self.send_request(url)
 }
 
-const get_hashtag_stories = (self, hashtag) => {
+export const get_hashtag_stories = (self, hashtag) => {
   const url = `tags/${hashtag}/story/`
   return self.send_request(url)
 }
