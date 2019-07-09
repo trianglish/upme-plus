@@ -203,7 +203,7 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
 
 
 export const get_user_reel = (self, user_id) => {
-  url = `feed/user/${user_id}/reel_media/`.format()
+  const url = `feed/user/${user_id}/reel_media/`
   return self.send_request(url)
 }
 
@@ -241,41 +241,34 @@ export const see_reels = async (self, reels = []) => {
   if (reels && !reels.join) {
     reels = [reels]
   }
-  //
-  // if not isinstance(reels, list):
-  //     reels = [reels]
 
   const story_seen = {}
   // now = int(time.time())
-  const now = Date.now()
+  const now = Math.floor(Date.now() / 1000)
+  const randint = (a, b) => Math.floor(a + (b-a) * Math.random())
 
-  reels.forEach((story, i) => {
-    const story_seen_at = now - Math.min(i + 1 + Math.floor(3*Math.random()), Math.max(0, now - story['taken_at']))
-    story_seen[
-      `${story['id']}_${story['user']['pk']}`
-      // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
-    ] = [
-      `${story['taken_at']}_${story_seen_at}`
-      // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
-    ]
-  })
-  //
   // for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
-  //     story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
-  //     story_seen[
-  //       `${story['id']}_${story['user']['pk']}`
-  //       // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
-  //     ] = [
-  //       `${story['taken_at']}_${story_seen_at}`
-  //       // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
-  //     ]
+  //   story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
+
+  reels
+    .sort((story1, story2) => story1['taken_at'] - story2['taken_at'])
+    .forEach((story, index) => {
+      const story_seen_at = now - Math.min(index + 1 + randint(0,2), Math.max(0, now - story['taken_at']))
+
+      story_seen[
+        `${story['id']}_${story['user']['pk']}`
+        // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
+      ] = [
+        `${story['taken_at']}_${story_seen_at}`
+        // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
+      ]
+    })
 
   const default_data = await self.default_data()
 
   const _data = {
-    reels: story_seen,
-    _csrftoken: self.rank_token(),
     ...default_data,
+    reels: story_seen,
   }
 
   // data = self.json_data({
@@ -285,8 +278,7 @@ export const see_reels = async (self, reels = []) => {
   //     '_uid': self.user_id
   // })
 
-  // const data = self.generate_signature(_data)
-  return self.send_request('media/seen/', _data, {}, { with_signature: true, v2: true })
+  return self.send_request('media/seen/', _data, { with_signature: true, v2: true })
 }
 
 export const get_user_stories = (self, user_id) => {
