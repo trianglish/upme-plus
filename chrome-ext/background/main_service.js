@@ -57,6 +57,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
+      if (method === 'login_2fa') {
+        const [ username, password, verification_code, two_factor_data ] = params || []
+
+        try {
+          const user = await instagram.verify_2fa(username, password, verification_code, two_factor_data)
+
+          return sendResponse({ status: 'ok', user })
+        } catch (err) {
+          console.error(err)
+          const { message, response } = err
+          const { data, headers } = response
+          return sendResponse({ status: 'error', error: { message, response: data, headers }})
+        }
+      }
+
       if (method === 'exit') {
         // TODO: logout
         instagram.user = {}
@@ -117,10 +132,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
           console.error(err)
           const { message, response } = err
+          const { data, headers } = response || {}
+          return replyToRequest(sender, req_id, { status: 'error', error: { message, response: data, headers }})
+        }
+      }
+
+      if (method === 'login_2fa') {
+        const [ username, password, verification_code, two_factor_data ] = params || []
+
+        try {
+          const user = await instagram.verify_2fa(username, password, verification_code, two_factor_data)
+
+          return replyToRequest(sender, req_id, { status: 'ok', user })
+        } catch (err) {
+          console.error(err)
+          const { message, response } = err
           const { data, headers } = response
           return replyToRequest(sender, req_id, { status: 'error', error: { message, response: data, headers }})
         }
       }
+
 
       if (method === 'exit') {
         // TODO: logout
