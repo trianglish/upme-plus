@@ -2,10 +2,10 @@
 
 Gram Up - We Automate boring Instagram stuff for you. Start to get followers for free without any coding skills. 
 
-[<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+[<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://get.gramup.me)
 <img width="200" alt="Instagrambot Gif" src="https://user-images.githubusercontent.com/5613295/57079066-41044980-6cf8-11e9-8c5d-1d2f8a1dcbc4.gif">
 
-# [Download the extension!](https://chrome.google.com/webstore/detail/instagram-yourself/njonkbhnmmjgancfbncekpgkmidhbbpo)
+# [Download the extension!](https://get.gramup.me)
 
 ## [Video demo](https://www.youtube.com/watch?v=CPFkPjB0lzQ)
 

@@ -1,4 +1,5 @@
 export const API_URL = 'https://i.instagram.com/api/v1/'
+export const API_URL_v2 = 'https://i.instagram.com/api/v2/'
 export const LOGIN_URL = API_URL + 'accounts/login/'
 
 // # I have more devices here:

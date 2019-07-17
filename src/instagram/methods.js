@@ -102,8 +102,13 @@ export const search_location = (self, query, lat = '', lng = '') => {
   return self.send_request(`fbsearch/places/?rank_token=${rank_token}&query=${query}&lat=${lat}&lng=${lng}`)
 }
 
-export const get_timeline = (self) => {
+export const __DEPRECATED__get_timeline = (self) => {
   return self.send_request(`feed/timeline/?rank_token=${self.rank_token()}&ranked_content=true`)
+}
+
+export const get_timeline = (self) => {
+  const data = {is_prefetch: '0', is_pull_to_refresh: '0'}
+  return self.send_request('feed/timeline/', data, { with_signature: false })
 }
 
 export const get_popular_feed = (self) => {
@@ -205,4 +210,105 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
   console.log('_data', _data)
 
   return self.send_request(`direct_v2/threads/broadcast/${item_type}/`, _data, { with_signature: false, form: true })
+}
+
+
+export const get_user_reel = (self, user_id) => {
+  const url = `feed/user/${user_id}/reel_media/`
+  return self.send_request(url)
+}
+
+export const get_users_reel = async (self, user_ids) => {
+  /*
+  Input: user_ids - a list of user_id
+  Output: dictionary: user_id - stories data.
+  Basically, for each user output the same as after self.get_user_reel
+  */
+  const url = `feed/reels_media/`
+  user_ids = user_ids.map(id => `${id}`)
+  const res = await self.send_request(url, { user_ids })
+
+  return (res && res.reels) ? res.reels : []
+}
+  //
+  // if (res) {
+  //   if (res.reels) {
+  //     return res.reels
+  //   } else {
+  //     return []
+  //   }
+  // } else {}
+  // if res:
+  //     if "reels" in self.last_json:
+  //         return self.last_json["reels"]
+  //     return []
+  // return []
+
+export const see_reels = async (self, reels = []) => {
+  /*
+  Input - the list of reels jsons
+  They can be aquired by using get_users_reel() or get_user_reel() methods
+  */
+  if (reels && !reels.join) {
+    reels = [reels]
+  }
+
+  const story_seen = {}
+  // now = int(time.time())
+  const now = Math.floor(Date.now() / 1000)
+  const randint = (a, b) => Math.floor(a + (b-a) * Math.random())
+
+  // for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
+  //   story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
+
+  reels
+    .sort((story1, story2) => story1['taken_at'] - story2['taken_at'])
+    .forEach((story, index) => {
+      const story_seen_at = now - Math.min(index + 1 + randint(0,2), Math.max(0, now - story['taken_at']))
+
+      story_seen[
+        `${story['id']}_${story['user']['pk']}`
+        // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
+      ] = [
+        `${story['taken_at']}_${story_seen_at}`
+        // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
+      ]
+    })
+
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    reels: story_seen,
+  }
+
+  // data = self.json_data({
+  //     'reels': story_seen,
+  //     '_csrftoken': self.token,
+  //     '_uuid': self.uuid,
+  //     '_uid': self.user_id
+  // })
+
+  return self.send_request('media/seen/', _data, { with_signature: true, v2: true })
+}
+
+export const get_user_stories = (self, user_id) => {
+  const url = `feed/user/${user_id}/story/`
+  return self.send_request(url)
+}
+
+export const get_self_story_viewers = (self, story_id) => {
+  const config = {} // ???
+  const url = `media/${story_id}/list_reel_media_viewer/?supported_capabilities_new=${config.SUPPORTED_CAPABILITIES}`
+  return self.send_request(url)
+}
+
+export const get_tv_suggestions = (self) => {
+  const url = 'igtv/tv_guide/'
+  return self.send_request(url)
+}
+
+export const get_hashtag_stories = (self, hashtag) => {
+  const url = `tags/${hashtag}/story/`
+  return self.send_request(url)
 }
