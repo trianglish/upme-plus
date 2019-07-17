@@ -98,7 +98,11 @@ window.onload = async () => {
       if (err.data.two_factor_required) {
 
         const two_factor_data = err.data
-        const two_factor_code = prompt('Please input 2fa code')
+        const two_factor_code = prompt('Input a code for two-factor auth from SMS')
+
+        if (!two_factor_code) {
+          return onLoginError(`No code`)
+        }
 
         const res = await instagram.request({
           method: 'login_2fa',
