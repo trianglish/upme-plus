@@ -7,6 +7,23 @@ const replyToRequest = (sender, req_id, data) => {
   }
 }
 
+const setupDMCheck = () => {
+  let last_unseen_count_ts = 0
+  let last_unseen_count = 0
+
+  setInterval(async () => {
+    const { inbox } = await instagram.callMethod('get_inbox')
+
+    const hasNewMessages = last_unseen_count < inbox.unseen_count && inbox.unseen_count > 0
+    const unique_id = inbox.unseen_count_ts
+
+    if (hasNewMessages) {
+      last_unseen_count = inbox.unseen_count
+      showNewMessagesNotification([], unique_id)
+    }
+  }, 30 * 1000)
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const { username, password } = await getCredentials()
 
@@ -20,6 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else {
     const user = await instagram.login(username, password)
   }
+
+  // setupDMCheck()
 
   chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
 
