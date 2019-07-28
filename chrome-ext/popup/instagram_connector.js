@@ -1,11 +1,13 @@
 class InstagramError extends Error {
-  constructor(status, errorMessage = '', { error_title, error_type, message } = {}) {
+  constructor(status, errorMessage = '', errorData = {}) {
+    const { error_title, error_type, message } = errorData.response || {}
+
     let _message = ''
 
     if (error_title) {
       _message = `${error_title}`
     } else if (error_type) {
-      _message = `${error_type}`
+      _message = `${error_type}: ${message}`
     } else if (message) {
       _message = `${message}`
     } else if (errorMessage) {
@@ -18,7 +20,9 @@ class InstagramError extends Error {
 
     this.name = `InstagramError`
     this.status = status
+    this.data = errorData.response
     this.message = _message
+    this.error = errorData
 
     // error_title: "Incorrect password for phystechtv"
     // error_type: "bad_password"
@@ -82,8 +86,10 @@ class InstagramConnector {
 
       console.log('request', data.method, '->', status, message)
 
+      console.log(status, error)
+
       if (status !== 'ok') {
-        reject(new InstagramError(status, error, message))
+        reject(new InstagramError(status, error.message, error))
       } else {
         resolve(message)
       }
