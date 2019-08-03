@@ -99,9 +99,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (method === 'check_login') {
         try {
-          const info = await instagram.callMethod('get_user_info', instagram.user.username)
+          if (instagram.user && instagram.user.username) {
+            const info = await instagram.callMethod('get_user_info', instagram.user.username)
 
-          instagram.user = info.user
+            instagram.user = info.user
+          }
         } catch (error) {
           console.log(`Needs relogin`, error)
 
