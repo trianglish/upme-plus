@@ -1,9 +1,9 @@
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
-const FAMILY_WS_URL = `ws://socket.gramup.me:6789/`
+const GRAMUP_WS_URL = `wss://socket.gramup.me/`
 const VERSION = '1.4.10'
 
 const DEFAULT_CONFIG = {
-  familyUrl: FAMILY_WS_URL,
+  familyUrl: GRAMUP_WS_URL,
 }
 
 const getConfig = () => {
