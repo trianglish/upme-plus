@@ -1,15 +1,5 @@
-const replyToRequest = (sender, req_id, data) => {
-  console.log('reply to', req_id, data)
-  if (sender.tab) {
-    return chrome.tabs.sendMessage(sender.tab.id, { req_id, ...data })
-  } else {
-    return chrome.runtime.sendMessage(sender.id, { req_id, ...data })
-  }
-}
-
-const FAMILY_WS_LOCAL_URL = `ws://192.168.1.19:6789/`
-const FAMILY_WS_URL = `wss://family.gramup.me/`
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
+const FAMILY_WS_URL = `ws://socket.gramup.me:6789/`
 const VERSION = '1.4.10'
 
 const DEFAULT_CONFIG = {
@@ -23,6 +13,15 @@ const getConfig = () => {
   } catch (err) {
     console.error(err)
     return DEFAULT_CONFIG
+  }
+}
+
+const replyToRequest = (sender, req_id, data) => {
+  console.log('reply to', req_id, data)
+  if (sender.tab) {
+    return chrome.tabs.sendMessage(sender.tab.id, { req_id, ...data })
+  } else {
+    return chrome.runtime.sendMessage(sender.id, { req_id, ...data })
   }
 }
 
