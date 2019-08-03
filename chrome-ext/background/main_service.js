@@ -7,13 +7,13 @@ const DEFAULT_CONFIG = {
 }
 
 const getConfig = () => {
-  try {
-    return fetch(GRAMUP_CONFIG_URL)
-      .then(res => res.json())
-  } catch (err) {
-    console.error(err)
-    return DEFAULT_CONFIG
-  }
+  return fetch(GRAMUP_CONFIG_URL)
+    .then(res => res.json())
+    .then(config => config || DEFAULT_CONFIG)
+    .catch(err => {
+      console.error(err)
+      return DEFAULT_CONFIG
+    })
 }
 
 const replyToRequest = (sender, req_id, data) => {
