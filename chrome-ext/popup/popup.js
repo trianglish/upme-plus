@@ -95,9 +95,9 @@ window.onload = async () => {
     } catch (err) {
       console.error(err)
 
-      if (err.data.two_factor_required) {
+      if (err.response.two_factor_required) {
 
-        const two_factor_data = err.data
+        const two_factor_data = err.response
         const two_factor_code = prompt('Input a code for two-factor auth from SMS')
 
         if (!two_factor_code) {
