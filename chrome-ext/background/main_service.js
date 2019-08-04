@@ -197,7 +197,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log('message', message)
       console.log('sender', sender)
 
-      const sendResponse = (data) => port.postMessage(data)
+      const { req_id } = message
+
+      const sendResponse = (data) => port.postMessage({ req_id, ...data })
 
       await processMessage(message, sendResponse)
     })
