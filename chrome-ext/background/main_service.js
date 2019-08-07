@@ -1,6 +1,7 @@
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.4.10'
+const VERSION = '1.4.12'
+const JOINED_FAMILY = true // configurable via settings
 
 const DEFAULT_CONFIG = {
   familyUrl: GRAMUP_WS_URL,
@@ -178,6 +179,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('sender', event.origin)
 
         if (!message.method) throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
+
+        if (!JOINED_FAMILY) return console.log(`Drop action, JOINED_FAMILY = ${JOINED_FAMILY}`)
 
         await processMessage(message, sendResponse)
       } catch (err) {
