@@ -93,11 +93,13 @@ window.onload = async () => {
       onLoginSuccess(res, creds)
 
     } catch (err) {
-      console.error(err)
+      const { error: { response } } = err
 
-      if (err.response.two_factor_required) {
+      console.error(response)
 
-        const two_factor_data = err.response
+      if (response.two_factor_required) {
+
+        const two_factor_data = response
         const two_factor_code = prompt('Input a code for two-factor auth from SMS')
 
         if (!two_factor_code) {
@@ -115,8 +117,11 @@ window.onload = async () => {
           onLoginError(res.error.message)
         }
 
+      } else if (response.challenge) {
+        onLoginError(response.message)
+        window.open(response.challenge.url)
       } else {
-        onLoginError(err.message)
+        onLoginError(response.message)
       }
 
       // if (err.message.includes(`status code 400`)) {
