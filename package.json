@@ -5,7 +5,7 @@
   "description": "Smart Automation for your Instagram inside your browser for free. https://gramup.me",
   "main": "src/index.js",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "axios-adapter-hmac": "^0.1.1",
     "blueimp-md5": "^2.10.0",
     "hmac": "^1.0.1",
@@ -28,7 +28,7 @@
     "build:chrome": "npm run build && npm run zip",
     "postbuild:chrome": "npm run open-chrome-store",
     "zip": "rm -rf chrome-ext.zip && zip -r -X chrome-ext.zip chrome-ext",
-    "open-chrome-store": "open https://chrome.google.com/webstore/devconsole/g07844052442324404914/njonkbhnmmjgancfbncekpgkmidhbbpo/edit/package?hl=en_GB",
+    "open-chrome-store": "open https://chrome.google.com/webstore/developer/edit/njonkbhnmmjgancfbncekpgkmidhbbpo",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

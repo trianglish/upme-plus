@@ -82,6 +82,7 @@ window.onload = async () => {
     event.preventDefault()
 
     const { username, password } = instalogin.elements
+    const creds = { username: username.value, password: password.value }
 
     try {
       const res = await instagram.request({
@@ -89,16 +90,58 @@ window.onload = async () => {
         params: [ username.value, password.value ]
       })
 
-      await saveCredentials(username.value, password.value)
-      await whenLogged()
-      openControlPanel()
+      onLoginSuccess(res, creds)
+
     } catch (err) {
-      if (err.message.includes(`status code 400`)) {
-        alert(`InstagramError: Probably wrong password:` + err.message)
+      const { error: { response } } = err
+
+      console.error(response)
+
+      if (response.two_factor_required) {
+
+        const two_factor_data = response
+        const two_factor_code = prompt('Input a code for two-factor auth from SMS')
+
+        if (!two_factor_code) {
+          return onLoginError(`No code`)
+        }
+
+        const res = await instagram.request({
+          method: 'login_2fa',
+          params: [ username.value, password.value, two_factor_code, two_factor_data ]
+        })
+
+        if (res.status === 'ok') {
+          onLoginSuccess(res, creds)
+        } else {
+          onLoginError(res.error.message)
+        }
+
+      } else if (response.challenge) {
+        onLoginError(response.message)
+        window.open(response.challenge.url)
       } else {
-        alert(err.message)
+        onLoginError(response.message)
       }
-      console.error(err)
+
+      // if (err.message.includes(`status code 400`)) {
+      //   alert(`InstagramError: Probably wrong password:` + err.message)
+      // } else if (err.message.includes(`status code 400`)) {
+      //   alert(`InstagramError: Probably wrong password:` + err.message)
+      // } else {
+      //   alert(err.message)
+      // }
     }
+  }
+
+  const onLoginSuccess = async (res, { username, password }) => {
+    await saveCredentials(username, password)
+    await whenLogged()
+    openControlPanel()
+  }
+
+  const onLoginError = async (reason) => {
+    alert(reason)
+    console.error('LoginError:', reason)
   }
 }

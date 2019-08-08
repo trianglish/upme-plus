@@ -1,47 +1,20 @@
 class InstagramError extends Error {
-  constructor(status, errorMessage = '', { error_title, error_type, message } = {}) {
-    let _message = ''
-
-    if (error_title) {
-      _message = `${error_title}`
-    } else if (error_type) {
-      _message = `${error_type}`
-    } else if (message) {
-      _message = `${message}`
-    } else if (errorMessage) {
-      _message = `${status}: ${errorMessage}`
-    } else {
-      _message = `${status}`
-    }
-
-    super(errorMessage)
-
-    this.name = `InstagramError`
+  constructor(status, error = '') {
+    super(error)
     this.status = status
-    this.message = _message
-
-    // error_title: "Incorrect password for phystechtv"
-    // error_type: "bad_password"
-    // invalid_credentials: true
-    // message: "The password you entered is incorrect. Please try again."
-    // status: "fail"
-
-    // console.log('building error', error_title, error_type, message)
-    // console.log('building error', this, status, errorMessage, message)
-
+    this.error = error
+    this.message = `InstagramError ${status}: ${error.response ? error.response.message : error}`
+    this.response = error.response
   }
 }
 
 class TimeoutError extends Error {}
 
 class InstagramConnector {
+  isStopped = false
+  isConnected = false
 
-  constructor() {
-    this.isStopped = false
-    this.isConnected = false
-  }
-
-  async init () {
+  init = async () => {
     try {
       const ping = await this.request({
         method: 'ping'
@@ -58,11 +31,10 @@ class InstagramConnector {
 
       throw err
     }
-
   }
 
-  start () { this.isStopped = false }
-  kill () { this.isStopped = true }
+  start = () => (this.isStopped = false)
+  kill = () => (this.isStopped = true)
 
   request (data) {
     return new Promise((resolve, reject) => {
@@ -82,8 +54,10 @@ class InstagramConnector {
 
       console.log('request', data.method, '->', status, message)
 
+      console.log(status, error)
+
       if (status !== 'ok') {
-        reject(new InstagramError(status, error, message))
+        reject(new InstagramError(status, error))
       } else {
         resolve(message)
       }

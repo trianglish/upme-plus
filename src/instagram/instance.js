@@ -2,6 +2,7 @@ const print = console.log
 
 import {
   API_URL,
+  API_URL_v2,
   DEVICE,
   USER_AGENT_BASE,
   IG_SIG_KEY,
@@ -82,6 +83,43 @@ export default class Instagram {
     }
   }
 
+  async verify_2fa(username, password, two_factor_code, two_factor_data) {
+    const two_factor_id = two_factor_data['two_factor_info']['two_factor_identifier']
+
+    if (!this.device_id) {
+      console.error(`this.device_id uninitialized! You need to call .login first`)
+      return false
+    }
+
+    const data = {
+      device_id: this.device_id,
+      username,
+      password,
+      verification_code: two_factor_code,
+      two_factor_identifier: two_factor_id,
+      ig_sig_key_version: 4,
+    }
+
+    try {
+      const { logged_in_user, status } = await this.send_request('accounts/two_factor_login/', data, { doLogin: true })
+
+      const MASKED_PASSWORD = password.split('').fill('*').join('')
+      this.history && this.history.save('login', [username, MASKED_PASSWORD], { status })
+
+      if (logged_in_user) {
+        this.is_logged_in = true
+        this.user_id = logged_in_user.pk
+        this.user = logged_in_user
+        return logged_in_user
+      } else {
+        throw new Error(`Could not log in: ${response}`)
+      }
+    } catch (err) {
+      console.error(`LoginError: ${err.message}`)
+      throw err
+    }
+  }
+
   async _login(username, password) {
     this.device_id = generate_device_id_from_username(username)
     print("DEVICE_ID:", this.device_id)
@@ -109,7 +147,7 @@ export default class Instagram {
     return response
   }
 
-  async _request(endpoint, method = 'GET', post_data, extra_headers = {}, { form = false } = {}) {
+  async _request(endpoint, method = 'GET', post_data, extra_headers = {}, { v2 = false, form = false } = {}) {
     const headers = prefixUnsecureHeaders({
       'User-Agent': this.user_agent,
       ...REQUEST_HEADERS,
@@ -126,8 +164,10 @@ export default class Instagram {
       post_data = bodyFormData
     }
 
+    const root = v2 ? API_URL_v2 : API_URL
+
     const response = await axios({
-      url: API_URL + endpoint,
+      url: root + endpoint,
       method,
       data: post_data,
       headers,
