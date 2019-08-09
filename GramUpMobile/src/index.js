@@ -1,4 +1,7 @@
 import Instagram from './instagram'
 
-export { Instagram }
-export default new Instagram()
+const instagram = new Instagram()
+
+export { instagram, Instagram }
+
+export default Instagram

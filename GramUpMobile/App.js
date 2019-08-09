@@ -30,7 +30,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import instagram from './src/instagram/';
+import { processMessage } from './processMessage';
 
 const VERSION = 'react-native-0.0.1';
 const source = { uri: 'http://localhost:1234' };
@@ -43,26 +43,6 @@ const sendMessage = async message => {
   return new Promise((resolve, reject) => {
     processMessage(message, response => resolve(response))
   })
-}
-
-const processMessage = async (message, sendResponse) => {
-  try {
-    const { method, params } = message
-
-    if (method === 'ping') {
-      return sendResponse({ status: 'ok', pong: 'pong' })
-    }
-
-    if (method === 'version') {
-      return sendResponse({ status: 'ok', version: VERSION })
-    }
-
-    const res = await instagram.callMethod(method, ...params)
-
-    return sendResponse(res)
-  } catch (err) {
-    return sendResponse({ status: 'error', error: err.message })
-  }
 }
 
 const App = () => {
