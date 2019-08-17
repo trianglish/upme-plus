@@ -1,6 +1,7 @@
 import Instagram from './src/instagram/';
 
-const instagram = new Instagram()
+export const VERSION = 'react-native-0.0.1';
+export const instagram = new Instagram()
 
 export const processMessage = async (message, sendResponse) => {
 

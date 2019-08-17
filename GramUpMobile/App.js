@@ -6,21 +6,18 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
+import React, { useState, Fragment } from 'react';
 import {
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
+  TextInput,
   StatusBar,
   Button,
 } from 'react-native';
-
-import { WebView, WebViewSharedProps } from 'react-native-webview';
-import { withWebViewBridge } from 'react-native-webview-bridge-seamless';
-
-const WebViewWithBridge = withWebViewBridge(WebView);
 
 import {
   Header,
@@ -30,10 +27,16 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { processMessage } from './processMessage';
+import Prompt from 'react-native-prompt';
 
-const VERSION = 'react-native-0.0.1';
-const source = { uri: 'http://localhost:1234' };
+import { WebView, WebViewSharedProps } from 'react-native-webview';
+import { withWebViewBridge } from 'react-native-webview-bridge-seamless';
+
+const WebViewWithBridge = withWebViewBridge(WebView);
+
+import { instagram, processMessage } from './processMessage';
+
+const source = { uri: 'https://dist.caffeinum.now.sh/' };
 
 const sendMessage = async message => {
   console.log('message', message)
@@ -45,7 +48,42 @@ const sendMessage = async message => {
   })
 }
 
+const tryLogin = async (username, password) => {
+  const res = await instagram.login(username, password, true)
+}
+
+const isLoggedIn = () => {
+  return instagram.is_logged_in
+}
+
 const App = () => {
+
+  const [ username, setUsername ] = useState('')
+  const [ password, setPassword ] = useState('')
+
+  const [ step, goToStep ] = useState(isLoggedIn() ? 'logged_in' : 'none')
+
+  const finishStep = () => {
+    console.log('state', step, username, password)
+
+    if (step === 'login') {
+      if (!!username && !!password) {
+        tryLogin(username, password)
+          .then(() => goToStep('logged_in'))
+      } else {
+        goToStep('none')
+      }
+    } else if (step === 'get_username') {
+      goToStep('get_password')
+    } else if (step === 'get_password') {
+      goToStep('login')
+    } else if (step === 'logged_in') {
+      alert('Already logged in')
+    } else {
+      goToStep('none')
+    }
+  }
+
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
@@ -53,8 +91,43 @@ const App = () => {
       <ScrollView>
         <View style={styles.body}>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Gram Up!</Text>
+            <Text style={styles.sectionTitle}>
+              Gram Up!
+            </Text>
+
+            {isLoggedIn() && (
+              <Text style={styles.sectionTitle}>
+                @{instagram.user.username}
+              </Text>
+            )}
           </View>
+
+          {!isLoggedIn() && (
+            <View style={styles.loginView}>
+              <Text>Username</Text>
+              <TextInput
+                style={styles.formInput}
+                textContentType="username"
+                onChangeText={(value) => setUsername('' + value)}
+                value={username}
+              />
+
+              <Text>Password</Text>
+              <TextInput
+                style={styles.formInput}
+                textContentType="password"
+                onChangeText={(value) => setPassword('' + value)}
+                value={password}
+              />
+              <Button
+                title="Login"
+                onPress={() => {
+                  tryLogin(username, password)
+                    .then(() => goToStep('logged_in'))
+                }}
+              />
+            </View>
+          )}
 
           <WebViewWithBridge
             style={styles.webview}
@@ -76,9 +149,26 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
 
+  loginButton: {
+    flex: 0.5,
+  },
+
+  loginView: {
+    fontSize: 24,
+    color: 'black',
+
+    flex: 1,
+    // height: Dimensions.get('window').height,
+
+    marginLeft: 20,
+    marginTop: 20,
+    marginRight: 20,
+  },
+
   webview: {
-    width: 375,
-    height: 650,
+    width:  Dimensions.get('window').width,
+    height: Dimensions.get('window').height - 100,
+    // height: 650,
 
     marginLeft: 0,
     marginTop: 20,
@@ -88,6 +178,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: 'solid',
   },
+
+  formInput: {
+    fontSize: 24,
+    color: 'black',
+
+    borderColor: 'green',
+    borderWidth: 2,
+    borderStyle: 'solid',
+  },
+
   engine: {
     position: 'absolute',
     right: 0,
@@ -98,11 +198,14 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
+    flex: 0.5,
   },
   sectionDescription: {
     marginTop: 8,

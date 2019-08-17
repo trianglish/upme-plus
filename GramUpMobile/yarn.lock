@@ -5172,6 +5172,10 @@ react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
   integrity sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==
 
+react-native-prompt@anti-nerd/react-native-prompt:
+  version "1.0.0"
+  resolved "https://codeload.github.com/anti-nerd/react-native-prompt/tar.gz/ff80df2cc1f5cb3a2dcc9e7be1abb8de5451a127"
+
 react-native-webview-bridge-seamless@^0.0.11:
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/react-native-webview-bridge-seamless/-/react-native-webview-bridge-seamless-0.0.11.tgz#9fdba14d080eddce2f339d9a580d80c10a30ccdb"

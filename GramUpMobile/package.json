@@ -14,6 +14,7 @@
     "js-sha256": "^0.9.0",
     "react": "16.8.6",
     "react-native": "0.60.4",
+    "react-native-prompt": "anti-nerd/react-native-prompt",
     "react-native-webview": "^6.8.1",
     "react-native-webview-bridge-seamless": "^0.0.11",
     "uuid-js": "^0.7.5"
