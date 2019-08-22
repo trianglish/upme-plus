@@ -192,7 +192,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  const connectIPFS = async (sec = 1) => {
+    const { ipfs, room } = await initRoom()
+
+    window.ipfs = ipfs
+    window.room = room
+
+    room.on('subscribed', () => {
+      room.broadcast(JSON.stringify(
+        { status: 'ok', version: VERSION, user: instagram.user, joined: JOINED_FAMILY }
+      ))
+    })
+
+    room.on('message', (message) => {
+      console.log('message from', message.from)
+      console.log(message.data.toString())
+
+      const sendResponse = (data) => room.sendTo(message.from, JSON.stringify(data))
+
+      const data = JSON.parse(message.data.toString())
+
+      if (!data.method) return
+
+      if (!JOINED_FAMILY) return console.log(`Drop action, JOINED_FAMILY = ${JOINED_FAMILY}`)
+
+      processMessage(message, sendResponse)
+    })
+  }
+
   connectWebsocket()
+  connectIPFS()
 
   chrome.runtime.onConnectExternal.addListener(async (port) => {
     console.log('connect', port)
