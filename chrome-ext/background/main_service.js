@@ -1,6 +1,6 @@
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.4.12'
+const VERSION = '1.4.13'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
 const JOINED_FAMILY = true // configurable via settings
 

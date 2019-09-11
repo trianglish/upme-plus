@@ -3,7 +3,7 @@ class InstagramStats extends Collection {
   constructor(instagram) {
     super()
 
-    this.available_keys = ['follower_count', 'following_count', 'user', 'current', 'misc']
+    this.available_keys = ['follower_count', 'following_count', 'average_like_count', 'user', 'current', 'misc']
 
     this.instagram = instagram
   }
@@ -22,8 +22,9 @@ class InstagramStats extends Collection {
     await this.save('user', user)
     await this.set('current', user)
 
-    await this.save('follower_count', { followers: user.follower_count })
-    await this.save('following_count', { followers: user.following_count })
+    await this.save('follower_count', { followers: user.follower_count, pk: user.pk })
+    await this.save('following_count', { followers: user.following_count, pk: user.pk })
+    await this.save('average_like_count', { likes: user.average_like_count, pk: user.pk })
 
     return user
   }
@@ -34,6 +35,7 @@ class InstagramStats extends Collection {
 
     const { follower_count } = await this.get('follower_count')
     const { following_count } = await this.get('following_count')
+    const { average_like_count } = await this.get('average_like_count')
 
     const { current } = await this.get('current')
 
@@ -43,6 +45,7 @@ class InstagramStats extends Collection {
 
       follower_count: current.follower_count,
       following_count: current.following_count,
+      follower_count: current.follower_count,
       average_like_count: current.average_like_count,
 
       full: {
@@ -53,6 +56,7 @@ class InstagramStats extends Collection {
 
         follower_count,
         following_count,
+        average_like_count,
       }
     }
   }
