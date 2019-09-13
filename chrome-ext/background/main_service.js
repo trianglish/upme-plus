@@ -4,6 +4,10 @@ const VERSION = '1.4.14'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
 // const JOINED_FAMILY = true
 // stored in the config now
+const defaultLocalConfig = {
+  JOINED_FAMILY: false,
+  NOT_BETA_TEST: false,
+}
 
 const DEFAULT_CONFIG = {
   familyUrl: GRAMUP_WS_URL,
@@ -31,7 +35,7 @@ const replyToRequest = (sender, req_id, data) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const { username, password } = await getCredentials()
 
-  let { config } = await ChromeStorage.get('config') || {}
+  let { config = defaultLocalConfig } = await ChromeStorage.get('config') || {}
 
   window.instagram = new Instagram()
   window.instagram.history = new ChromeHistory()
@@ -71,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'config') {
-        const { config: current } = await ChromeStorage.get('config')
+        const { config: current = defaultLocalConfig } = await ChromeStorage.get('config') || {}
         const [ updates ] = params || []
 
         try {
@@ -211,9 +215,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
         }
 
-        if (!config.JOINED_FAMILY) {
-          console.log(`Drop action, JOINED_FAMILY = ${config.JOINED_FAMILY}`)
-          throw new Error(`FAMILY turned off: JOINED_FAMILY = ${config.JOINED_FAMILY}`)
+        if (!config.JOINED_FAMILY && config.NOT_BETA_TEST) {
+          console.log(`Drop action, JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
+          throw new Error(`FAMILY turned off: JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
         }
 
         await processMessage(message, sendResponse)
