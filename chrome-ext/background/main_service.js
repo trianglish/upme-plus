@@ -1,8 +1,9 @@
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.4.13'
+const VERSION = '1.4.14'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
-const JOINED_FAMILY = true // configurable via settings
+// const JOINED_FAMILY = true
+// stored in the config now
 
 const DEFAULT_CONFIG = {
   familyUrl: GRAMUP_WS_URL,
@@ -30,6 +31,8 @@ const replyToRequest = (sender, req_id, data) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const { username, password } = await getCredentials()
 
+  let { config } = await ChromeStorage.get('config') || {}
+
   window.instagram = new Instagram()
   window.instagram.history = new ChromeHistory()
   window.instagram.confirmator = new AllowAll()
@@ -50,8 +53,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return sendResponse({ status: 'ok', pong: 'pong' })
       }
 
-      if (method === 'version') {
-        return sendResponse({ status: 'ok', version: VERSION, user_agent: USER_AGENT })
+      if (method === 'version' || method === 'info') {
+        return sendResponse({
+          status: 'ok',
+          version: VERSION,
+          user_agent: USER_AGENT,
+          config: config,
+        })
       }
 
       if (method === 'stats') {
@@ -60,6 +68,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await stats.getInfo()
 
         return sendResponse({ status: 'ok', data })
+      }
+
+      if (method === 'config') {
+        const { config: current } = await ChromeStorage.get('config')
+        const [ updates ] = params || []
+
+        try {
+          const new_config = await ChromeStorage.set('config', {
+            ...current,
+            ...updates,
+          })
+
+          const { config: _config } = await ChromeStorage.get('config')
+
+          config = _config
+
+          return sendResponse({ status: 'ok', config: _config })
+        } catch (err) {
+          return sendResponse({ status: 'error', error: err.message })
+        }
       }
 
       if (method === 'login') {
@@ -179,9 +207,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('message', message)
         console.log('sender', event.origin)
 
-        if (!message.method) throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
+        if (!message.method) {
+          throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
+        }
 
-        if (!JOINED_FAMILY) return console.log(`Drop action, JOINED_FAMILY = ${JOINED_FAMILY}`)
+        if (!config.JOINED_FAMILY) {
+          console.log(`Drop action, JOINED_FAMILY = ${config.JOINED_FAMILY}`)
+          throw new Error(`FAMILY turned off: JOINED_FAMILY = ${config.JOINED_FAMILY}`)
+        }
 
         await processMessage(message, sendResponse)
       } catch (err) {
