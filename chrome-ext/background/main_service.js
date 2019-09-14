@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           config = _config
 
+          updateWSData(connection)
+
           return sendResponse({ status: 'ok', config: _config })
         } catch (err) {
           return sendResponse({ status: 'error', error: err.message })
