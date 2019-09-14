@@ -48,6 +48,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = await instagram.login(username, password)
   }
 
+  const updateWSData = async (connection) => {
+    try {
+      if (instagram.user) {
+        const { user } = await instagram.callMethod('get_user_info', instagram.user.pk)
+        instagram.user = user
+      }
+
+      connection.send(JSON.stringify({
+        status: 'ok',
+        version: VERSION,
+        user_agent: USER_AGENT,
+        user: instagram.user,
+        config: config,
+      }))
+    } catch (err) {
+      console.error(`Error updating WS data`, err)
+    }
+  }
+
   const processMessage = async (message, sendResponse) => {
 
     try {
@@ -99,6 +118,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
           const user = await instagram.login(username, password, true)
+
+          updateWSData(connection)
 
           return sendResponse({ status: 'ok', user })
         } catch (err) {
@@ -194,7 +215,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     connection.onopen = () => {
       sec = 1 // reset error timeout counter
       console.log('Connected to FAMILY', familyUrl)
-      sendResponse({ status: 'ok', version: VERSION, user: instagram.user })
+
+      updateWSData(connection)
     }
 
     connection.onclose = () => {
@@ -227,9 +249,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sendResponse({ status: 'error', error: { message: err.message } })
       }
     }
-  }
 
-  connectWebsocket()
+    return { connection, sendResponse }
+  }
 
   chrome.runtime.onConnectExternal.addListener(async (port) => {
     console.log('connect', port)
@@ -264,5 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await processMessage(message, sendResponse)
   })
+
+  const { connection } = await connectWebsocket()
 
 }, false)
