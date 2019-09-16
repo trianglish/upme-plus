@@ -1,8 +1,13 @@
 const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.4.13'
+const VERSION = '1.4.14'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
-const JOINED_FAMILY = true // configurable via settings
+// const JOINED_FAMILY = true
+// stored in the config now
+const defaultLocalConfig = {
+  JOINED_FAMILY: false,
+  NOT_BETA_TEST: false,
+}
 
 const DEFAULT_CONFIG = {
   familyUrl: GRAMUP_WS_URL,
@@ -30,6 +35,8 @@ const replyToRequest = (sender, req_id, data) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const { username, password } = await getCredentials()
 
+  let { config = defaultLocalConfig } = await ChromeStorage.get('config') || {}
+
   window.instagram = new Instagram()
   window.instagram.history = new ChromeHistory()
   window.instagram.confirmator = new AllowAll()
@@ -41,6 +48,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = await instagram.login(username, password)
   }
 
+  const updateWSData = async (connection) => {
+    try {
+      if (instagram.user) {
+        const { user } = await instagram.callMethod('get_user_info', instagram.user.pk)
+        instagram.user = user
+      }
+
+      connection.send(JSON.stringify({
+        status: 'ok',
+        version: VERSION,
+        user_agent: USER_AGENT,
+        user: instagram.user,
+        config: config,
+      }))
+    } catch (err) {
+      console.error(`Error updating WS data`, err)
+    }
+  }
+
   const processMessage = async (message, sendResponse) => {
 
     try {
@@ -50,8 +76,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return sendResponse({ status: 'ok', pong: 'pong' })
       }
 
-      if (method === 'version') {
-        return sendResponse({ status: 'ok', version: VERSION, user_agent: USER_AGENT })
+      if (method === 'version' || method === 'info') {
+        return sendResponse({
+          status: 'ok',
+          version: VERSION,
+          user_agent: USER_AGENT,
+          config: config,
+        })
       }
 
       if (method === 'stats') {
@@ -62,11 +93,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         return sendResponse({ status: 'ok', data })
       }
 
+      if (method === 'config') {
+        const { config: current = defaultLocalConfig } = await ChromeStorage.get('config') || {}
+        const [ updates ] = params || []
+
+        try {
+          const new_config = await ChromeStorage.set('config', {
+            ...current,
+            ...updates,
+          })
+
+          const { config: _config } = await ChromeStorage.get('config')
+
+          config = _config
+
+          updateWSData(connection)
+
+          return sendResponse({ status: 'ok', config: _config })
+        } catch (err) {
+          return sendResponse({ status: 'error', error: err.message })
+        }
+      }
+
       if (method === 'login') {
         const [ username, password ] = params || []
 
         try {
           const user = await instagram.login(username, password, true)
+
+          updateWSData(connection)
 
           return sendResponse({ status: 'ok', user })
         } catch (err) {
@@ -162,7 +217,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     connection.onopen = () => {
       sec = 1 // reset error timeout counter
       console.log('Connected to FAMILY', familyUrl)
-      sendResponse({ status: 'ok', version: VERSION, user: instagram.user })
+
+      updateWSData(connection)
     }
 
     connection.onclose = () => {
@@ -179,9 +235,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('message', message)
         console.log('sender', event.origin)
 
-        if (!message.method) throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
+        if (!message.method) {
+          throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
+        }
 
-        if (!JOINED_FAMILY) return console.log(`Drop action, JOINED_FAMILY = ${JOINED_FAMILY}`)
+        if (!config.JOINED_FAMILY && config.NOT_BETA_TEST) {
+          console.log(`Drop action, JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
+          throw new Error(`FAMILY turned off: JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
+        }
 
         await processMessage(message, sendResponse)
       } catch (err) {
@@ -190,9 +251,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sendResponse({ status: 'error', error: { message: err.message } })
       }
     }
-  }
 
-  connectWebsocket()
+    return { connection, sendResponse }
+  }
 
   chrome.runtime.onConnectExternal.addListener(async (port) => {
     console.log('connect', port)
@@ -227,5 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await processMessage(message, sendResponse)
   })
+
+  const { connection } = await connectWebsocket()
 
 }, false)
