@@ -81,6 +81,19 @@ export const user_friendship = (self, user_id) => {
   return self.send_request(`friendships/show/${user_id}/`, { user_id })
 }
 
+export const user_friendships = async (self, user_ids = []) => {
+  const data = { user_ids: user_ids.join(',') }
+
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    ...data,
+  }
+
+  return self.send_request(`friendships/show_many/`, _data, { with_signature: false, form: true })
+}
+
 export const comment = (self, media_id, comment_text) => {
   return self.send_request(`media/${media_id}/comment/`, { comment_text })
 }
