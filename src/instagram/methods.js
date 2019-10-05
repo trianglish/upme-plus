@@ -226,9 +226,7 @@ export const get_users_reel = async (self, user_ids) => {
   */
   const url = `feed/reels_media/`
   user_ids = user_ids.map(id => `${id}`)
-  const res = await self.send_request(url, { user_ids })
-
-  return (res && res.reels) ? res.reels : []
+  return self.send_request(url, { user_ids })
 }
   //
   // if (res) {
