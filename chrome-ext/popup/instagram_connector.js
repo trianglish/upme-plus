@@ -1,10 +1,10 @@
 class InstagramError extends Error {
-  constructor(status, message = '') {
-    super(message)
+  constructor(status, error = '') {
+    super(error)
     this.status = status
-    this.error = message
-    this.message = `InstagramError ${status}: ${message}`
-    this.response = {}
+    this.error = error
+    this.message = `InstagramError ${status}: ${error.response ? error.response.message : error}`
+    this.response = error.response
   }
 }
 
