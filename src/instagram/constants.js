@@ -131,9 +131,9 @@ export const REQUEST_HEADERS = {
       // 'X-Instaweb-Cookie2': '$Version=1',
 }
 
-// Instagram Signature Key (v113.0.0.39.122) ARM and x86
+// Instagram Signature Key (v117.0.0.28.123) ARM and x86
 // from https://github.com/itsMoji/Instagram_SSL_Pinning
-export const IG_SIG_KEY = '8013dff8e97c16461a8881071210e8271c8fb0cf604d3c7d8f798df621435a18'
+export const IG_SIG_KEY = 'a86109795736d73c9a94172cd9b736917d7d94ca61c9101164894b3f0d43bef4'
 
 // console.log(" ---> Preparing consts:")
 
