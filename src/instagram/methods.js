@@ -323,3 +323,17 @@ export const get_hashtag_stories = (self, hashtag) => {
   const url = `tags/${hashtag}/story/`
   return self.send_request(url)
 }
+
+export const report = async (self, user_id, source_name = 'profile') => {
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    reason_id: 1,
+    user_id: user_id,
+    source_name: source_name,
+    is_spam: true,
+  }
+
+  return self.send_request(`users/${user_id}/flag_user/`, _data, { with_signature: false, form: true })
+}
