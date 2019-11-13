@@ -136,6 +136,8 @@ export const get_media_likers = (self, media_id) => {
   return self.send_request(`media/${media_id}/likers`)
 }
 
+
+// DIRECT
 export const get_inbox = (self) => {
   return self.send_request(`direct_v2/inbox/?`)
 }
@@ -179,7 +181,8 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
   const mutation_token = generate_uuid(true)
 
   const data = {
-    'client_context': generate_uuid(true),
+    // mutation_token,
+    'client_context': mutation_token,
     'action': 'send_item',
   }
 
@@ -225,7 +228,25 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
   return self.send_request(`direct_v2/threads/broadcast/${item_type}/`, _data, { with_signature: false, form: true })
 }
 
+export const mark_direct_seen = async (self, thread_id, thread_item_id) => {
+  const data = {
+    action: 'mark_seen',
+    use_unified_inbox: true,
+    thread_id: thread_id,
+    item_id: thread_item_id,
+  }
 
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    ...data,
+  }
+
+  return self.send_request(`direct_v2/threads/${thread_id}/items/${thread_item_id}/seen/`, _data, { with_signature: false, form: true })
+}
+
+// STORIES
 export const get_user_reel = (self, user_id) => {
   const url = `feed/user/${user_id}/reel_media/`
   return self.send_request(url)
