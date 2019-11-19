@@ -1,6 +1,7 @@
 // Inspired with Instabot API:
 // https://github.com/instagrambot/instabot/blob/master/instabot/api/api.py
 import { generate_uuid } from './helpers'
+import querystring from 'querystring'
 
 function is_user_id(user_id_or_username){
   return !isNaN(user_id_or_username)
@@ -27,15 +28,34 @@ export const logout = async (self) => {
   return result
 }
 
-export const get_user_followers = (self, user_id, max_id='') => {
+export const get_user_followers = (self, user_id, search_query='', max_id='') => {
   const rank_token = self.rank_token()
-  const url = `friendships/${user_id}/followers/?max_id=${max_id}&rank_token=${rank_token}&`
+
+  const query_str = querystring.stringify({
+    max_id,
+    rank_token,
+    query: search_query,
+  })
+
+  const url = `friendships/${user_id}/followers/?${query_str}`
+
+  // const url = `friendships/${user_id}/followers/?max_id=${max_id}&rank_token=${rank_token}&`
   return self.send_request(url)
 }
 
-export const get_user_followings = (self, user_id, max_id='') => {
+export const get_user_followings = (self, user_id, search_query='', max_id='') => {
   const rank_token = self.rank_token()
-  const url = `friendships/${user_id}/following/?max_id=${max_id}&rank_token=${rank_token}&`
+  const query_str = querystring.stringify({
+    max_id,
+    rank_token,
+    query: search_query,
+  })
+
+  // `max_id=${max_id}&rank_token=${rank_token}&`
+  // console.log('query_str', query_str)
+
+  const url = `friendships/${user_id}/following/?${query_str}`
+
   return self.send_request(url)
 }
 
@@ -358,3 +378,18 @@ export const report = async (self, user_id, source_name = 'profile') => {
 
   return self.send_request(`users/${user_id}/flag_user/`, _data, { with_signature: false, form: true })
 }
+//
+// const search_users = (self, query) => {
+//
+//   url = (
+//   "users/search/?ig_sig_key_version={sig_key}"
+//   "&is_typeahead=true&query={query}&rank_token={rank_token}"
+//   )
+//   return self.send_request(
+//   url.format(
+//   sig_key=config.SIG_KEY_VERSION,
+//   query=query,
+//   rank_token=self.rank_token
+//   )
+// )
+// }
