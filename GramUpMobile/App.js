@@ -69,7 +69,13 @@ const App = () => {
       .then(({ username, password }) => {
         username && setUsername(username)
         password && setPassword(password)
+
+        if (username && password) {
+          tryLogin(username, password)
+            .then(() => goToStep('logged_in'))
+        }
       })
+
   }, [])
 
   const finishStep = () => {
