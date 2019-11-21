@@ -1,7 +1,7 @@
 {
   "name": "Gram Up! – Free Instagram Bot by Instabot",
   "short_name": "Gram Up! Bot",
-  "version": "1.4.12",
+  "version": "1.4.14",
   "description": "Extension helps you Instagram effectively!",
   "icons": {
     "192": "images/icon.png"
@@ -43,6 +43,7 @@
       "https://dm.gramup.me/*",
       "https://gramup.me/*",
       "https://*.gramup.me/*",
+      "https://*.okhlopkov.now.sh/*",
       "https://instagrambot.github.io/*"
     ]
   },
