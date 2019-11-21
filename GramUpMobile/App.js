@@ -36,7 +36,7 @@ const WebViewWithBridge = withWebViewBridge(WebView);
 
 import { instagram, processMessage } from './processMessage';
 
-const source = { uri: 'https://dist.caffeinum.now.sh/' };
+const source = { uri: 'https://gramup-react-native.caffeinum.now.sh' };
 
 const sendMessage = async message => {
   console.log('message', message)
