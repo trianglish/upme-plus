@@ -1,7 +1,7 @@
 import Instagram from './src/instagram/';
 import UserAgent from 'react-native-user-agent';
 
-export const VERSION = 'react-native-1.4.14';
+export const VERSION = '1.4.14.react-native';
 export const instagram = new Instagram()
 export const USER_AGENT = UserAgent.getUserAgent();
 export const config = {}
