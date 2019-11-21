@@ -840,6 +840,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@react-native-community/async-storage@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.6.3.tgz#1a713e8c5cacd543ab8539080a5ce57ad917da88"
+  integrity sha512-67K2akX90uc252zKMYJt1wISvaEH6ARtdTI9bUkwmOFXVPyVk1DfPnaRmyUzcVdeCBOO1n0xv9YO2GSppIormQ==
+
 "@react-native-community/cli-platform-android@^2.0.1", "@react-native-community/cli-platform-android@^2.8.3":
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-platform-android/-/cli-platform-android-2.8.3.tgz#097237769d69400ceaf254a780d645bb8284acd6"
@@ -5175,6 +5180,11 @@ react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
 react-native-prompt@anti-nerd/react-native-prompt:
   version "1.0.0"
   resolved "https://codeload.github.com/anti-nerd/react-native-prompt/tar.gz/ff80df2cc1f5cb3a2dcc9e7be1abb8de5451a127"
+
+react-native-user-agent@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-user-agent/-/react-native-user-agent-2.1.0.tgz#254ca743da254896f527095ec5eb173843306cc2"
+  integrity sha512-uH3AFrEmTteQyh7cqv/CyCa2ayTuGVGZx5AeetITc7h0okzCdGObISCGGLMouXty70SOWzbtLbBlob0a9z7gbQ==
 
 react-native-webview-bridge-seamless@^0.0.11:
   version "0.0.11"

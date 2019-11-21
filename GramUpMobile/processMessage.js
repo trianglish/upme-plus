@@ -1,7 +1,10 @@
 import Instagram from './src/instagram/';
+import UserAgent from 'react-native-user-agent';
 
-export const VERSION = 'react-native-0.0.1';
+export const VERSION = 'react-native-1.4.14';
 export const instagram = new Instagram()
+export const USER_AGENT = UserAgent.getUserAgent();
+export const config = {}
 
 export const processMessage = async (message, sendResponse) => {
 
@@ -12,8 +15,13 @@ export const processMessage = async (message, sendResponse) => {
         return sendResponse({ status: 'ok', pong: 'pong' })
       }
 
-      if (method === 'version') {
-        return sendResponse({ status: 'ok', version: VERSION })
+      if (method === 'version' || method === 'info') {
+        return sendResponse({
+          status: 'ok',
+          version: VERSION,
+          user_agent: USER_AGENT,
+          config: config,
+        })
       }
 
       if (method === 'stats') {
@@ -27,6 +35,10 @@ export const processMessage = async (message, sendResponse) => {
 
           full: {},
         }})
+      }
+
+      if (method === 'config') {
+        return sendResponse({ status: 'ok', config })
       }
 
       if (method === 'login') {

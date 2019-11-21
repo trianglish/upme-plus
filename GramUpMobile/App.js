@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -35,6 +35,7 @@ import { withWebViewBridge } from 'react-native-webview-bridge-seamless';
 const WebViewWithBridge = withWebViewBridge(WebView);
 
 import { instagram, processMessage } from './processMessage';
+import { saveCredentials, getCredentials } from './credentials';
 
 const source = { uri: 'https://gramup-react-native.caffeinum.now.sh' };
 
@@ -63,6 +64,14 @@ const App = () => {
 
   const [ step, goToStep ] = useState(isLoggedIn() ? 'logged_in' : 'none')
 
+  useEffect(() => {
+    getCredentials()
+      .then(({ username, password }) => {
+        username && setUsername(username)
+        password && setPassword(password)
+      })
+  }, [])
+
   const finishStep = () => {
     console.log('state', step, username, password)
 
@@ -70,6 +79,7 @@ const App = () => {
       if (!!username && !!password) {
         tryLogin(username, password)
           .then(() => goToStep('logged_in'))
+          .then(() => saveCredentials(username, password))
       } else {
         goToStep('none')
       }
@@ -92,7 +102,7 @@ const App = () => {
         <View style={styles.body}>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>
-              Gram Up!
+              Gram App!
             </Text>
 
             {isLoggedIn() && (
@@ -108,7 +118,13 @@ const App = () => {
               <TextInput
                 style={styles.formInput}
                 textContentType="username"
-                onChangeText={(value) => setUsername('' + value)}
+                autoCapitalize="none"
+                autoCompleteType="username"
+                autoCorrect={false}
+                onChangeText={(value) => {
+                  setUsername('' + value)
+                  saveCredentials(value, password)
+                }}
                 value={username}
               />
 
@@ -116,7 +132,13 @@ const App = () => {
               <TextInput
                 style={styles.formInput}
                 textContentType="password"
-                onChangeText={(value) => setPassword('' + value)}
+                autoCapitalize="none"
+                autoCompleteType="password"
+                autoCorrect={false}
+                onChangeText={(value) => {
+                  setPassword('' + value)
+                  saveCredentials(username, value)
+                }}
                 value={password}
               />
               <Button
