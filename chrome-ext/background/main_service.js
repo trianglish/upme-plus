@@ -60,6 +60,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         version: VERSION,
         user_agent: USER_AGENT,
         user: instagram.user,
+        device: {
+          user_agent: instagram.user_agent,
+          phone_id: instagram.phone_id,
+          uuid: instagram.uuid,
+          // rank_token: instagram.rank_token(),
+        },
+        constants: instagram.constants,
         config: config,
       }))
     } catch (err) {
@@ -81,6 +88,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           status: 'ok',
           version: VERSION,
           user_agent: USER_AGENT,
+          device: {
+            user_agent: instagram.user_agent,
+            phone_id: instagram.phone_id,
+            uuid: instagram.uuid,
+            rank_token: instagram.rank_token(),
+          },
+          constants: instagram.constants,
           config: config,
         })
       }
