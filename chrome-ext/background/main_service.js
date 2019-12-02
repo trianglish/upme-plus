@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const processMessage = async (message, sendResponse) => {
 
     try {
-      const { method, params } = message
+      const { method, params = [] } = message
 
       if (method === 'ping') {
         return sendResponse({ status: 'ok', pong: 'pong' })
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (method === 'config') {
         const { config: current = defaultLocalConfig } = await ChromeStorage.get('config') || {}
-        const [ updates ] = params || []
+        const [ updates ] = params
 
         try {
           const new_config = await ChromeStorage.set('config', {
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'login') {
-        const [ username, password ] = params || []
+        const [ username, password ] = params
 
         try {
           const user = await instagram.login(username, password, true)
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'login_2fa') {
-        const [ username, password, verification_code, two_factor_data ] = params || []
+        const [ username, password, verification_code, two_factor_data ] = params
 
         try {
           const user = await instagram.verify_2fa(username, password, verification_code, two_factor_data)
