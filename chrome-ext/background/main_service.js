@@ -7,6 +7,7 @@ const USER_AGENT = navigator ? navigator.userAgent : 'none'
 const defaultLocalConfig = {
   JOINED_FAMILY: false,
   NOT_BETA_TEST: false,
+  CURRENT_TASK: null,
 }
 
 const DEFAULT_CONFIG = {
