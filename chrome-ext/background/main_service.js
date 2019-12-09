@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             user_agent: instagram.user_agent,
             phone_id: instagram.phone_id,
             uuid: instagram.uuid,
-            rank_token: instagram.rank_token(),
+            // rank_token: instagram.rank_token(),
           },
           constants: instagram.constants,
           config: config,
