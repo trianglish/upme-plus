@@ -43,6 +43,11 @@ export default class Instagram {
     this.total_requests = 0
     this.last_response = {}
 
+    this.constants = {
+      DEVICE,
+      IG_SIG_KEY,
+    }
+
     // if (username && password) {
     //   this.login(username, password)
     // }

@@ -1,6 +1,7 @@
 // Inspired with Instabot API:
 // https://github.com/instagrambot/instabot/blob/master/instabot/api/api.py
 import { generate_uuid } from './helpers'
+import querystring from 'querystring'
 
 function is_user_id(user_id_or_username){
   return !isNaN(user_id_or_username)
@@ -27,15 +28,34 @@ export const logout = async (self) => {
   return result
 }
 
-export const get_user_followers = (self, user_id, max_id='') => {
+export const get_user_followers = (self, user_id, search_query='', max_id='') => {
   const rank_token = self.rank_token()
-  const url = `friendships/${user_id}/followers/?max_id=${max_id}&rank_token=${rank_token}&`
+
+  const query_str = querystring.stringify({
+    max_id,
+    rank_token,
+    query: search_query,
+  })
+
+  const url = `friendships/${user_id}/followers/?${query_str}`
+
+  // const url = `friendships/${user_id}/followers/?max_id=${max_id}&rank_token=${rank_token}&`
   return self.send_request(url)
 }
 
-export const get_user_followings = (self, user_id, max_id='') => {
+export const get_user_followings = (self, user_id, search_query='', max_id='') => {
   const rank_token = self.rank_token()
-  const url = `friendships/${user_id}/following/?max_id=${max_id}&rank_token=${rank_token}&`
+  const query_str = querystring.stringify({
+    max_id,
+    rank_token,
+    query: search_query,
+  })
+
+  // `max_id=${max_id}&rank_token=${rank_token}&`
+  // console.log('query_str', query_str)
+
+  const url = `friendships/${user_id}/following/?${query_str}`
+
   return self.send_request(url)
 }
 
@@ -81,6 +101,19 @@ export const user_friendship = (self, user_id) => {
   return self.send_request(`friendships/show/${user_id}/`, { user_id })
 }
 
+export const user_friendships = async (self, user_ids = []) => {
+  const data = { user_ids: user_ids.join(',') }
+
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    ...data,
+  }
+
+  return self.send_request(`friendships/show_many/`, _data, { with_signature: false, form: true })
+}
+
 export const comment = (self, media_id, comment_text) => {
   return self.send_request(`media/${media_id}/comment/`, { comment_text })
 }
@@ -123,6 +156,8 @@ export const get_media_likers = (self, media_id) => {
   return self.send_request(`media/${media_id}/likers`)
 }
 
+
+// DIRECT
 export const get_inbox = (self) => {
   return self.send_request(`direct_v2/inbox/?`)
 }
@@ -166,7 +201,8 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
   const mutation_token = generate_uuid(true)
 
   const data = {
-    'client_context': generate_uuid(true),
+    // mutation_token,
+    'client_context': mutation_token,
     'action': 'send_item',
   }
 
@@ -212,7 +248,25 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
   return self.send_request(`direct_v2/threads/broadcast/${item_type}/`, _data, { with_signature: false, form: true })
 }
 
+export const mark_direct_seen = async (self, thread_id, thread_item_id) => {
+  const data = {
+    action: 'mark_seen',
+    use_unified_inbox: true,
+    thread_id: thread_id,
+    item_id: thread_item_id,
+  }
 
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    ...data,
+  }
+
+  return self.send_request(`direct_v2/threads/${thread_id}/items/${thread_item_id}/seen/`, _data, { with_signature: false, form: true })
+}
+
+// STORIES
 export const get_user_reel = (self, user_id) => {
   const url = `feed/user/${user_id}/reel_media/`
   return self.send_request(url)
@@ -226,9 +280,7 @@ export const get_users_reel = async (self, user_ids) => {
   */
   const url = `feed/reels_media/`
   user_ids = user_ids.map(id => `${id}`)
-  const res = await self.send_request(url, { user_ids })
-
-  return (res && res.reels) ? res.reels : []
+  return self.send_request(url, { user_ids })
 }
   //
   // if (res) {
@@ -312,3 +364,32 @@ export const get_hashtag_stories = (self, hashtag) => {
   const url = `tags/${hashtag}/story/`
   return self.send_request(url)
 }
+
+export const report = async (self, user_id, source_name = 'profile') => {
+  const default_data = await self.default_data()
+
+  const _data = {
+    ...default_data,
+    reason_id: 1,
+    user_id: user_id,
+    source_name: source_name,
+    is_spam: true,
+  }
+
+  return self.send_request(`users/${user_id}/flag_user/`, _data, { with_signature: false, form: true })
+}
+//
+// const search_users = (self, query) => {
+//
+//   url = (
+//   "users/search/?ig_sig_key_version={sig_key}"
+//   "&is_typeahead=true&query={query}&rank_token={rank_token}"
+//   )
+//   return self.send_request(
+//   url.format(
+//   sig_key=config.SIG_KEY_VERSION,
+//   query=query,
+//   rank_token=self.rank_token
+//   )
+// )
+// }
