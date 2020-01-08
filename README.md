@@ -3,7 +3,6 @@
 Gram Up - We Automate boring Instagram stuff for you. Start to get followers for free without any coding skills. 
 
 [<img width="200" alt="Instagrambot Web" src="https://user-images.githubusercontent.com/1909384/52903490-47be0d00-322f-11e9-954c-9035f4d9ac7f.png">](https://get.gramup.me)
-<img width="200" alt="Instagrambot Gif" src="https://user-images.githubusercontent.com/5613295/57079066-41044980-6cf8-11e9-8c5d-1d2f8a1dcbc4.gif">
 
 # [Download the extension!](https://get.gramup.me)
 
@@ -16,16 +15,16 @@ Gram Up - We Automate boring Instagram stuff for you. Start to get followers for
 
 ----
 
-## Automate your Instagram with your browser!
+## Automate social network with your browser!
 
 > Yes, we moved [Instabot](https://github.com/instagrambot/instabot) to the browser. No coding skills needed! Just our [extension](https://get.gramup.me).
 
 This browser extension can help you to:
 * Get Free 100 likes
 * Double your followers
-* Start Earning with your Instagram
+* Start Earning with your 
 
-There are a lot of ways to automate your Instagram but you have to give them your credentials to allow them perform in-app activity for you. As a result you can eventually found yourself being subscribed to unknown people or even lose your account.
+There are a lot of ways to automate your activity in social networks but you have to give them your credentials to allow them perform in-app activity for you. As a result you can eventually found yourself being subscribed to unknown people or even lose your account.
 
 We found a hack that allowed to insert all automation scripts into a browser. As a result, we don’t need a backend and your private data - your passwords never left your browser. And we made this tool completely free and open source. Miracle? Reality! 
 
@@ -34,7 +33,7 @@ If you find our free tool useful or just want more features available, please do
 ### Features
 
 - Like posts by hashtag, by user, by location
-- [Send and receive](https://github.com/instagrambot/gramup-dm) Instagram Direct messages
+- [Send and receive](https://github.com/instagrambot/gramup-dm) Direct messages
 - Follow users' followers, followees
 - Follow users' who posted to hashtag
 - Follow likers of a hashtag or a user
@@ -50,12 +49,12 @@ While we are in early alpha version, to use our service you should fit these req
 2. Install [Extension](https://get.gramup.me)
 3. Don't close the website while it doing his job. If you close tab - everything would stop.
 
-### How to start automating your Instagram
+### How to start automating
 
 1. Install and update your [Google Chrome browser](https://chrome.google.com)
 2. Install our extension from the [Official store](https://get.gramup.me/)
-3. Press our pink extension icon and login with your Instagram account (we don't have a backend, so don't store your credentials)
-4. Open [Dashboard](https://insta.gramup.me/)
+3. Press our pink extension icon and login with your account (we don't have a backend, so don't store your credentials)
+4. Open [Dashboard](https://dashboard.gramup.me/)
 5. Enjoy!
 
 ---------  
@@ -119,7 +118,7 @@ npm run build
 
 # Final words
 
-Get free real instagram followers and likes with our open source Chrome extension app. We've already developed a really good growth strategies for you. Join now: https://get.gramup.me. 
+Get free real followers and likes with our open source Chrome extension app. We've already developed a really good growth strategies for you. Join now: https://get.gramup.me. 
 
 ----------
 *authors: [@caffeinum](https://github.com/caffeinum), [@ohld](https://github.com/ohld). Love [Morejust](https://morejust.foundation).*
