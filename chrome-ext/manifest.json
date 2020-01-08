@@ -1,8 +1,8 @@
 {
-  "name": "Gram Up! – Free Instagram Bot by Instabot",
-  "short_name": "Gram Up! Bot",
-  "version": "1.5",
-  "description": "Extension helps you Instagram effectively!",
+  "name": "GramUp! – Free Bot by Instabot",
+  "short_name": "GramUp! Bot",
+  "version": "1.5.1",
+  "description": "Extension helps you effectively use social networks!",
   "icons": {
     "192": "images/icon.png"
   },
@@ -35,7 +35,7 @@
   "externally_connectable": {
     "matches": [
       "http://localhost/*",
-      "https://insta.gramup.me/*",
+      "https://dashboard.gramup.me/*",
       "https://api.gramup.me/*",
       "https://dm.gramup.me/*",
       "https://*.gramup.me/*",

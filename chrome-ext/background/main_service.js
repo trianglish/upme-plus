@@ -1,4 +1,4 @@
-const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
+const GRAMUP_CONFIG_URL = `https://dashboard.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
 const VERSION = '1.5'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
