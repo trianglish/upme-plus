@@ -43,7 +43,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         urls: [
           "https://caffeinum.github.io/*",
           "https://instagrambot.github.io/*",
-          "https://insta.gramup.me/*",
+          "https://dashboard.gramup.me/*",
           "https://api.gramup.me/*",
           "https://gramup.me/*",
           "*://localhost/*",

@@ -1,8 +1,8 @@
 {
-  "name": "Gram Up! – Free Instagram Bot by Instabot",
-  "short_name": "Gram Up! Bot",
-  "version": "1.4.14",
-  "description": "Extension helps you Instagram effectively!",
+  "name": "GramUp! – Free Social Bot",
+  "short_name": "GramUp! Bot",
+  "version": "1.5.2",
+  "description": "Extension helps you effectively use social networks!",
   "icons": {
     "192": "images/icon.png"
   },
@@ -29,21 +29,18 @@
     "background",
     "webRequest",
     "webRequestBlocking",
-    "https://i.instagram.com/*",
-    "https://insta.gramup.me/*",
-    "https://api.gramup.me/*",
-    "https://gramup.me/*",
-    "https://instagrambot.github.io/*"
+    "webRequestBlocking",
+    "https://i.instagram.com/"
   ],
   "externally_connectable": {
     "matches": [
       "http://localhost/*",
-      "https://insta.gramup.me/*",
+      "https://dashboard.gramup.me/*",
       "https://api.gramup.me/*",
       "https://dm.gramup.me/*",
-      "https://gramup.me/*",
       "https://*.gramup.me/*",
       "https://*.okhlopkov.now.sh/*",
+      "https://*.caffeinum.now.sh/*",
       "https://instagrambot.github.io/*"
     ]
   },

@@ -1,12 +1,13 @@
-const GRAMUP_CONFIG_URL = `https://insta.gramup.me/config.json`
+const GRAMUP_CONFIG_URL = `https://dashboard.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.4.14'
+const VERSION = '1.5'
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
 // const JOINED_FAMILY = true
 // stored in the config now
 const defaultLocalConfig = {
   JOINED_FAMILY: false,
   NOT_BETA_TEST: false,
+  CURRENT_TASK: null,
 }
 
 const DEFAULT_CONFIG = {
@@ -60,6 +61,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         version: VERSION,
         user_agent: USER_AGENT,
         user: instagram.user,
+        device: {
+          user_agent: instagram.user_agent,
+          phone_id: instagram.phone_id,
+          uuid: instagram.uuid,
+          // rank_token: instagram.rank_token(),
+        },
+        constants: instagram.constants,
         config: config,
       }))
     } catch (err) {
@@ -70,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const processMessage = async (message, sendResponse) => {
 
     try {
-      const { method, params } = message
+      const { method, params = [] } = message
 
       if (method === 'ping') {
         return sendResponse({ status: 'ok', pong: 'pong' })
@@ -81,6 +89,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           status: 'ok',
           version: VERSION,
           user_agent: USER_AGENT,
+          device: {
+            user_agent: instagram.user_agent,
+            phone_id: instagram.phone_id,
+            uuid: instagram.uuid,
+            // rank_token: instagram.rank_token(),
+          },
+          constants: instagram.constants,
           config: config,
         })
       }
@@ -95,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (method === 'config') {
         const { config: current = defaultLocalConfig } = await ChromeStorage.get('config') || {}
-        const [ updates ] = params || []
+        const [ updates ] = params
 
         try {
           const new_config = await ChromeStorage.set('config', {
@@ -116,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'login') {
-        const [ username, password ] = params || []
+        const [ username, password ] = params
 
         try {
           const user = await instagram.login(username, password, true)
@@ -133,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (method === 'login_2fa') {
-        const [ username, password, verification_code, two_factor_data ] = params || []
+        const [ username, password, verification_code, two_factor_data ] = params
 
         try {
           const user = await instagram.verify_2fa(username, password, verification_code, two_factor_data)

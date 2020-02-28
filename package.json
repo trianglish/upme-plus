@@ -1,13 +1,14 @@
 {
   "name": "gram-up",
-  "version": "1.4.14",
+  "version": "1.5.2",
   "repository": "https://github.com/instagrambot/GramUp",
-  "description": "Smart Automation for your Instagram inside your browser for free. https://gramup.me",
+  "description": "Smart Automation for your social networks inside your browser for free. https://gramup.me",
   "main": "src/index.js",
   "dependencies": {
     "axios": "^0.18.1",
     "axios-adapter-hmac": "^0.1.1",
     "blueimp-md5": "^2.10.0",
+    "crx": "^5.0.1",
     "hmac": "^1.0.1",
     "js-sha256": "^0.9.0",
     "uuid-js": "^0.7.5"
@@ -25,7 +26,9 @@
   "scripts": {
     "dev": "webpack --watch --mode=development --output chrome-ext/background/main.js",
     "start": "open http://localhost:8000 && python -m SimpleHTTPServer",
+    "pack": "crx pack -p chrome-ext.pem chrome-ext",
     "build": "webpack --mode=production --output chrome-ext/background/main.js",
+    "build:crx": "npm run build && npm run pack",
     "build:chrome": "npm run build && npm run zip",
     "postbuild:chrome": "npm run upload:chrome",
     "zip": "rm -rf chrome-ext.zip && zip -r -X chrome-ext.zip chrome-ext",

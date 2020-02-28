@@ -15,7 +15,7 @@ const whenLogged = async () => {
 }
 
 const openControlPanel = () => {
-  const WEBSITE_URL = `https://insta.gramup.me/`
+  const WEBSITE_URL = `https://dashboard.gramup.me/`
   window.open(WEBSITE_URL)
 }
 
