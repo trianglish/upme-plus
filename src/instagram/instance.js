@@ -4,6 +4,7 @@ import {
   API_URL,
   API_URL_v2,
   DEVICE,
+  DEVICES,
   USER_AGENT_BASE,
   IG_SIG_KEY,
   LOGIN_URL,
@@ -14,7 +15,14 @@ import {
 import axios from 'axios'
 import * as methods from './methods'
 import { prefixUnsecureHeaders } from './unsecure_headers'
-import { generate_uuid, generate_device_id_from_username, generate_signature } from './helpers'
+import {
+  generate_uuid,
+  generate_device_id_from_username,
+  generate_signature,
+  random_from,
+} from './helpers'
+
+import { get_locale } from './get_locale'
 
 export default class Instagram {
 
@@ -25,7 +33,10 @@ export default class Instagram {
     this.history = null
     this.confirmator = null // new Confirmator()
 
-    this.user_agent = USER_AGENT_BASE(DEVICE) // just insert params
+    this.locale = get_locale()
+
+    this.device = random_from(Object.values(DEVICES)) || DEFAULT_DEVICE
+    this.user_agent = USER_AGENT_BASE(this.device) // just insert params
 
     print("USER_AGENT:", this.user_agent)
 
@@ -43,8 +54,11 @@ export default class Instagram {
     this.total_requests = 0
     this.last_response = {}
 
+    this.methods = methods
+
     this.constants = {
-      DEVICE,
+      DEVICE: this.device,
+      LOCALE: this.locale,
       IG_SIG_KEY,
     }
 
@@ -57,6 +71,41 @@ export default class Instagram {
     return {
       '_uuid': this.uuid,
       '_uid': this.user_id,
+    }
+  }
+
+  async login_via_cookie() {
+    if (this.is_logged_in) {
+      throw new Error(`Already logged in`);
+    }
+
+    console.log('login via cookie')
+
+    const { viewer } = await this.send_request(`direct_v2/inbox/?`, null, { doLogin: true })
+
+    const user_id = viewer.pk
+
+    const { user, status } = await this.send_request(`users/${user_id}/info/`, null, {
+      doLogin: true
+    });
+
+    console.log('logged_in', user)
+
+    this.history &&
+      this.history.save("login", [user.username, "__from_cookie__"], { status });
+
+    try {
+      if (user) {
+        this.is_logged_in = true;
+        this.user_id = user.pk;
+        this.user = user;
+        return user;
+      } else {
+        throw new Error(`Could not log in: ${response}`);
+      }
+    } catch (err) {
+      console.error(`LoginError: ${err.message}`)
+      throw err
     }
   }
 
@@ -222,7 +271,7 @@ export default class Instagram {
     return this._request(endpoint, 'POST', data, extra_headers, options)
   }
 
-  send_request(endpoint, data = null, { doLogin = false, with_signature = true, ...options } = {}) {
+  async send_request(endpoint, data = null, { doLogin = false, with_signature = true, ...options } = {}) {
     if (!this.is_logged_in && !doLogin) {
       throw new Error(`Not logged in! Tried to call ${endpoint}`)
     }
@@ -235,9 +284,9 @@ export default class Instagram {
 
     try {
       if (data) {
-        return this._post(endpoint, _data, {}, { ...options })
+        return await this._post(endpoint, _data, {}, { ...options })
       } else {
-        return this._get(endpoint, {}, { ...options })
+        return await this._get(endpoint, {}, { ...options })
       }
     } catch (err) {
       console.error(`Request failed:`, err, `Data:`, endpoint, data, )
