@@ -33,3 +33,9 @@ export const generate_signature = (data) => {
 
   return signature
 }
+
+export const random_from = (arr) => {
+  const index = Math.floor( Math.random() * arr.length )
+
+  return arr[index]
+}
