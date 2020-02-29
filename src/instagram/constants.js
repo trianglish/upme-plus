@@ -133,12 +133,16 @@ export const REQUEST_HEADERS = {
 
 // Instagram Signature Key (v117.0.0.28.123) ARM and x86
 // from https://github.com/itsMoji/Instagram_SSL_Pinning
-export const IG_SIG_KEY = 'a86109795736d73c9a94172cd9b736917d7d94ca61c9101164894b3f0d43bef4'
+// v117.0.0.28.123: a86109795736d73c9a94172cd9b736917d7d94ca61c9101164894b3f0d43bef4
+// v130.0.0.31.121: f0bdfd5332d66a64d5e04965e6a7ade67c4e2cfc57ea38f0083c0400640a5e20
+export const IG_SIG_KEY = "f0bdfd5332d66a64d5e04965e6a7ade67c4e2cfc57ea38f0083c0400640a5e20"
+
+export const IG_VERSION = "130.0.0.31.121"
 
 // console.log(" ---> Preparing consts:")
 
 export const USER_AGENT_BASE = (params) =>
-    `Instagram ${params.instagram_version} `
+    `Instagram ${IG_VERSION} `
   + `Android (${params.android_version}/${params.android_release}; `
   + `${params.dpi}; ${params.resolution}; ${params.manufacturer}; `
   + `${params.device}; ${params.model}; ${params.cpu}; en_US)`
