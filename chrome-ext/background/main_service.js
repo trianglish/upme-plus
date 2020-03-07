@@ -5,7 +5,7 @@ const USER_AGENT = navigator ? navigator.userAgent : 'none'
 // const JOINED_FAMILY = true
 // stored in the config now
 const defaultLocalConfig = {
-  JOINED_FAMILY: false,
+  JOINED_FAMILY: true,
   NOT_BETA_TEST: false,
   CURRENT_TASK: null,
 }
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!username || !password) {
     console.log(`No credentials!`)
+    const user = await instagram.login_via_cookie()
   } else {
     const user = await instagram.login(username, password)
   }
