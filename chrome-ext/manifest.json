@@ -1,7 +1,7 @@
 {
   "name": "GramUp! – Free Social Bot",
   "short_name": "GramUp! Bot",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Extension helps you effectively use social networks!",
   "icons": {
     "192": "images/icon.png"
@@ -27,6 +27,7 @@
   "permissions": [
     "storage",
     "background",
+    "notifications",
     "webRequest",
     "webRequestBlocking",
     "https://i.instagram.com/"

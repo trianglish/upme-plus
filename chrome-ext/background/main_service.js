@@ -148,6 +148,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
+      if (method === 'login_via_cookie') {
+        try {
+          const user = await instagram.login_via_cookie()
+
+          updateWSData(connection)
+
+          return sendResponse({ status: 'ok', user })
+        } catch (err) {
+          console.error(err)
+          const { message, response } = err
+          const { data, headers } = response
+          return sendResponse({ status: 'error', error: { message, response: data, headers }})
+        }
+      }
+
       if (method === 'login_2fa') {
         const [ username, password, verification_code, two_factor_data ] = params
 
@@ -166,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (method === 'exit') {
         // TODO: logout
         instagram.user = {}
+        instagram.is_logged_in = false
         return sendResponse({ status: 'ok', user: instagram.user })
       }
 
@@ -180,7 +196,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           console.log(`Needs relogin`, error)
 
           const { username, password } = await getCredentials()
-          instagram.user = await instagram.login(username, password, true)
+
+          if (username) {
+            instagram.user = await instagram.login(username, password, true)
+          } else {
+            instagram.user = await instagram.login_via_cookie()
+          }
         }
 
         return sendResponse({ status: 'ok', user: instagram.user })

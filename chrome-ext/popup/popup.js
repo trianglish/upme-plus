@@ -78,6 +78,23 @@ window.onload = async () => {
     await updateView()
   }
 
+  document.querySelector(".btn-get-cookies").onclick = async (event) => {
+    event.preventDefault();
+
+    try {
+      const res = await instagram.request({
+        method: 'login_via_cookie'
+      })
+
+      onLoginSuccess(res)
+    } catch (err) {
+      console.log('Login Error', err)
+      const { error: { response } } = err
+      console.error(response)
+      onLoginError(res.error.message)
+    }
+  }
+
   login_form.onsubmit = async (event) => {
     event.preventDefault()
 
@@ -93,7 +110,9 @@ window.onload = async () => {
       onLoginSuccess(res, creds)
 
     } catch (err) {
-      const { error: { response } } = err
+      console.error(err)
+
+      const { error: { response } } = err || {}
 
       console.error(response)
 
@@ -134,8 +153,12 @@ window.onload = async () => {
     }
   }
 
-  const onLoginSuccess = async (res, { username, password }) => {
-    await saveCredentials(username, password)
+  const onLoginSuccess = async (res, creds) => {
+    if (creds) {
+      const { username, password } = creds
+      await saveCredentials(username, password)
+    }
+
     await whenLogged()
     openControlPanel()
   }
