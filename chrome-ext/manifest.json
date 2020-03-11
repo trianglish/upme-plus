@@ -37,8 +37,8 @@
       "http://localhost/",
       "https://dashboard.gramup.me/",
       "https://dm.gramup.me/",
-      "https://*.okhlopkov.now.sh/*",
-      "https://*.caffeinum.now.sh/*"
+      "https://*.okhlopkov.now.sh/",
+      "https://*.caffeinum.now.sh/"
     ]
   },
   "manifest_version": 2
