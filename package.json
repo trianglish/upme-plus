@@ -5,6 +5,7 @@
   "description": "Smart Automation for your social networks inside your browser for free. https://gramup.me",
   "main": "src/index.js",
   "dependencies": {
+    "amplitude-js": "^5.9.0",
     "axios": "^0.18.1",
     "axios-adapter-hmac": "^0.1.1",
     "blueimp-md5": "^2.10.0",
