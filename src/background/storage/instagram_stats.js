@@ -1,4 +1,6 @@
-class InstagramStats extends Collection {
+import Collection from './collection'
+
+export class InstagramStats extends Collection {
 
   constructor(instagram) {
     super()
@@ -62,3 +64,5 @@ class InstagramStats extends Collection {
   }
 
 }
+
+export default InstagramStats

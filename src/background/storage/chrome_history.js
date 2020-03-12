@@ -1,4 +1,7 @@
-class ChromeHistory extends History {
+import { History } from '../../instagram';
+import Collection from './collection';
+
+export class ChromeHistory extends History {
 
   constructor () {
     super()
@@ -21,3 +24,5 @@ class ChromeHistory extends History {
   }
 
 }
+
+export default ChromeHistory

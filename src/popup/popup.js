@@ -1,3 +1,5 @@
+import instagram from './instagram_connector';
+
 const whenLogged = async () => {
 
   const { user } = await instagram.request({

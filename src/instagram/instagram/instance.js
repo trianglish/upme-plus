@@ -25,8 +25,9 @@ import {
 import { get_locale } from './get_locale'
 
 export default class Instagram {
-
+  
   constructor(username, password) {
+
     this.is_logged_in = false
     this.user_id = null
     this.user = null

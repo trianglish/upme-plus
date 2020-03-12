@@ -1,6 +1,20 @@
+import Instagram from '../instagram';
+import ChromeStorage from './storage/storage_promise';
+import ChromeHistory from './storage/chrome_history';
+import InstagramStats from './storage/instagram_stats';
+
+import {
+  getCredentials,
+  saveCredentials,
+  clearCredentials
+} from '../shared/credentials';
+
+// import manifest from '../manifest.json';
+import pkg from '../../package.json';
+
 const GRAMUP_CONFIG_URL = `https://dashboard.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = '1.5'
+const VERSION = pkg['version']
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
 // const JOINED_FAMILY = true
 // stored in the config now
@@ -40,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.instagram = new Instagram()
   window.instagram.history = new ChromeHistory()
-  window.instagram.confirmator = new AllowAll()
+  window.instagram.confirmator = null
   window.stats = new InstagramStats(window.instagram)
 
   if (!username || !password) {

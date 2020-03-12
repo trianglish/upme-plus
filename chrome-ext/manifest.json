@@ -8,20 +8,11 @@
   },
   "background": {
     "scripts": [
-      "shared/credentials.js",
-      "background/services/insecure_headers.js",
-      "background/services/on_install.js",
-      "background/main.js",
-      "background/storage/collection.js",
-      "background/storage/storage_promise.js",
-      "background/storage/instagram_stats.js",
-      "background/storage/chrome_history.js",
-      "background/window_confirmator.js",
-      "background/main_service.js"
+      "build/background.js"
     ]
   },
   "browser_action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "popup.html",
     "default_icon": "images/icon.png"
   },
   "permissions": [

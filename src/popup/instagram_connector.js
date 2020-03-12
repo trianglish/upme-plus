@@ -1,4 +1,4 @@
-class InstagramError extends Error {
+export class InstagramError extends Error {
   constructor(status, error = '') {
     super(error)
     this.status = status
@@ -8,33 +8,36 @@ class InstagramError extends Error {
   }
 }
 
-class TimeoutError extends Error {}
+export class TimeoutError extends Error {}
 
-class InstagramConnector {
-  isStopped = false
-  isConnected = false
-
-  init = async () => {
-    try {
-      const ping = await this.request({
-        method: 'ping'
-      })
-
-      console.log('ping', ping)
-
-      this.isConnected = ping.status === 'ok' && Boolean(ping.pong)
-    } catch (err) {
-      if (err instanceof TimeoutError) {
-        this.isConnected = false
-        return
+export class InstagramConnector {
+  constructor() {
+    this.isStopped = false
+    this.isConnected = false
+  
+    this.init = async () => {
+      try {
+        const ping = await this.request({
+          method: 'ping'
+        })
+  
+        console.log('ping', ping)
+  
+        this.isConnected = ping.status === 'ok' && Boolean(ping.pong)
+      } catch (err) {
+        if (err instanceof TimeoutError) {
+          this.isConnected = false
+          return
+        }
+  
+        throw err
       }
-
-      throw err
     }
+
+    this.start = () => (this.isStopped = false)
+    this.kill = () => (this.isStopped = true)
   }
 
-  start = () => (this.isStopped = false)
-  kill = () => (this.isStopped = true)
 
   request (data) {
     return new Promise((resolve, reject) => {
@@ -76,4 +79,5 @@ class InstagramConnector {
 
 }
 
-const instagram = new InstagramConnector()
+export const instagram = new InstagramConnector()
+export default instagram

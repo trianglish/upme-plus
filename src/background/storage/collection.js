@@ -1,5 +1,6 @@
+import ChromeStorage from './storage_promise'
 
-class Collection {
+export class Collection {
 
   get default_key() {
     return 'misc'
@@ -48,3 +49,5 @@ class Collection {
   }
 
 }
+
+export default Collection

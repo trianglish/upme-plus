@@ -1,6 +1,6 @@
 {
   "name": "gram-up",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "repository": "https://github.com/instagrambot/GramUp",
   "description": "Smart Automation for your social networks inside your browser for free. https://gramup.me",
   "main": "src/index.js",
@@ -16,26 +16,24 @@
     "uuid-js": "^0.7.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "babel-loader": "^8.0.5",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-json": "^4.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-typescript": "^4.0.0",
     "chrome-webstore-upload-cli": "^1.2.0",
-    "uglifyjs-webpack-plugin": "^2.1.1",
-    "webpack": "^4.29.4",
-    "webpack-cli": "^3.2.3"
+    "rollup": "^2.0.5",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "typescript": "^3.8.3"
   },
   "scripts": {
-    "dev": "webpack --watch --mode=development --output chrome-ext/background/main.js",
-    "start": "open http://localhost:8000 && python -m SimpleHTTPServer",
+    "dev": "rollup -c -w",
     "pack": "crx pack -p chrome-ext.pem chrome-ext",
-    "build": "webpack --mode=production --output chrome-ext/background/main.js",
+    "build": "rollup -c",
     "build:crx": "npm run build && npm run pack",
     "build:chrome": "npm run build && npm run zip",
-    "postbuild:chrome": "npm run upload:chrome",
     "zip": "rm -rf chrome-ext.zip && zip -r -X chrome-ext.zip chrome-ext",
     "upload:chrome": "source .env && webstore upload --source chrome-ext.zip --extension-id $EXTENSION_ID --client-id \"$CLIENT_ID\" --client-secret $CLIENT_SECRET --refresh-token \"$REFRESH_TOKEN\"",
-    "postupload:chrome": "npm run open-chrome-store",
     "open-chrome-store": "open https://chrome.google.com/webstore/developer/edit/njonkbhnmmjgancfbncekpgkmidhbbpo",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
