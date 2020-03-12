@@ -1,4 +1,4 @@
-import ChromeStorage from './storage_promise'
+import ChromeStorage from './chrome_storage'
 
 export class Collection {
 

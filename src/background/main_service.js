@@ -1,5 +1,5 @@
-import Instagram from '../instagram';
-import ChromeStorage from './storage/storage_promise';
+import Instagram from './instagram';
+import ChromeStorage from './storage/chrome_storage';
 import ChromeHistory from './storage/chrome_history';
 import InstagramStats from './storage/instagram_stats';
 
@@ -9,15 +9,14 @@ import {
   clearCredentials
 } from '../shared/credentials';
 
-// import manifest from '../manifest.json';
+import manifest from '../../chrome-ext/manifest.json';
 import pkg from '../../package.json';
 
 const GRAMUP_CONFIG_URL = `https://dashboard.gramup.me/config.json`
 const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = pkg['version']
+const VERSION = manifest['version']
 const USER_AGENT = navigator ? navigator.userAgent : 'none'
-// const JOINED_FAMILY = true
-// stored in the config now
+
 const defaultLocalConfig = {
   JOINED_FAMILY: true,
   NOT_BETA_TEST: false,

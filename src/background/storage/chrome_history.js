@@ -1,4 +1,4 @@
-import { History } from '../../instagram';
+import { History } from '../instagram';
 import Collection from './collection';
 
 export class ChromeHistory extends History {

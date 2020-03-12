@@ -42,11 +42,11 @@ const config = ({ inFile, outFile }) => ({
 
 export default [
   config({
-    inFile: 'src/background.js',
+    inFile: 'src/background/index.js',
     outFile: 'chrome-ext/build/background.js',
   }),
   config({
-    inFile: 'src/popup.js',
+    inFile: 'src/popup/index.js',
     outFile: 'chrome-ext/build/popup.js',
   }),
 ];
