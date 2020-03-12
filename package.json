@@ -29,7 +29,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "pack": "crx pack -p chrome-ext.pem chrome-ext",
-    "build": "rollup -c",
+    "build": "NODE_ENV=production rollup -c",
     "build:crx": "npm run build && npm run pack",
     "build:chrome": "npm run build && npm run zip",
     "zip": "rm -rf chrome-ext.zip && zip -r -X chrome-ext.zip chrome-ext",

@@ -1,18 +1,27 @@
-
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from "@rollup/plugin-json";
-import nodePolyfills from "rollup-plugin-node-polyfills";
 import { terser } from 'rollup-plugin-terser';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 // import typescript from "@rollup/plugin-typescript";
-// import pkg from './package.json';
-// import manifest from './chrome-ext/manifest.json';
+import pkg from './package.json';
+import manifest from './chrome-ext/manifest.json';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
 // const production = !process.env.ROLLUP_WATCH;
 const isProduction = process.env.NODE_ENV === "production";
+
+console.log('[BUILD]')
+console.log('PRODUCTION', isProduction)
+console.log('PKG VERSION', pkg.version)
+console.log('MAN VERSION', manifest.version)
+
+if (pkg.version !== manifest.version) {
+  console.error(`\n\tVERSIONS DON'T MATCH\n`)
+  process.exit()
+}
 
 const config = ({ inFile, outFile }) => ({
   input: inFile,
@@ -23,8 +32,9 @@ const config = ({ inFile, outFile }) => ({
     sourcemap: true
   },
   plugins: [
-    resolve({ browser: true }),
+    resolve({ browser: true, preferBuiltins: true }),
     commonjs(),
+    nodePolyfills(),
     // typescript(),
     json(),
     isProduction && terser() // minify, but only in production
@@ -40,52 +50,4 @@ export default [
     inFile: 'src/popup.js',
     outFile: 'chrome-ext/build/popup.js',
   }),
-  // {
-  //   input: "chrome-ext/background.js",
-  //   output: {
-  //     file: "chrome-ext/dist/background.js",
-  //     // outDir: "chrome-ext/dist/background",
-  //     // dir: "chrome-ext/dist",
-  //     format: "mjs",
-  //     sourcemap: true
-  //   },
-  //   plugins: [
-  //     resolve(), // so Rollup can find `ms`
-  //     commonjs(), // so Rollup can convert `ms` to an ES module
-  //     json(),
-  //     typescript(),
-  //     production && terser() // minify, but only in production
-  //   ]
-  // },
-  // {
-  //   input: "chrome-ext/popup.js",
-  //   output: {
-  //     file: "chrome-ext/dist/popup.js",
-  //     // outDir: "chrome-ext/dist/popup",
-  //     // dir: "chrome-ext/dist",
-  //     format: "mjs",
-  //     sourcemap: true
-  //   },
-  //   plugins: [
-  //     resolve(), // so Rollup can find `ms`
-  //     commonjs(), // so Rollup can convert `ms` to an ES module
-  //     json(),
-  //     typescript(),
-  //     production && terser() // minify, but only in production
-  //   ]
-  // }
-  //   {
-  //     input: "src/index.js",
-  //     external: ["ms"],
-  //     output: [
-  //       { file: pkg.main, format: "cjs" },
-  //       { file: pkg.module, format: "es" }
-  //     ],
-  //     plugins: [
-  //       resolve(), // so Rollup can find `ms`
-  //       commonjs(), // so Rollup can convert `ms` to an ES module
-  //       json(),
-  //       production && terser() // minify, but only in production
-  //     ]
-  //   }
 ];
