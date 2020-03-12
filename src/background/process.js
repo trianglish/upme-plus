@@ -72,8 +72,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         return sendResponse({ status: 'ok', user })
       } catch (err) {
         console.error(err)
-        const { message, response } = err
+
+        const { message, response = {} } = err
         const { data, headers } = response
+
         return sendResponse({
           status: 'error',
           error: { message, response: data, headers },
@@ -90,7 +92,7 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         return sendResponse({ status: 'ok', user })
       } catch (err) {
         console.error(err)
-        const { message, response } = err
+        const { message, response = {} } = err
         const { data, headers } = response
         return sendResponse({
           status: 'error',
@@ -113,8 +115,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         return sendResponse({ status: 'ok', user })
       } catch (err) {
         console.error(err)
-        const { message, response } = err
+
+        const { message, response = {} } = err
         const { data, headers } = response
+
         return sendResponse({
           status: 'error',
           error: { message, response: data, headers },
@@ -142,7 +146,7 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       } catch (error) {
         console.log('Needs relogin', error)
 
-        const { username, password } = await getCredentials()
+        const { username, password } = await getCredentials() || {}
 
         if (username) {
           instagram.user = await instagram.login(username, password, true)
@@ -172,8 +176,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
     return sendResponse(res)
   } catch (err) {
     console.error(err)
-    const { message, response } = err
-    const { data, headers } = response || {}
+
+    const { message, response = {} } = err
+    const { data, headers } = response
+
     return sendResponse({
       status: 'error',
       error: { message, response: data, headers },

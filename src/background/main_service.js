@@ -3,7 +3,7 @@ import ChromeStorage from './storage/chrome_storage'
 import ChromeHistory from './storage/chrome_history'
 
 import stats from './storage/instagram_stats'
-import { getCredentials } from '../shared/credentials'
+import { getCredentials, clearCredentials } from '../shared/credentials'
 
 import { DEFAULT_LOCAL_CONFIG } from './constants'
 
@@ -12,13 +12,12 @@ import processMessage from './process'
 
 window.instagram = instagram
 window.instagram.history = new ChromeHistory()
-// window.instagram.confirmator = null
-window.stats = stats // new InstagramStats(window.instagram);
+window.stats = stats
 
 document.addEventListener(
   'DOMContentLoaded',
   async () => {
-    const { username, password } = await getCredentials()
+    const { username, password } = await getCredentials() || {}
 
     const { config = DEFAULT_LOCAL_CONFIG } =
       (await ChromeStorage.get('config')) || {}
@@ -28,8 +27,13 @@ document.addEventListener(
       const user = await instagram.login_via_cookie()
       console.log('user', user)
     } else {
-      const user = await instagram.login(username, password)
-      console.log('user', user)
+      try {
+        const user = await instagram.login(username, password)
+        console.log('user', user)
+      } catch (err) {
+        console.log('clearing wrong credentials for', username)
+        await clearCredentials()
+      }
     }
 
     const replyToRequest = (sender, req_id, data) => {
