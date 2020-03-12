@@ -1,344 +1,84 @@
-import Instagram from './instagram';
-import ChromeStorage from './storage/chrome_storage';
-import ChromeHistory from './storage/chrome_history';
-import InstagramStats from './storage/instagram_stats';
+import instagram from "./instagram";
+import ChromeStorage from "./storage/chrome_storage";
+import ChromeHistory from "./storage/chrome_history";
 
-import {
-  getCredentials,
-  saveCredentials,
-  clearCredentials
-} from '../shared/credentials';
+import stats from "./storage/instagram_stats";
+import { getCredentials } from "../shared/credentials";
 
-import manifest from '../../chrome-ext/manifest.json';
-import pkg from '../../package.json';
+import { DEFAULT_LOCAL_CONFIG } from "./constants";
 
-const GRAMUP_CONFIG_URL = `https://dashboard.gramup.me/config.json`
-const GRAMUP_WS_URL = `wss://socket.gramup.me/`
-const VERSION = manifest['version']
-const USER_AGENT = navigator ? navigator.userAgent : 'none'
+import { connectWebsocket } from "./ws";
+import processMessage from "./process";
 
-const defaultLocalConfig = {
-  JOINED_FAMILY: true,
-  NOT_BETA_TEST: false,
-  CURRENT_TASK: null,
-}
+window.instagram = instagram;
+window.instagram.history = new ChromeHistory();
+// window.instagram.confirmator = null
+window.stats = stats; // new InstagramStats(window.instagram);
 
-const DEFAULT_CONFIG = {
-  familyUrl: GRAMUP_WS_URL,
-}
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+    const { username, password } = await getCredentials();
 
-const getConfig = () => {
-  return fetch(GRAMUP_CONFIG_URL)
-    .then(res => res.json())
-    .then(config => config || DEFAULT_CONFIG)
-    .catch(err => {
-      console.error(err)
-      return DEFAULT_CONFIG
-    })
-}
+    let { config = DEFAULT_LOCAL_CONFIG } =
+      (await ChromeStorage.get("config")) || {};
 
-const replyToRequest = (sender, req_id, data) => {
-  console.log('reply to', req_id, data)
-  if (sender.tab) {
-    return chrome.tabs.sendMessage(sender.tab.id, { req_id, ...data })
-  } else {
-    return chrome.runtime.sendMessage(sender.id, { req_id, ...data })
-  }
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const { username, password } = await getCredentials()
-
-  let { config = defaultLocalConfig } = await ChromeStorage.get('config') || {}
-
-  window.instagram = new Instagram()
-  window.instagram.history = new ChromeHistory()
-  window.instagram.confirmator = null
-  window.stats = new InstagramStats(window.instagram)
-
-  if (!username || !password) {
-    console.log(`No credentials!`)
-    const user = await instagram.login_via_cookie()
-  } else {
-    const user = await instagram.login(username, password)
-  }
-
-  const updateWSData = async (connection) => {
-    try {
-      if (instagram.user) {
-        const { user } = await instagram.callMethod('get_user_info', instagram.user.pk)
-        instagram.user = user
-      }
-
-      connection.send(JSON.stringify({
-        status: 'ok',
-        version: VERSION,
-        user_agent: USER_AGENT,
-        user: instagram.user,
-        device: {
-          user_agent: instagram.user_agent,
-          phone_id: instagram.phone_id,
-          uuid: instagram.uuid,
-          // rank_token: instagram.rank_token(),
-        },
-        constants: instagram.constants,
-        config: config,
-      }))
-    } catch (err) {
-      console.error(`Error updating WS data`, err)
-    }
-  }
-
-  const processMessage = async (message, sendResponse) => {
-
-    try {
-      const { method, params = [] } = message
-
-      if (method === 'ping') {
-        return sendResponse({ status: 'ok', pong: 'pong' })
-      }
-
-      if (method === 'version' || method === 'info') {
-        return sendResponse({
-          status: 'ok',
-          version: VERSION,
-          user_agent: USER_AGENT,
-          device: {
-            user_agent: instagram.user_agent,
-            phone_id: instagram.phone_id,
-            uuid: instagram.uuid,
-            // rank_token: instagram.rank_token(),
-          },
-          constants: instagram.constants,
-          config: config,
-        })
-      }
-
-      if (method === 'stats') {
-        await stats.updateValues()
-
-        const data = await stats.getInfo()
-
-        return sendResponse({ status: 'ok', data })
-      }
-
-      if (method === 'config') {
-        const { config: current = defaultLocalConfig } = await ChromeStorage.get('config') || {}
-        const [ updates ] = params
-
-        try {
-          const new_config = await ChromeStorage.set('config', {
-            ...current,
-            ...updates,
-          })
-
-          const { config: _config } = await ChromeStorage.get('config')
-
-          config = _config
-
-          updateWSData(connection)
-
-          return sendResponse({ status: 'ok', config: _config })
-        } catch (err) {
-          return sendResponse({ status: 'error', error: err.message })
-        }
-      }
-
-      if (method === 'login') {
-        const [ username, password ] = params
-
-        try {
-          const user = await instagram.login(username, password, true)
-
-          updateWSData(connection)
-
-          return sendResponse({ status: 'ok', user })
-        } catch (err) {
-          console.error(err)
-          const { message, response } = err
-          const { data, headers } = response
-          return sendResponse({ status: 'error', error: { message, response: data, headers }})
-        }
-      }
-
-      if (method === 'login_via_cookie') {
-        try {
-          const user = await instagram.login_via_cookie()
-
-          updateWSData(connection)
-
-          return sendResponse({ status: 'ok', user })
-        } catch (err) {
-          console.error(err)
-          const { message, response } = err
-          const { data, headers } = response
-          return sendResponse({ status: 'error', error: { message, response: data, headers }})
-        }
-      }
-
-      if (method === 'login_2fa') {
-        const [ username, password, verification_code, two_factor_data ] = params
-
-        try {
-          const user = await instagram.verify_2fa(username, password, verification_code, two_factor_data)
-
-          return sendResponse({ status: 'ok', user })
-        } catch (err) {
-          console.error(err)
-          const { message, response } = err
-          const { data, headers } = response
-          return sendResponse({ status: 'error', error: { message, response: data, headers }})
-        }
-      }
-
-      if (method === 'exit') {
-        // TODO: logout
-        instagram.user = {}
-        instagram.is_logged_in = false
-        return sendResponse({ status: 'ok', user: instagram.user })
-      }
-
-      if (method === 'check_login') {
-        try {
-          if (instagram.user && instagram.user.username) {
-            const info = await instagram.callMethod('get_user_info', instagram.user.username)
-
-            instagram.user = info.user
-          }
-        } catch (error) {
-          console.log(`Needs relogin`, error)
-
-          const { username, password } = await getCredentials()
-
-          if (username) {
-            instagram.user = await instagram.login(username, password, true)
-          } else {
-            instagram.user = await instagram.login_via_cookie()
-          }
-        }
-
-        return sendResponse({ status: 'ok', user: instagram.user })
-      }
-
-      if (method === 'get_history') {
-        const history = await getHistory(...params)
-
-        return sendResponse({ status: 'ok', history })
-      }
-
-      if (!instagram) {
-        return sendResponse({ status: 'error', error: { message: 'Not initialized' } })
-      }
-
-      const res = await instagram.callMethod(method, ...params)
-
-      return sendResponse(res)
-    } catch (err) {
-      console.error(err)
-      const { message, response } = err
-      const { data, headers } = response || {}
-      return sendResponse({ status: 'error', error: { message, response: data, headers }})
+    if (!username || !password) {
+      console.log(`No credentials!`);
+      const user = await instagram.login_via_cookie();
+      console.log('user', user)
+    } else {
+      const user = await instagram.login(username, password);
+      console.log('user', user)
     }
 
-  }
+    const replyToRequest = (sender, req_id, data) => {
+      console.log("reply to", req_id, data);
+      if (sender.tab) {
+        return chrome.tabs.sendMessage(sender.tab.id, { req_id, ...data });
+      } else {
+        return chrome.runtime.sendMessage(sender.id, { req_id, ...data });
+      }
+    };
 
-  const connectWebsocket = async (sec = 1) => {
-    if (window.connection && window.connection.readyState === window.connection.OPEN) return console.log('Already running...')
+    chrome.runtime.onConnectExternal.addListener(async port => {
+      console.log("connect", port);
 
-    const reconnect = () => {
-      console.log(`Reconnecting to FAMILY in ${sec} seconds...`)
-      setTimeout(() => connectWebsocket(sec * 2), sec * 1000)
-    }
+      port.onMessage.addListener(async (message, sender) => {
+        console.log("message", message);
+        console.log("sender", sender);
 
-    const { familyUrl } = await getConfig()
+        const { req_id } = message;
 
-    const connection = new WebSocket(familyUrl)
+        const sendResponse = data => port.postMessage({ req_id, ...data });
 
-    const sendResponse = data => connection.send(JSON.stringify(data))
+        await processMessage(instagram, config, message, sendResponse);
+      });
+    });
+
+    chrome.runtime.onMessageExternal.addListener(
+      async (message, sender, sendResponse) => {
+        console.log("message", message);
+        console.log("sender", sender);
+
+        await processMessage(instagram, config, message, sendResponse);
+      }
+    );
+
+    chrome.runtime.onMessage.addListener(async (message, sender) => {
+      console.log("message", message);
+      console.log("sender", sender);
+
+      const { req_id } = message;
+
+      const sendResponse = data => replyToRequest(sender, req_id, data);
+
+      await processMessage(instagram, config, message, sendResponse);
+    });
+
+    const { connection } = await connectWebsocket(instagram, config);
 
     window.connection = connection
-
-    connection.onerror = error => {
-      console.error(error)
-
-      connection.close()
-    }
-
-    connection.onopen = () => {
-      sec = 1 // reset error timeout counter
-      console.log('Connected to FAMILY', familyUrl)
-
-      updateWSData(connection)
-    }
-
-    connection.onclose = () => {
-      console.log(`Connection to FAMILY closed`)
-      reconnect()
-    }
-
-    connection.onmessage = async event => {
-      console.log('event', event)
-
-      try {
-        const message = JSON.parse(event.data)
-
-        console.log('message', message)
-        console.log('sender', event.origin)
-
-        if (!message.method) {
-          throw new Error(`Wrong message format: '${event.data}', 'method' expected`)
-        }
-
-        if (!config.JOINED_FAMILY && config.NOT_BETA_TEST) {
-          console.log(`Drop action, JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
-          throw new Error(`FAMILY turned off: JOINED_FAMILY = ${config.JOINED_FAMILY}, BETA_TEST = ${!config.NOT_BETA_TEST}`)
-        }
-
-        await processMessage(message, sendResponse)
-      } catch (err) {
-        console.error(err, event)
-
-        sendResponse({ status: 'error', error: { message: err.message } })
-      }
-    }
-
-    return { connection, sendResponse }
-  }
-
-  chrome.runtime.onConnectExternal.addListener(async (port) => {
-    console.log('connect', port)
-
-    port.onMessage.addListener(async (message, sender) => {
-      console.log('message', message)
-      console.log('sender', sender)
-
-      const { req_id } = message
-
-      const sendResponse = (data) => port.postMessage({ req_id, ...data })
-
-      await processMessage(message, sendResponse)
-    })
-  })
-
-  chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
-
-    console.log('message', message)
-    console.log('sender', sender)
-
-    await processMessage(message, sendResponse)
-  })
-
-  chrome.runtime.onMessage.addListener(async (message, sender) => {
-    console.log('message', message)
-    console.log('sender', sender)
-
-    const { req_id } = message
-
-    const sendResponse = data => replyToRequest(sender, req_id, data)
-
-    await processMessage(message, sendResponse)
-  })
-
-  const { connection } = await connectWebsocket()
-
-}, false)
+  },
+  false
+);

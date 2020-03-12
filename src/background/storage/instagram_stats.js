@@ -1,4 +1,5 @@
 import Collection from './collection'
+import instagram from '../instagram'
 
 export class InstagramStats extends Collection {
 
@@ -47,7 +48,7 @@ export class InstagramStats extends Collection {
 
       follower_count: current.follower_count,
       following_count: current.following_count,
-      follower_count: current.follower_count,
+      // follower_count: current.follower_count,
       average_like_count: current.average_like_count,
 
       full: {
@@ -65,4 +66,6 @@ export class InstagramStats extends Collection {
 
 }
 
-export default InstagramStats
+export const stats = new InstagramStats(instagram);
+
+export default stats;

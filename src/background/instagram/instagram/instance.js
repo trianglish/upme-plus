@@ -7,7 +7,6 @@ import {
   DEVICES,
   USER_AGENT_BASE,
   IG_SIG_KEY,
-  LOGIN_URL,
   REQUEST_HEADERS,
 } from './constants'
 
@@ -36,7 +35,7 @@ export default class Instagram {
 
     this.locale = get_locale()
 
-    this.device = random_from(Object.values(DEVICES)) || DEFAULT_DEVICE
+    this.device = random_from(Object.values(DEVICES)) || DEVICE
     this.user_agent = USER_AGENT_BASE(this.device) // just insert params
 
     print("USER_AGENT:", this.user_agent)
