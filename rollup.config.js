@@ -19,8 +19,7 @@ console.log('PKG VERSION', pkg.version)
 console.log('MAN VERSION', manifest.version)
 
 if (pkg.version !== manifest.version) {
-  console.error(`\n\tVERSIONS DON'T MATCH\n`)
-  process.exit()
+  throw new Error(`VERSIONS DON'T MATCH: ${pkg.version} != ${manifest.version}`);
 }
 
 const config = ({ inFile, outFile }) => ({
