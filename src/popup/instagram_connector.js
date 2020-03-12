@@ -75,4 +75,7 @@ export class InstagramConnector {
 }
 
 export const instagram = new InstagramConnector()
+
+window.instagram = instagram
+
 export default instagram

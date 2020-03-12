@@ -1,6 +1,6 @@
 import * as constants from './constants'
 
-const { GRAMUP_REMOTE_CONFIG_URL, GRAMUP_DEFAULT_WS_URL } = constants
+const { GRAMUP_REMOTE_CONFIG_URL } = constants
 
 const { DEFAULT_CONFIG } = constants
 

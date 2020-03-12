@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 export class ChromeStorage {
   static set (key, value) {
     return new Promise((resolve, reject) => {

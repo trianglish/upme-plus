@@ -4,6 +4,8 @@ import md5 from 'blueimp-md5'
 import sha256 from 'js-sha256'
 import uuidjs from 'uuid-js'
 
+export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 export const generate_uuid = () => uuidjs.create(4).hex
 
 // ################################################

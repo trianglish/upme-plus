@@ -1,4 +1,8 @@
 import instagram from './instagram_connector'
+import {
+  saveCredentials,
+  clearCredentials,
+} from '../shared/credentials'
 
 const whenLogged = async () => {
   const { user } = await instagram.request({
@@ -88,16 +92,16 @@ window.onload = async () => {
       onLoginSuccess(res)
     } catch (err) {
       console.log('Login Error', err)
+      onLoginError(err.message)
       const { error: { response } } = err
       console.error(response)
-      onLoginError(res.error.message)
     }
   }
 
   login_form.onsubmit = async (event) => {
     event.preventDefault()
 
-    const { username, password } = instalogin.elements
+    const { username, password } = document.forms.instalogin.elements
     const creds = { username: username.value, password: password.value }
 
     try {

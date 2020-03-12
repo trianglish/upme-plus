@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 export const saveCredentials = (username, password) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.set({ credentials: { username, password } }, () => {
@@ -28,5 +29,5 @@ export const clearCredentials = () => {
   })
 }
 
-window.saveCredentials = saveCredentials
-window.getCredentials = getCredentials
+// window.saveCredentials = saveCredentials
+// window.getCredentials = getCredentials

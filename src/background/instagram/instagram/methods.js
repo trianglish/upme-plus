@@ -204,19 +204,19 @@ export const send_direct_item = async (self, item_type = 'text', options = {}) =
 
   const text = options.text || ''
 
-  if (item_type == 'link') {
+  if (item_type === 'link') {
     data.link_text = text
     data.link_urls = JSON.stringify(options.urls) // json.dumps(options.get('urls'))
-  } else if (item_type == 'text') {
+  } else if (item_type === 'text') {
     data.text = text
-  } else if (item_type == 'media_share') {
+  } else if (item_type === 'media_share') {
     data.text = text
     data.media_type = options.media_type || 'photo' // options.get('media_type', 'photo')
     data.media_id = options.media_id || ''
-  } else if (item_type == 'hashtag') {
+  } else if (item_type === 'hashtag') {
     data.text = text
     data.Hashtag = options.hashtag || ''
-  } else if (item_type == 'profile') {
+  } else if (item_type === 'profile') {
     data.text = text
     data.profile_user_id = options.profile_user_id || ''
   }

@@ -1,3 +1,7 @@
+/// This file is a testdrive, not used anywhere
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+
 import {
   DEVICE,
   USER_AGENT_BASE,

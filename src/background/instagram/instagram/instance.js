@@ -16,6 +16,7 @@ import {
   generate_device_id_from_username,
   generate_signature,
   random_from,
+  sleep,
 } from './helpers'
 
 import { get_locale } from './get_locale'
@@ -98,7 +99,7 @@ export default class Instagram {
         this.user = user
         return user
       } else {
-        throw new Error(`Could not log in: ${response}`)
+        throw new Error('Could not log in from cookie')
       }
     } catch (err) {
       console.error(`LoginError: ${err.message}`)
@@ -126,7 +127,7 @@ export default class Instagram {
         this.user = logged_in_user
         return logged_in_user
       } else {
-        throw new Error(`Could not log in: ${response}`)
+        throw new Error(`Could not log in: ${status}`)
       }
     } catch (err) {
       console.error(`LoginError: ${err.message}`)
@@ -163,7 +164,7 @@ export default class Instagram {
         this.user = logged_in_user
         return logged_in_user
       } else {
-        throw new Error(`Could not log in: ${response}`)
+        throw new Error(`Could not log in: ${status}`)
       }
     } catch (err) {
       console.error(`LoginError: ${err.message}`)
@@ -190,7 +191,7 @@ export default class Instagram {
 
     const response = await this.send_request('accounts/login/', data, { doLogin: true })
 
-    if (response.message == 'checkpoint_required') {
+    if (response.message === 'checkpoint_required') {
       // In case of 'suspicious activity'
       console.log('Checkpoing required:', response.checkpoint_url)
     }
@@ -226,7 +227,7 @@ export default class Instagram {
 
     const { data, status } = response
 
-    if (status == 200) {
+    if (status === 200) {
       this.last_response = response
       return data
     }
