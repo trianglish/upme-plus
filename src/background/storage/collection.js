@@ -1,12 +1,11 @@
 import ChromeStorage from './chrome_storage'
 
 export class Collection {
-
-  get default_key() {
+  get default_key () {
     return 'misc'
   }
 
-  constructor(name, available_keys) {
+  constructor (name, available_keys) {
     this.name = name || 'collection'
     this.available_keys = available_keys
   }
@@ -23,7 +22,7 @@ export class Collection {
     return ChromeStorage.append(`${this.name}.${key}`, entry)
   }
 
-  async set(key, values) {
+  async set (key, values) {
     const savedAt = Date.now()
 
     if (!this.available_keys.includes(key)) {
@@ -47,7 +46,6 @@ export class Collection {
       [key]: result[`${this.name}.${key}`] || [],
     }), {})
   }
-
 }
 
 export default Collection

@@ -3,7 +3,7 @@
 import { generate_uuid } from './helpers'
 import querystring from 'querystring'
 
-function is_user_id(user_id_or_username){
+function is_user_id (user_id_or_username) {
   return !isNaN(user_id_or_username)
 }
 
@@ -28,7 +28,7 @@ export const logout = async (self) => {
   return result
 }
 
-export const get_user_followers = (self, user_id, search_query='', max_id='') => {
+export const get_user_followers = (self, user_id, search_query = '', max_id = '') => {
   const rank_token = self.rank_token()
 
   const query_str = querystring.stringify({
@@ -43,7 +43,7 @@ export const get_user_followers = (self, user_id, search_query='', max_id='') =>
   return self.send_request(url)
 }
 
-export const get_user_followings = (self, user_id, search_query='', max_id='') => {
+export const get_user_followings = (self, user_id, search_query = '', max_id = '') => {
   const rank_token = self.rank_token()
   const query_str = querystring.stringify({
     max_id,
@@ -59,22 +59,22 @@ export const get_user_followings = (self, user_id, search_query='', max_id='') =
   return self.send_request(url)
 }
 
-export const get_user_feed = (self, user_id, max_id='') => {
+export const get_user_feed = (self, user_id, max_id = '') => {
   const rank_token = self.rank_token()
   const url = `feed/user/${user_id}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
   return self.send_request(url)
 }
 
-export const get_hashtag_feed = (self, hashtag, max_id='') => {
-    const rank_token = self.rank_token()
-    const url = `feed/tag/${hashtag}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
-    return self.send_request(url)
+export const get_hashtag_feed = (self, hashtag, max_id = '') => {
+  const rank_token = self.rank_token()
+  const url = `feed/tag/${hashtag}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
+  return self.send_request(url)
 }
 
-export const get_location_feed = (self, location_id, max_id='') => {
-    const rank_token = self.rank_token()
-    const url = `feed/location/${location_id}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
-    return self.send_request(url)
+export const get_location_feed = (self, location_id, max_id = '') => {
+  const rank_token = self.rank_token()
+  const url = `feed/location/${location_id}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
+  return self.send_request(url)
 }
 
 export const media_info = (self, media_id) => {
@@ -111,7 +111,7 @@ export const user_friendships = async (self, user_ids = []) => {
     ...data,
   }
 
-  return self.send_request(`friendships/show_many/`, _data, { with_signature: false, form: true })
+  return self.send_request('friendships/show_many/', _data, { with_signature: false, form: true })
 }
 
 export const comment = (self, media_id, comment_text) => {
@@ -140,7 +140,7 @@ export const __DEPRECATED__get_timeline = (self) => {
 }
 
 export const get_timeline = (self) => {
-  const data = {is_prefetch: '0', is_pull_to_refresh: '0'}
+  const data = { is_prefetch: '0', is_pull_to_refresh: '0' }
   return self.send_request('feed/timeline/', data, { with_signature: false })
 }
 
@@ -156,10 +156,9 @@ export const get_media_likers = (self, media_id) => {
   return self.send_request(`media/${media_id}/likers`)
 }
 
-
 // DIRECT
 export const get_inbox = (self) => {
-  return self.send_request(`direct_v2/inbox/?`)
+  return self.send_request('direct_v2/inbox/?')
 }
 
 export const get_thread = (self, thread_id, cursor_id = '') => {
@@ -167,12 +166,11 @@ export const get_thread = (self, thread_id, cursor_id = '') => {
 }
 
 export const get_direct_share = (self) => {
-  return self.send_request(`direct_share/inbox/?`)
+  return self.send_request('direct_share/inbox/?')
 }
 
-
 export const get_pending_inbox = (self) => {
-  return self.send_request(`direct_v2/pending_inbox/?persistentBadging=true&use_unified_inbox=true`)
+  return self.send_request('direct_v2/pending_inbox/?persistentBadging=true&use_unified_inbox=true')
 }
 
 export const approve_pending_thread = async (self, thread_id) => {
@@ -180,7 +178,6 @@ export const approve_pending_thread = async (self, thread_id) => {
 
   return self.send_request(`direct_v2/threads/${thread_id}/approve/`, data)
 }
-
 
 const _prepare_recipients = (users, thread_id = null, use_quotes = false) => {
   const result = {}
@@ -197,40 +194,39 @@ const _prepare_recipients = (users, thread_id = null, use_quotes = false) => {
 }
 
 export const send_direct_item = async (self, item_type = 'text', options = {}) => {
-
   const mutation_token = generate_uuid(true)
 
   const data = {
     // mutation_token,
-    'client_context': mutation_token,
-    'action': 'send_item',
+    client_context: mutation_token,
+    action: 'send_item',
   }
 
-  const text = options['text'] || ''
+  const text = options.text || ''
 
   if (item_type == 'link') {
-    data['link_text'] = text
-    data['link_urls'] = JSON.stringify(options.urls) // json.dumps(options.get('urls'))
+    data.link_text = text
+    data.link_urls = JSON.stringify(options.urls) // json.dumps(options.get('urls'))
   } else if (item_type == 'text') {
-    data['text'] = text
+    data.text = text
   } else if (item_type == 'media_share') {
-    data['text'] = text
-    data['media_type'] = options.media_type || 'photo' // options.get('media_type', 'photo')
-    data['media_id'] = options.media_id || ''
+    data.text = text
+    data.media_type = options.media_type || 'photo' // options.get('media_type', 'photo')
+    data.media_id = options.media_id || ''
   } else if (item_type == 'hashtag') {
-    data['text'] = text
-    data['Hashtag'] = options.hashtag || ''
+    data.text = text
+    data.Hashtag = options.hashtag || ''
   } else if (item_type == 'profile') {
-    data['text'] = text
-    data['profile_user_id'] = options.profile_user_id || ''
+    data.text = text
+    data.profile_user_id = options.profile_user_id || ''
   }
 
   const { thread, users } = _prepare_recipients(options.users, options.thread, false)
 
   if (thread) {
-    data['thread_ids'] = thread
+    data.thread_ids = thread
   } else if (users) {
-    data['recipient_users'] = users
+    data.recipient_users = users
   } else {
     return false
   }
@@ -278,23 +274,23 @@ export const get_users_reel = async (self, user_ids) => {
   Output: dictionary: user_id - stories data.
   Basically, for each user output the same as after self.get_user_reel
   */
-  const url = `feed/reels_media/`
+  const url = 'feed/reels_media/'
   user_ids = user_ids.map(id => `${id}`)
   return self.send_request(url, { user_ids })
 }
-  //
-  // if (res) {
-  //   if (res.reels) {
-  //     return res.reels
-  //   } else {
-  //     return []
-  //   }
-  // } else {}
-  // if res:
-  //     if "reels" in self.last_json:
-  //         return self.last_json["reels"]
-  //     return []
-  // return []
+//
+// if (res) {
+//   if (res.reels) {
+//     return res.reels
+//   } else {
+//     return []
+//   }
+// } else {}
+// if res:
+//     if "reels" in self.last_json:
+//         return self.last_json["reels"]
+//     return []
+// return []
 
 export const see_reels = async (self, reels = []) => {
   /*
@@ -308,21 +304,21 @@ export const see_reels = async (self, reels = []) => {
   const story_seen = {}
   // now = int(time.time())
   const now = Math.floor(Date.now() / 1000)
-  const randint = (a, b) => Math.floor(a + (b-a) * Math.random())
+  const randint = (a, b) => Math.floor(a + (b - a) * Math.random())
 
   // for i, story in enumerate(sorted(reels, key=lambda m: m['taken_at'], reverse=True)):
   //   story_seen_at = now - min(i + 1 + random.randint(0, 2), max(0, now - story['taken_at']))
 
   reels
-    .sort((story1, story2) => story1['taken_at'] - story2['taken_at'])
+    .sort((story1, story2) => story1.taken_at - story2.taken_at)
     .forEach((story, index) => {
-      const story_seen_at = now - Math.min(index + 1 + randint(0,2), Math.max(0, now - story['taken_at']))
+      const story_seen_at = now - Math.min(index + 1 + randint(0, 2), Math.max(0, now - story.taken_at))
 
       story_seen[
-        `${story['id']}_${story['user']['pk']}`
+        `${story.id}_${story.user.pk}`
         // '{0!s}_{1!s}'.format(story['id'], story['user']['pk'])
       ] = [
-        `${story['taken_at']}_${story_seen_at}`
+        `${story.taken_at}_${story_seen_at}`,
         // '{0!s}_{1!s}'.format(story['taken_at'], story_seen_at)
       ]
     })

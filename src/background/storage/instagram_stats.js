@@ -2,8 +2,7 @@ import Collection from './collection'
 import instagram from '../instagram'
 
 export class InstagramStats extends Collection {
-
-  constructor(instagram) {
+  constructor (instagram) {
     super()
 
     this.available_keys = ['follower_count', 'following_count', 'average_like_count', 'user', 'current', 'misc']
@@ -11,9 +10,9 @@ export class InstagramStats extends Collection {
     this.instagram = instagram
   }
 
-  async updateValues() {
+  async updateValues () {
     if (!instagram.is_logged_in) {
-      throw new Error(`Instagram not logged in`)
+      throw new Error('Instagram not logged in')
     }
 
     const { user } = await this.instagram.callMethod('get_user_info', this.instagram.user.pk)
@@ -32,7 +31,7 @@ export class InstagramStats extends Collection {
     return user
   }
 
-  async getInfo() {
+  async getInfo () {
     const { like } = await this.instagram.history.get('like')
     const { follow } = await this.instagram.history.get('follow')
 
@@ -60,12 +59,11 @@ export class InstagramStats extends Collection {
         follower_count,
         following_count,
         average_like_count,
-      }
+      },
     }
   }
-
 }
 
-export const stats = new InstagramStats(instagram);
+export const stats = new InstagramStats(instagram)
 
-export default stats;
+export default stats

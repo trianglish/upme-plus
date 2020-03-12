@@ -1,3 +1,3 @@
-import "../shared/credentials";
-import "./ui";
-import "./instagram_connector";
+import '../shared/credentials'
+import './ui'
+import './instagram_connector'

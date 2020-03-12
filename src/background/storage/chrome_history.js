@@ -1,13 +1,12 @@
-import { History } from '../instagram';
-import Collection from './collection';
+import { History } from '../instagram'
+import Collection from './collection'
 
 export class ChromeHistory extends History {
-
   constructor () {
     super()
 
     this.collection = new Collection('history', [
-      ...History.AVAILABLE_METHODS, 'login', 'misc'
+      ...History.AVAILABLE_METHODS, 'login', 'misc',
     ])
   }
 
@@ -22,7 +21,6 @@ export class ChromeHistory extends History {
   async get (...methods) {
     return this.collection.get(...methods)
   }
-
 }
 
 export default ChromeHistory

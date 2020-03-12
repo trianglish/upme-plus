@@ -1,9 +1,8 @@
 import * as methods from './methods'
 const AVAILABLE_METHODS = Object.keys(methods)
 
-
 class History {
-  static get AVAILABLE_METHODS() {
+  static get AVAILABLE_METHODS () {
     return AVAILABLE_METHODS
   }
 
@@ -16,7 +15,6 @@ class History {
   get (...args) {
     return {}
   }
-
 }
 
 export default History

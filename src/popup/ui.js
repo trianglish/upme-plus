@@ -1,10 +1,9 @@
-import instagram from './instagram_connector';
+import instagram from './instagram_connector'
 
 const whenLogged = async () => {
-
   const { user } = await instagram.request({
     method: 'get_user_info',
-    params: [ 'instagram' ]
+    params: ['instagram'],
   })
 
   console.log('@instagram', user.pk, user)
@@ -17,14 +16,14 @@ const whenLogged = async () => {
 }
 
 const openControlPanel = () => {
-  const WEBSITE_URL = `https://dashboard.gramup.me/`
+  const WEBSITE_URL = 'https://dashboard.gramup.me/'
   window.open(WEBSITE_URL)
 }
 
 const updateView = async () => {
   try {
     const { user } = await instagram.request({
-      method: 'check_login'
+      method: 'check_login',
     })
 
     console.log('update view, user =', user)
@@ -43,24 +42,22 @@ const updateView = async () => {
   }
 }
 
-const setView = ({ logged_in, user = {}} = {}) => {
+const setView = ({ logged_in, user = {} } = {}) => {
   const changeDisplay = (elem, isShown) => isShown
-    ? elem.classList.remove("hide")
-    : elem.classList.add("hide")
+    ? elem.classList.remove('hide')
+    : elem.classList.add('hide')
 
   if (logged_in) {
-    document.querySelectorAll('.logged_in')    .forEach(elem => changeDisplay(elem, true))
+    document.querySelectorAll('.logged_in').forEach(elem => changeDisplay(elem, true))
     document.querySelectorAll('.not_logged_in').forEach(elem => changeDisplay(elem, false))
-  }
-  else {
-    document.querySelectorAll('.logged_in')    .forEach(elem => changeDisplay(elem, false))
+  } else {
+    document.querySelectorAll('.logged_in').forEach(elem => changeDisplay(elem, false))
     document.querySelectorAll('.not_logged_in').forEach(elem => changeDisplay(elem, true))
   }
 
   if (user) {
     document.querySelector('.username-field').innerText = user.username
   }
-
 }
 
 window.onload = async () => {
@@ -80,12 +77,12 @@ window.onload = async () => {
     await updateView()
   }
 
-  document.querySelector(".btn-get-cookies").onclick = async (event) => {
-    event.preventDefault();
+  document.querySelector('.btn-get-cookies').onclick = async (event) => {
+    event.preventDefault()
 
     try {
       const res = await instagram.request({
-        method: 'login_via_cookie'
+        method: 'login_via_cookie',
       })
 
       onLoginSuccess(res)
@@ -106,11 +103,10 @@ window.onload = async () => {
     try {
       const res = await instagram.request({
         method: 'login',
-        params: [ username.value, password.value ]
+        params: [username.value, password.value],
       })
 
       onLoginSuccess(res, creds)
-
     } catch (err) {
       console.error(err)
 
@@ -119,17 +115,16 @@ window.onload = async () => {
       console.error(response)
 
       if (response.two_factor_required) {
-
         const two_factor_data = response
         const two_factor_code = prompt('Input a code for two-factor auth from SMS')
 
         if (!two_factor_code) {
-          return onLoginError(`No code`)
+          return onLoginError('No code')
         }
 
         const res = await instagram.request({
           method: 'login_2fa',
-          params: [ username.value, password.value, two_factor_code, two_factor_data ]
+          params: [username.value, password.value, two_factor_code, two_factor_data],
         })
 
         if (res.status === 'ok') {
@@ -137,7 +132,6 @@ window.onload = async () => {
         } else {
           onLoginError(res.error.message)
         }
-
       } else if (response.challenge) {
         onLoginError(response.message)
         window.open(response.challenge.url)

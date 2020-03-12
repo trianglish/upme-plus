@@ -9,25 +9,25 @@
         resolve({ username, password });
       });
 
-      setTimeout(() => reject("storage error"), 5000);
-    });
+      setTimeout(() => reject('storage error'), 5000);
+    })
   };
 
   const getCredentials = () => {
     return new Promise((resolve, reject) => {
-      chrome.storage.local.get(["credentials"], result => {
+      chrome.storage.local.get(['credentials'], result => {
         resolve(result.credentials || {});
       });
 
-      setTimeout(() => reject("storage error"), 5000);
-    });
+      setTimeout(() => reject('storage error'), 5000);
+    })
   };
 
   window.saveCredentials = saveCredentials$1;
   window.getCredentials = getCredentials;
 
   class InstagramError extends Error {
-    constructor(status, error = '') {
+    constructor (status, error = '') {
       super(error);
       this.status = status;
       this.error = error;
@@ -39,25 +39,25 @@
   class TimeoutError extends Error {}
 
   class InstagramConnector {
-    constructor() {
+    constructor () {
       this.isStopped = false;
       this.isConnected = false;
-    
+
       this.init = async () => {
         try {
           const ping = await this.request({
-            method: 'ping'
+            method: 'ping',
           });
-    
+
           console.log('ping', ping);
-    
+
           this.isConnected = ping.status === 'ok' && Boolean(ping.pong);
         } catch (err) {
           if (err instanceof TimeoutError) {
             this.isConnected = false;
             return
           }
-    
+
           throw err
         }
       };
@@ -66,54 +66,48 @@
       this.kill = () => (this.isStopped = true);
     }
 
-
     request (data) {
       return new Promise((resolve, reject) => {
+        if (this.isStopped) return reject(new Error('Request was killed'))
 
-      if (this.isStopped) return reject(new Error(`Request was killed`))
+        // { method, params } = method
 
-      // { method, params } = method
+        const req_id = Date.now();
 
-      const req_id = Date.now();
+        const handler = (message, sender) => {
+          const { status, error } = message;
 
-      const handler = (message, sender) => {
-        const { status, error } = message;
+          if (message.req_id && req_id !== message.req_id) return
 
-        if (message.req_id && req_id !== message.req_id) return
+          chrome.runtime.onMessage && chrome.runtime.onMessage.removeListener(handler);
 
-        chrome.runtime.onMessage && chrome.runtime.onMessage.removeListener(handler);
+          console.log('request', data.method, '->', status, message);
 
-        console.log('request', data.method, '->', status, message);
+          console.log(status, error);
 
-        console.log(status, error);
+          if (status !== 'ok') {
+            reject(new InstagramError(status, error));
+          } else {
+            resolve(message);
+          }
+        };
 
-        if (status !== 'ok') {
-          reject(new InstagramError(status, error));
-        } else {
-          resolve(message);
-        }
-      };
+        setTimeout(() => reject(new TimeoutError('Request timeout')), 10000);
 
-      setTimeout(() => reject(new TimeoutError(`Request timeout`)), 10000);
+        chrome.runtime.onMessage && chrome.runtime.onMessage.addListener(handler);
 
-      chrome.runtime.onMessage && chrome.runtime.onMessage.addListener(handler);
-
-      console.log(`send_message`, null, { req_id, ...data });
-      chrome.runtime.sendMessage(null, { req_id, ...data });
-
+        console.log('send_message', null, { req_id, ...data });
+        chrome.runtime.sendMessage(null, { req_id, ...data });
       })
-
     }
-
   }
 
   const instagram = new InstagramConnector();
 
   const whenLogged = async () => {
-
     const { user } = await instagram.request({
       method: 'get_user_info',
-      params: [ 'instagram' ]
+      params: ['instagram'],
     });
 
     console.log('@instagram', user.pk, user);
@@ -126,14 +120,14 @@
   };
 
   const openControlPanel = () => {
-    const WEBSITE_URL = `https://dashboard.gramup.me/`;
+    const WEBSITE_URL = 'https://dashboard.gramup.me/';
     window.open(WEBSITE_URL);
   };
 
   const updateView = async () => {
     try {
       const { user } = await instagram.request({
-        method: 'check_login'
+        method: 'check_login',
       });
 
       console.log('update view, user =', user);
@@ -152,24 +146,22 @@
     }
   };
 
-  const setView = ({ logged_in, user = {}} = {}) => {
+  const setView = ({ logged_in, user = {} } = {}) => {
     const changeDisplay = (elem, isShown) => isShown
-      ? elem.classList.remove("hide")
-      : elem.classList.add("hide");
+      ? elem.classList.remove('hide')
+      : elem.classList.add('hide');
 
     if (logged_in) {
-      document.querySelectorAll('.logged_in')    .forEach(elem => changeDisplay(elem, true));
+      document.querySelectorAll('.logged_in').forEach(elem => changeDisplay(elem, true));
       document.querySelectorAll('.not_logged_in').forEach(elem => changeDisplay(elem, false));
-    }
-    else {
-      document.querySelectorAll('.logged_in')    .forEach(elem => changeDisplay(elem, false));
+    } else {
+      document.querySelectorAll('.logged_in').forEach(elem => changeDisplay(elem, false));
       document.querySelectorAll('.not_logged_in').forEach(elem => changeDisplay(elem, true));
     }
 
     if (user) {
       document.querySelector('.username-field').innerText = user.username;
     }
-
   };
 
   window.onload = async () => {
@@ -189,12 +181,12 @@
       await updateView();
     };
 
-    document.querySelector(".btn-get-cookies").onclick = async (event) => {
+    document.querySelector('.btn-get-cookies').onclick = async (event) => {
       event.preventDefault();
 
       try {
         const res = await instagram.request({
-          method: 'login_via_cookie'
+          method: 'login_via_cookie',
         });
 
         onLoginSuccess(res);
@@ -215,11 +207,10 @@
       try {
         const res = await instagram.request({
           method: 'login',
-          params: [ username.value, password.value ]
+          params: [username.value, password.value],
         });
 
         onLoginSuccess(res, creds);
-
       } catch (err) {
         console.error(err);
 
@@ -228,17 +219,16 @@
         console.error(response);
 
         if (response.two_factor_required) {
-
           const two_factor_data = response;
           const two_factor_code = prompt('Input a code for two-factor auth from SMS');
 
           if (!two_factor_code) {
-            return onLoginError(`No code`)
+            return onLoginError('No code')
           }
 
           const res = await instagram.request({
             method: 'login_2fa',
-            params: [ username.value, password.value, two_factor_code, two_factor_data ]
+            params: [username.value, password.value, two_factor_code, two_factor_data],
           });
 
           if (res.status === 'ok') {
@@ -246,7 +236,6 @@
           } else {
             onLoginError(res.error.message);
           }
-
         } else if (response.challenge) {
           onLoginError(response.message);
           window.open(response.challenge.url);
