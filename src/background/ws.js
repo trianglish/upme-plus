@@ -1,4 +1,4 @@
-import { VERSION, USER_AGENT } from './constants'
+import { VERSION, USER_AGENT } from '../shared/constants'
 
 import processMessage from './process'
 import getRemoteConfig from './config'

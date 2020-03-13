@@ -1,4 +1,4 @@
-import * as constants from './constants'
+import * as constants from '../shared/constants'
 
 const { GRAMUP_REMOTE_CONFIG_URL } = constants
 

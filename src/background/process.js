@@ -1,4 +1,4 @@
-import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from './constants'
+import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from '../shared/constants'
 import ChromeStorage from './storage/chrome_storage'
 
 import { getCredentials } from '../shared/credentials'

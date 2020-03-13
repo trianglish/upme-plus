@@ -6,6 +6,7 @@ import {
 } from '../shared/credentials'
 import { logEvent } from '../shared/amplitude'
 import { setView } from './view'
+import { DASHBOARD_URL } from '../shared/constants'
 
 const whenLogged = async () => {
   const { user } = await instagram.request({
@@ -23,8 +24,7 @@ const whenLogged = async () => {
 }
 
 const openControlPanel = () => {
-  const WEBSITE_URL = 'https://dashboard.gramup.me/'
-  window.open(WEBSITE_URL)
+  window.open(DASHBOARD_URL)
 }
 
 const checkLogin = async () => {
