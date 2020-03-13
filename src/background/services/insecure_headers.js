@@ -1,3 +1,7 @@
+import { MODIFIED_HEADERS_URLS } from '../../shared/constants'
+
+const PREFIX = 'X-Instaweb-'
+
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function (info) {
     // xhr.js:126 Refused to set unsafe header "User-Agent"
@@ -10,10 +14,10 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     console.log('headers', headers)
 
     const new_headers = headers
-      .filter(header => header.name.includes('X-Instaweb'))
+      .filter(header => header.name.includes(PREFIX))
       .map(header => {
         return {
-          name: header.name.replace('X-Instaweb-', ''),
+          name: header.name.replace(PREFIX, ''),
           value: header.value,
         }
       })
@@ -39,19 +43,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   {
     // Modify the headers for these pages
     urls: [
-      'https://caffeinum.github.io/*',
-      'https://instagrambot.github.io/*',
-      'https://dashboard.gramup.me/*',
-      'https://api.gramup.me/*',
-      'https://gramup.me/*',
-      '*://localhost/*',
-      'file://*/*',
-      'chrome-extension://*/*',
-      // TODO: remove wildcard
-      '*://*/*',
+      ...MODIFIED_HEADERS_URLS,
     ],
-    // In the main window and frames
-    types: ['main_frame', 'sub_frame', 'xmlhttprequest'],
   },
   ['blocking', 'requestHeaders'],
 )

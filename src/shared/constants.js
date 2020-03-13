@@ -15,3 +15,7 @@ export const DEFAULT_CONFIG = {
   NOT_BETA_TEST: true,
   CURRENT_TASK: null,
 }
+
+export const MODIFIED_HEADERS_URLS = [
+  'https://i.instagram.com/*',
+]
