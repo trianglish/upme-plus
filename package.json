@@ -1,7 +1,7 @@
 {
   "name": "gram-up",
-  "version": "1.5.4",
-  "repository": "https://github.com/instagrambot/GramUp",
+  "version": "1.5.5",
+  "repository": "https://github.com/caffeinum/GramUp",
   "description": "Smart Automation for your social networks inside your browser for free. https://gramup.me",
   "main": "src/index.js",
   "dependencies": {
