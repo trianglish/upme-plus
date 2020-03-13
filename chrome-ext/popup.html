@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+  <title>GramUp!</title>
+
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous"
+    />
+  <script src="./build/popup.js" charset="utf-8"></script>
+</head>
+
+<style>
+  .hide {
+    display: none;
+  }
+
+  .loader-over {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background:rgba(255,255,255,0.9);
+    z-index: 9999;
+    padding: 4rem;
+    margin: 0;
+  }
+
+</style>
+
+<body>
+  <div id="container" class="container" style="width: 100%; max-width: 400px; padding: 30px">
+    <div class="row">
+      <div class="col-md mb-2">
+        <img class="mx-auto d-block" src="../images/icon.png" />
+        <!-- <a href="https://github.com/instagrambot/web/"> -->
+        <!-- </a> -->
+      </div>
+    </div>
+
+    <div class="row logged_in">
+      <div class="col-sm mb-1 text-center">
+        <button type="button" class="btn btn-outline-info" style="width: 100%" disabled>
+          @<span class="username-field"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row logged_in hide">
+      <div class="col-sm text-center">
+
+        <a class="btn btn-outline-primary" href="https://dashboard.gramup.me/" target="_blank">
+          Dashboard
+        </a>
+
+        <a class="btn btn-outline-danger" href="#" id="exit">Logout</a>
+
+      </div>
+    </div>
+
+    <div class="row not_logged_in">
+      <div class="col-sm mt-3">
+
+        <div class="loader-over loading text-center hidden">
+          <div class="spinner-border spinner-border-xl" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+        
+        <form id="instalogin">
+          <div class="text-center">
+            <a class="btn btn-outline-info btn-get-cookies" href="#">
+              Login via instagram.com
+            </a>
+          </div>
+
+          <div class="text-center mt-3 mb-3">
+            or
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">@</div>
+              </div>
+
+              <input type="text" class="form-control" id="username" placeholder="instagram">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" placeholder="********">
+
+            <small id="passwordHelp" class="form-text text-muted">Credentials are stored securely inside your browser. We never share them.</small>
+
+            <small class="form-text text-muted">
+              <a href="https://dashboard.gramup.me/#/legal" target="_blank">Privacy Policy</a>
+            </small>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Login
+          </button>
+          <a class="btn btn-outline-info" href="https://github.com/caffeinum/GramUp" target="_blank">
+            Read GitHub
+          </a>
+
+        </form>
+
+      </div>
+    </div>
+
+
+  </div>
+
+</body>
+
+</html>
