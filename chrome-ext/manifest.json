@@ -24,11 +24,11 @@
   ],
   "externally_connectable": {
     "matches": [
-      "http://localhost/",
-      "https://dashboard.gramup.me/",
-      "https://dm.gramup.me/",
-      "https://*.okhlopkov.now.sh/",
-      "https://*.caffeinum.now.sh/"
+      "http://localhost/*",
+      "https://dashboard.gramup.me/*",
+      "https://dm.gramup.me/*",
+      "https://*.okhlopkov.now.sh/*",
+      "https://*.caffeinum.now.sh/*"
     ]
   },
   "manifest_version": 2
