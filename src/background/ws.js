@@ -20,7 +20,7 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
 
   const connection = new WebSocket(familyUrl)
 
-  const sendResponse = data => connection.send(JSON.stringify(data))
+  const sendResponse = (data, req_id) => connection.send(JSON.stringify({ ...data, req_id }))
 
   window.connection = connection
 
@@ -48,6 +48,15 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
     try {
       const message = JSON.parse(event.data)
 
+      const { req_id, ...data } = message
+
+      const sendResponse = data => {
+        const response = { ...data, req_id }
+        console.log('response', response)
+        connection.send(JSON.stringify(response))
+      }
+
+      console.log('req_id', req_id)
       console.log('message', message)
       console.log('sender', event.origin)
 
@@ -70,7 +79,7 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
         )
       }
 
-      await processMessage(instagram, config, message, sendResponse)
+      await processMessage(instagram, config, data, sendResponse)
     } catch (err) {
       console.error(err, event)
 
@@ -94,6 +103,7 @@ export const updateWSData = async (instagram, config) => {
     window.connection.send(
       JSON.stringify({
         status: 'ok',
+        type: 'update',
         version: VERSION,
         user_agent: USER_AGENT,
         user: instagram.user,
