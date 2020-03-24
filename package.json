@@ -1,6 +1,6 @@
 {
   "name": "gram-up",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "repository": "https://github.com/caffeinum/GramUp",
   "description": "Smart Automation for your social networks inside your browser for free. https://gramup.me",
   "main": "src/index.js",
