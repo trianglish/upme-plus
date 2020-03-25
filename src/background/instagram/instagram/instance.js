@@ -172,6 +172,19 @@ export default class Instagram {
     }
   }
 
+  async _logout () {
+    // console.error(err.message)
+    // console.log(err)
+    // console.log(JSON.stringify(err))
+
+    // TODO: Analytics
+    // TODO: Check if banned
+
+    this.user = null
+    this.user_id = null
+    this.is_logged_in = false
+  }
+
   async _login (username, password) {
     this.device_id = generate_device_id_from_username(username)
     print('DEVICE_ID:', this.device_id)
@@ -223,6 +236,8 @@ export default class Instagram {
       method,
       data: post_data,
       headers,
+      // We handle errors manually, down there
+      validateStatus: (status) => true,
     })
 
     const { data, status } = response
@@ -234,25 +249,53 @@ export default class Instagram {
 
     console.error(`Request returns error! Status: ${status}`)
 
+    console.error('Error Data', data)
+    // Analytics.send Error
+
+    // See ERRORS.md
+    // TODO: have InstagramError class
+
+    if (status === 405) {
+      // Empty data
+      throw new Error('Empty response 405')
+    }
+
     if (data.message.includes('feedback_required')) {
       console.error('ATTENTION! \'feedback_required\', your action could have been blocked')
       throw new Error('feedback_required')
     }
 
     if (status === 429) {
-      const sleep_minutes = 5
+      const sleep_seconds = 30
 
       console.error(
         `That means 'too many requests'. I'll go to sleep
-        for ${sleep_minutes} minutes`)
+        for ${sleep_seconds} seconds`)
 
-      await sleep(5 * 60 * 1000)
+      await sleep(sleep_seconds * 1000)
     } else if (status === 400) {
       const error_message = data.message
       const error_type = data.error_type
 
       console.log(`Instagram's error message: ${error_message}, Error type: ${error_type}`)
       throw new Error(`InstagramError: ${error_type}: ${error_message}`)
+    } else if (status === 403) {
+      console.log('Error 403')
+
+      const error_message = data.message
+      const error_title = data.error_title
+
+      if (error_message === 'login_required') {
+        this._logout()
+      }
+
+      throw new Error(`InstagramError: ${error_message}: ${error_title}`)
+    } else {
+      const error_message = data.message
+      const err = new Error(`Unknown error ${error_message}`)
+      err.response = data
+      err.status = status
+      throw err
     }
 
     return false
@@ -284,7 +327,7 @@ export default class Instagram {
         return await this._get(endpoint, {}, { ...options })
       }
     } catch (err) {
-      console.error('Request failed:', err, 'Data:', endpoint, data)
+      console.error('Request failed: ', endpoint, 'Data:', data, err)
       throw err
     }
   }
