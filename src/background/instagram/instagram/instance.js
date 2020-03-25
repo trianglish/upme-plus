@@ -260,6 +260,11 @@ export default class Instagram {
       throw new Error('Empty response 405')
     }
 
+    if (!data) {
+      const err = new Error(`No JSON response ${status}`)
+      throw err
+    }
+
     if (data.message.includes('feedback_required')) {
       console.error('ATTENTION! \'feedback_required\', your action could have been blocked')
       throw new Error('feedback_required')
