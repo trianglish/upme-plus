@@ -98,7 +98,7 @@ export const unfollow = (self, user_id) => {
 }
 
 export const user_friendship = (self, user_id) => {
-  return self.send_request(`friendships/show/${user_id}/`, { user_id })
+  return self.send_request(`friendships/show/${user_id}`, { user_id })
 }
 
 export const user_friendships = async (self, user_ids = []) => {
