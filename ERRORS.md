@@ -20,12 +20,20 @@
 ## feedback_required
 
 
-**Status**: 400 ???
+**Status**: 400
 
 ```json
 {
     "message": "feedback_required",
-    ...
+    "comment_error_key": "comment_si_blocked",
+    "spam": true,
+    "feedback_title": "Action Blocked",
+    "feedback_message": "This action was blocked. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.",
+    "feedback_url": "repute/report_problem/instagram_comment/",
+    "feedback_appeal_label": "Report problem",
+    "feedback_ignore_label": "OK",
+    "feedback_action": "report_problem",
+    "status": "fail"
 }
 ```
 
