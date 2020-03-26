@@ -1,6 +1,7 @@
 import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from '../shared/constants'
 import ChromeStorage from './storage/chrome_storage'
 
+import { createNotification } from './services/notifications'
 import { getCredentials } from '../shared/credentials'
 // eslint-disable-next-line no-unused-vars
 import { updateWSData, restartConnection } from './ws'
@@ -12,6 +13,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
     if (method === 'ping') {
       return sendResponse({ status: 'ok', pong: 'pong' })
+    }
+
+    if (method === 'notification') {
+      createNotification(message)
     }
 
     if (method === 'version' || method === 'info') {

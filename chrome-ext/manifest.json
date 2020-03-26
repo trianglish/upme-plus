@@ -19,6 +19,7 @@
   "permissions": [
     "storage",
     "background",
+    "notifications",
     "webRequest",
     "webRequestBlocking",
     "https://i.instagram.com/"
