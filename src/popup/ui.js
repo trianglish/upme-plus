@@ -114,24 +114,26 @@ window.onload = async () => {
     await updateView()
   }
 
-  document.querySelector('.btn-get-cookies').onclick = async (event) => {
-    event.preventDefault()
+  if (document.querySelector('.btn-get-cookies')) {
+    document.querySelector('.btn-get-cookies').onclick = async (event) => {
+      event.preventDefault()
 
-    try {
-      setView({ is_loading: true })
+      try {
+        setView({ is_loading: true })
 
-      const res = await instagram.request({
-        method: 'login_via_cookie',
-      })
+        const res = await instagram.request({
+          method: 'login_via_cookie',
+        })
 
-      onLoginSuccess(res)
-    } catch (err) {
-      console.log('Login Error', err)
-      onLoginError(err.message)
-      const { error: { response } } = err
-      console.error(response)
-    } finally {
-      setView({ is_loading: false })
+        onLoginSuccess(res)
+      } catch (err) {
+        console.log('Login Error', err)
+        onLoginError(err.message)
+        const { error: { response } } = err
+        console.error(response)
+      } finally {
+        setView({ is_loading: false })
+      }
     }
   }
 

@@ -24,8 +24,9 @@ document.addEventListener(
 
     if (!username || !password) {
       console.log('No credentials!')
-      const user = await instagram.login_via_cookie()
-      console.log('user', user)
+      await clearCredentials()
+      // const user = await instagram.login_via_cookie()
+      // console.log('user', user)
     } else {
       try {
         const user = await instagram.login(username, password)

@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="row logged_in">
+    <div class="row logged_in hide">
       <div class="col-sm mb-1 text-center">
         <button type="button" class="btn btn-outline-info" style="width: 100%" disabled>
           @<span class="username-field"></span>
@@ -70,6 +70,7 @@
         </div>
         
         <form id="instalogin">
+          <!--
           <div class="text-center">
             <a class="btn btn-outline-info btn-get-cookies" href="#">
               Login via instagram.com
@@ -79,6 +80,7 @@
           <div class="text-center mt-3 mb-3">
             or
           </div>
+          -->
 
           <div class="form-group">
             <label for="username">Username</label>
@@ -96,19 +98,20 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" placeholder="********">
 
-            <small id="passwordHelp" class="form-text text-muted">Credentials are stored securely inside your browser. We never share them.</small>
-
-            <small class="form-text text-muted">
-              <a href="https://dashboard.gramup.me/#/legal" target="_blank">Privacy Policy</a>
+            <small id="passwordHelp" class="form-text text-muted">
+              Credentials are stored securely inside your browser. We never share them.
+              <a href="https://dashboard.gramup.me/legal" target="_blank">Privacy Policy</a>
             </small>
           </div>
 
-          <button type="submit" class="btn btn-primary">
-            Login
-          </button>
-          <a class="btn btn-outline-info" href="https://github.com/caffeinum/GramUp" target="_blank">
-            Read GitHub
-          </a>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">
+              Login
+            </button>
+            <a class="btn btn-outline-info" href="https://github.com/caffeinum/GramUp" target="_blank">
+              Read GitHub
+            </a>
+          </div>
 
         </form>
 
