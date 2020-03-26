@@ -247,28 +247,33 @@ export default class Instagram {
       return data
     }
 
-    console.error(`Request returns error! Status: ${status}`)
+    console.log(`Request returns error! Status: ${status}`)
 
-    console.error('Error Data', data)
+    console.log('Error Data', data)
     // Analytics.send Error
 
     // See ERRORS.md
     // TODO: have InstagramError class
 
+    const err = new Error(`Instagram Error ${status}`)
+
+    err.response = { data: response.data, headers: response.headers }
+    err.status = status
+
     if (status === 405) {
       // Empty data
-      throw new Error('Empty response 405')
-    }
-
-    if (!data) {
-      const err = new Error(`No JSON response ${status}`)
+      err.message = 'Empty response 405'
       throw err
     }
 
-    if (data.message.includes('feedback_required')) {
-      console.error('ATTENTION! \'feedback_required\', your action could have been blocked')
-      throw new Error('feedback_required')
+    if (!data) {
+      err.message = `No JSON response ${status}`
+      throw err
     }
+
+    const error_message = data.message
+    const error_title = data.error_title
+    const error_type = data.error_type
 
     if (status === 429) {
       const sleep_seconds = 30
@@ -279,27 +284,35 @@ export default class Instagram {
 
       await sleep(sleep_seconds * 1000)
     } else if (status === 400) {
-      const error_message = data.message
-      const error_type = data.error_type
+      if (error_message === 'feedback_required') {
+        console.error('ATTENTION! \'feedback_required\', your action could have been blocked')
+        err.error_type = 'feedback_required'
+        err.message = data.feedback_title
+        throw err
+      }
+
+      if (error_type === 'bad_password') {
+        err.message = error_message
+        err.error_type = 'bad_password'
+        throw err
+      }
+
+      err.message = `InstagramError: ${error_type}: ${error_message}`
 
       console.log(`Instagram's error message: ${error_message}, Error type: ${error_type}`)
-      throw new Error(`InstagramError: ${error_type}: ${error_message}`)
+      throw err
     } else if (status === 403) {
       console.log('Error 403')
-
-      const error_message = data.message
-      const error_title = data.error_title
 
       if (error_message === 'login_required') {
         this._logout()
       }
 
-      throw new Error(`InstagramError: ${error_message}: ${error_title}`)
+      err.message = error_title
+
+      throw err
     } else {
-      const error_message = data.message
-      const err = new Error(`Unknown error ${error_message}`)
-      err.response = data
-      err.status = status
+      err.message = `Unknown error ${error_message}`
       throw err
     }
 

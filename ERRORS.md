@@ -19,7 +19,6 @@
 
 ## feedback_required
 
-
 **Status**: 400
 
 ```json
@@ -34,6 +33,24 @@
     "feedback_ignore_label": "OK",
     "feedback_action": "report_problem",
     "status": "fail"
+}
+```
+
+
+## bad_password
+
+**Status**: 400
+
+Only on `/login`
+
+```json
+{
+    "message": "The password you entered is incorrect. Please try again.",
+    "invalid_credentials": true,
+    "error_title": "Incorrect password for neuralcat",
+    "buttons": [{"title": "Try Again", "action": "dismiss"}],
+    "status": "fail",
+    "error_type": "bad_password"
 }
 ```
 
