@@ -2,7 +2,7 @@ import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from '../shared/constants'
 import ChromeStorage from './storage/chrome_storage'
 
 import { getCredentials } from '../shared/credentials'
-import { updateWSData } from './ws'
+import { updateWSData, restartConnection } from './ws'
 import stats from './storage/instagram_stats'
 
 export const processMessage = async (instagram, config, message, sendResponse) => {
@@ -53,7 +53,9 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
         config = _config
 
-        updateWSData(instagram, config)
+        // TODO: hack
+        restartConnection()
+        // updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', config: _config })
       } catch (err) {
@@ -67,7 +69,9 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       try {
         const user = await instagram.login(username, password, true)
 
-        updateWSData(instagram, config)
+        // TODO: hack
+        restartConnection()
+        // updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', user })
       } catch (err) {
@@ -87,7 +91,9 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       try {
         const user = await instagram.login_via_cookie()
 
-        updateWSData(instagram, config)
+        // TODO: hack
+        restartConnection()
+        // updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', user })
       } catch (err) {
@@ -151,7 +157,8 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         if (username) {
           instagram.user = await instagram.login(username, password, true)
         } else {
-          instagram.user = await instagram.login_via_cookie()
+          // Noop: Can't relogin
+          console.log('No credentials saved, cant relogin')
         }
       }
 
@@ -188,3 +195,5 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 }
 
 export default processMessage
+
+export const data = { message: 'The password you entered is incorrect. Please try again.', invalid_credentials: true, error_title: 'Incorrect password for neuralcat', buttons: [{ title: 'Try Again', action: 'dismiss' }], status: 'fail', error_type: 'bad_password' }

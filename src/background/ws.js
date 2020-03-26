@@ -5,6 +5,11 @@ import getRemoteConfig from './config'
 
 window.connection = null
 
+export const restartConnection = () => {
+  // HACK
+  window.connection.close()
+}
+
 export const connectWebsocket = async (instagram, config, sec = 1) => {
   if (
     window.connection &&
@@ -51,7 +56,7 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
       const { req_id, ...data } = message
 
       const sendResponse = data => {
-        const response = { ...data, req_id }
+        const response = { ...data, req_id, type: 'reply' }
         console.log('response', response)
         connection.send(JSON.stringify(response))
       }
@@ -92,7 +97,7 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
 
 export const updateWSData = async (instagram, config) => {
   try {
-    if (instagram.user) {
+    if (instagram.user && instagram.user.pk) {
       const { user } = await instagram.callMethod(
         'get_user_info',
         instagram.user.pk,
@@ -103,7 +108,7 @@ export const updateWSData = async (instagram, config) => {
     window.connection.send(
       JSON.stringify({
         status: 'ok',
-        type: 'update',
+        type: 'connect',
         version: VERSION,
         user_agent: USER_AGENT,
         user: instagram.user,
