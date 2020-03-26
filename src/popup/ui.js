@@ -64,15 +64,17 @@ const updateView = async () => {
 }
 
 const onLoginSuccess = async (res, creds) => {
-  openControlPanel()
   await whenLogged()
-
-  logEvent('Login Success', { isCookie: !creds })
 
   if (creds) {
     const { username, password } = creds
     await saveCredentials(username, password)
+    console.log('saved creds', username, password)
   }
+
+  logEvent('Login Success', { isCookie: !creds })
+
+  openControlPanel()
 }
 
 const onLoginError = async (reason) => {
