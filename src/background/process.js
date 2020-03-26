@@ -2,6 +2,7 @@ import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from '../shared/constants'
 import ChromeStorage from './storage/chrome_storage'
 
 import { getCredentials } from '../shared/credentials'
+// eslint-disable-next-line no-unused-vars
 import { updateWSData, restartConnection } from './ws'
 import stats from './storage/instagram_stats'
 
@@ -141,6 +142,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
     if (method === 'check_login') {
       try {
+        console.log('Waiting init')
+        await instagram._wait_init
+        console.log('Initialized')
+
         if (instagram.user && instagram.user.username) {
           const info = await instagram.callMethod(
             'get_user_info',

@@ -8,6 +8,8 @@ import { logEvent } from '../shared/amplitude'
 import { setView } from './view'
 import { DASHBOARD_URL } from '../shared/constants'
 
+export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const whenLogged = async () => {
   const { user } = await instagram.request({
     method: 'get_user_info',
@@ -34,7 +36,7 @@ const checkLogin = async () => {
 
   console.log('update view, user =', user)
 
-  const logged_in = !!user.pk
+  const logged_in = !!user && !!user.pk
 
   return { logged_in, user }
 }
@@ -56,6 +58,8 @@ const updateView = async () => {
       user: null,
       creds,
     })
+
+    alert(err.message)
   }
 }
 
@@ -84,23 +88,6 @@ window.onload = async () => {
   const login_form = document.forms.instalogin
 
   if (!login_form) return
-
-  // try {
-  //   setView({ is_loading: true })
-
-  //   const res = await instagram.request({
-  //     method: 'login_via_cookie',
-  //   })
-
-  //   onLoginSuccess(res)
-  // } catch (err) {
-  //   console.log('Login Error', err)
-  //   onLoginError(err.message)
-  //   const { error: { response } } = err
-  //   console.error(response)
-  // } finally {
-  //   setView({ is_loading: false })
-  // }
 
   document.querySelector('#exit').onclick = async () => {
     await clearCredentials()
@@ -201,7 +188,9 @@ window.onload = async () => {
   // INIT
   setView({ is_loading: true })
 
-  setTimeout(async () => {
-    await updateView()
-  }, 1000)
+  // Need to wait until init background is set
+  // HACK: 100ms should be more than ChromeStorage.get in main_service.js
+  await sleep(100)
+  await instagram.init()
+  await updateView()
 }

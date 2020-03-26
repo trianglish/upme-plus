@@ -54,6 +54,10 @@ export default class Instagram {
 
     this.methods = methods
 
+    this._wait_init = new Promise(resolve => {
+      this._init_handler = resolve
+    })
+
     this.constants = {
       DEVICE: this.device,
       LOCALE: this.locale,
@@ -97,6 +101,7 @@ export default class Instagram {
         this.is_logged_in = true
         this.user_id = user.pk
         this.user = user
+        // this._logged_in_handler(user)
         return user
       } else {
         throw new Error('Could not log in from cookie')
@@ -125,6 +130,7 @@ export default class Instagram {
         this.is_logged_in = true
         this.user_id = logged_in_user.pk
         this.user = logged_in_user
+        // this._logged_in_handler(logged_in_user)
         return logged_in_user
       } else {
         throw new Error(`Could not log in: ${status}`)
@@ -162,6 +168,7 @@ export default class Instagram {
         this.is_logged_in = true
         this.user_id = logged_in_user.pk
         this.user = logged_in_user
+        // this._logged_in_handler(logged_in_user)
         return logged_in_user
       } else {
         throw new Error(`Could not log in: ${status}`)
