@@ -1,7 +1,7 @@
 {
   "name": "GramUp! – Free Social Bot",
   "short_name": "GramUp! Bot",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "description": "Extension helps you effectively use social networks!",
   "icons": {
     "128": "images/icon128.png",
