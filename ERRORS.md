@@ -36,6 +36,20 @@
 }
 ```
 
+```json
+{
+    "message": "feedback_required",
+    "spam": true,
+    "feedback_title": "Action Blocked",
+    "feedback_message": "This action was blocked. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.",
+    "feedback_url": "repute/report_problem/instagram_like_add/",
+    "feedback_appeal_label": "Tell us",
+    "feedback_ignore_label": "OK",
+    "feedback_action": "report_problem",
+    "status": "fail"
+}
+```
+
 
 ## bad_password
 
@@ -91,3 +105,18 @@ if (status === 400) {
 }
 ```
 
+Example:
+
+```
+Request URL: https://i.instagram.com/api/v1/media/2274212798530940616/like/
+Request Method: POST
+Status Code: 400
+```
+
+```json
+{
+  "message": "Sorry, this media has been deleted",
+  "like_error_key": "like_media_does_not_exist",
+  "status": "fail"
+}
+```
