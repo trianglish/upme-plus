@@ -1,4 +1,4 @@
-import { VERSION, USER_AGENT, DEFAULT_LOCAL_CONFIG } from '../shared/constants'
+import { VERSION, USER_AGENT, DEFAULT_EXTENSION_CONFIG } from '../shared/constants'
 import ChromeStorage from './storage/chrome_storage'
 
 import { createNotification } from './services/notifications'
@@ -44,7 +44,7 @@ export const processMessage = async (instagram, config, message, sendResponse) =
     }
 
     if (method === 'config') {
-      const { config: current = DEFAULT_LOCAL_CONFIG } =
+      const { config: current = DEFAULT_EXTENSION_CONFIG } =
         (await ChromeStorage.get('config')) || {}
       const [updates] = params
 

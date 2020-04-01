@@ -5,7 +5,7 @@ import ChromeHistory from './storage/chrome_history'
 import stats from './storage/instagram_stats'
 import { getCredentials, clearCredentials } from '../shared/credentials'
 
-import { DEFAULT_LOCAL_CONFIG } from '../shared/constants'
+import { DEFAULT_EXTENSION_CONFIG } from '../shared/constants'
 
 import { connectWebsocket } from './ws'
 import processMessage from './process'
@@ -24,7 +24,7 @@ const replyToRequest = (sender, req_id, data) => {
 }
 
 (async () => {
-  const { config = DEFAULT_LOCAL_CONFIG } =
+  const { config = DEFAULT_EXTENSION_CONFIG } =
     (await ChromeStorage.get('config')) || {}
 
   chrome.runtime.onConnectExternal.addListener(async port => {
