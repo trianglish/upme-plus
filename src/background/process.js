@@ -16,7 +16,11 @@ export const processMessage = async (instagram, config, message, sendResponse) =
     }
 
     if (method === 'notification') {
-      createNotification(message)
+      const [ title, otherOptions ] = params
+      const options = JSON.parse(otherOptions)
+      // otherOptions: { url, message, icon, ... }
+      const id = await createNotification({ title, ...options })
+      return sendResponse({ status: 'ok', id })
     }
 
     if (method === 'version' || method === 'info') {
