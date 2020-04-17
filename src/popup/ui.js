@@ -1,4 +1,4 @@
-import instagram from './instagram_connector'
+import instagram, { TimeoutError } from './instagram_connector'
 import {
   getCredentials,
   saveCredentials,
@@ -148,12 +148,16 @@ window.onload = async () => {
 
       console.error(response)
 
-      if (response.two_factor_required) {
+      if (err instanceof TimeoutError) {
+        onLoginError(err.message)
+        return
+      } else if (response.two_factor_required) {
         const two_factor_data = response
         const two_factor_code = prompt('Input a code for two-factor auth from SMS')
 
         if (!two_factor_code) {
-          return onLoginError('No code')
+          onLoginError('No code')
+          return
         }
 
         const res = await instagram.request({

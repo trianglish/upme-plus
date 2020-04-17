@@ -8,7 +8,12 @@ export class InstagramError extends Error {
   }
 }
 
-export class TimeoutError extends Error {}
+export class TimeoutError extends Error {
+  constructor (message) {
+    super(message)
+    this.message = message || 'TimeoutError: Extension may be not installed or configured incorrectly. Try reinstalling'
+  }
+}
 
 export class InstagramConnector {
   constructor () {
@@ -64,7 +69,7 @@ export class InstagramConnector {
         }
       }
 
-      setTimeout(() => reject(new TimeoutError('Request timeout')), 10000)
+      setTimeout(() => reject(new TimeoutError()), 10000)
 
       chrome.runtime.onMessage && chrome.runtime.onMessage.addListener(handler)
 
