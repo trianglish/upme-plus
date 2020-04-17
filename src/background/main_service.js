@@ -6,6 +6,7 @@ import stats from './storage/instagram_stats'
 import { getCredentials, clearCredentials } from '../shared/credentials'
 
 import { DEFAULT_EXTENSION_CONFIG } from '../shared/constants'
+import { tryCatch } from '../shared/helpers'
 
 import { connectWebsocket } from './ws'
 import processMessage from './process'
@@ -24,8 +25,10 @@ const replyToRequest = (sender, req_id, data) => {
 }
 
 (async () => {
-  const { config = DEFAULT_EXTENSION_CONFIG } =
-    (await ChromeStorage.get('config')) || {}
+  const { config = DEFAULT_EXTENSION_CONFIG } = await tryCatch(
+    () => ChromeStorage.get('config'),
+    (err) => null,
+  )
 
   chrome.runtime.onConnectExternal.addListener(async port => {
     console.log('connect', port)
