@@ -10,13 +10,15 @@ export const create = (options) => new Promise(resolve => {
 })
 
 export const onClicked = (notificationId) => new Promise(resolve => {
-  chrome.notifications.onClicked.addListener(id => {
+  const listener = id => {
     if (id === notificationId) {
+      chrome.notifications.onClicked.removeListener(listener)
       resolve(id)
     } else {
       // skip
     }
-  })
+  }
+  chrome.notifications.onClicked.addListener(listener)
 })
 
 export const createNotification = async ({ title = '', message = '', url = DASHBOARD_URL, ...others }) => {
