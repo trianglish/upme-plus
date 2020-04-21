@@ -23,6 +23,12 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       return sendResponse({ status: 'ok', id })
     }
 
+    if (method === 'open_url') {
+      const [ url ] = params
+      window.open(url)
+      return sendResponse({ status: 'ok' })
+    }
+
     if (method === 'version' || method === 'info') {
       return sendResponse({
         status: 'ok',
