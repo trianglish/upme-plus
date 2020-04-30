@@ -1,6 +1,6 @@
 import { MODIFIED_HEADERS_URLS } from '../../shared/constants'
 
-const PREFIX = 'X-Instaweb-'
+const PREFIX = 'Disable-For-Electron-Build-X-Instaweb-'
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function (info) {
