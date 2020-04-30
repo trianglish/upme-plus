@@ -1,8 +1,9 @@
 {
-  "name": "electron-quick-start",
+  "name": "gramup-electron-build",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "GramUp Native app",
   "main": "main.js",
+  "productName": "GramUp",
   "scripts": {
     "start": "electron ."
   },
