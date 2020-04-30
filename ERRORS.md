@@ -120,3 +120,19 @@ Status Code: 400
   "status": "fail"
 }
 ```
+
+## Not authorized
+
+Private profile?
+
+```
+Request URL: https://i.instagram.com/api/v1/feed/user/3012187558/?max_id=&rank_token=13781554766_9833052f-3d4d-4ed4-8acd-45079b935bc4&ranked_content=true&
+Request Method: GET
+Status Code: 400
+```
+```json
+{
+  "message": "Not authorized to view user",
+  "status": "fail"
+}
+```
