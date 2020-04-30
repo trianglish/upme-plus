@@ -25,6 +25,7 @@ const onBeforeSendHeaders = (details, callback) => {
   const new_headers = Object.keys(headers)
     .filter(header => header.includes(PREFIX))
     .map(header => {
+
       return {
         name: header.replace(PREFIX, ''),
         value: headers[header],
@@ -38,15 +39,14 @@ const onBeforeSendHeaders = (details, callback) => {
 
     if (new_header) {
       console.log(`changing header '${header}' to '${new_header.name}':`, new_header.value)
+      const masked_name = PREFIX + header
+      delete headers[masked_name]
       headers[header] = new_header.value
     }
   })
 
   console.log('edited headers', headers)
 
-  // return {
-  //   requestHeaders: headers,
-  // }
 
   callback({ requestHeaders: details.requestHeaders })
 }
