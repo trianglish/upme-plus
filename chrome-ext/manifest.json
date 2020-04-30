@@ -1,7 +1,7 @@
 {
-  "name": "GramUp! – Free Social Bot",
-  "short_name": "GramUp! Bot",
-  "version": "1.6.1",
+  "name": "Up! – Free Social Bot",
+  "short_name": "Up! Bot",
+  "version": "1.7.0",
   "description": "Extension helps you effectively use social networks!",
   "icons": {
     "128": "images/icon128.png",
@@ -30,7 +30,9 @@
       "https://dashboard.gramup.me/*",
       "https://dm.gramup.me/*",
       "https://*.okhlopkov.now.sh/*",
-      "https://*.caffeinum.now.sh/*"
+      "https://*.likeup.now.sh/*",
+      "https://*.caffeinum.now.sh/*",
+      "https://*.upme.plus/*"
     ]
   },
   "manifest_version": 2

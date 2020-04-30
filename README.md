@@ -1,6 +1,6 @@
-# [GramUp!](https://gramup.me/)
+# [Up!](https://gramup.me/)
 
-GramUp! - We Automate boring social network stuff for you. Start to get followers for free without any coding skills.
+Up! - We Automate boring social network stuff for you. Start to get followers for free without any coding skills.
 
 [<img width="200" alt="GramUp" src="https://user-images.githubusercontent.com/1909384/77645412-bcf02b80-6f73-11ea-8992-07755920b061.png">](https://get.gramup.me)
 
