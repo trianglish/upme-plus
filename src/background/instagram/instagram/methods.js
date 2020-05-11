@@ -114,6 +114,12 @@ export const user_friendships = async (self, user_ids = []) => {
   return self.send_request('friendships/show_many/', _data, { with_signature: false, form: true })
 }
 
+export const get_media_comments = (self, media_id, max_id='') => {
+  const url = `media/${media_id}/comments/?max_id=${max_id}`
+
+  return self.send_request(url)
+}
+
 export const comment = (self, media_id, comment_text) => {
   return self.send_request(`media/${media_id}/comment/`, { comment_text })
 }
@@ -389,3 +395,21 @@ export const report = async (self, user_id, source_name = 'profile') => {
 //   )
 // )
 // }
+
+
+// Save Bookmark
+
+export const get_saved_medias = (self) => {
+  return self.send_request(`feed/saved`)
+}
+
+// From profile => "module_name":"feed_contextual_profile"
+// From home/feed => "module_name":"feed_timeline"
+export const save_media = (self, media_id, module_name = 'feed_timeline') => {
+  // const data = {"module_name": module_name}
+  return self.send_request(`media/${media_id}/save/`, { module_name })
+}
+
+export const unsave_media = (self, media_id) => {
+  return self.send_request(`media/${media_id}/unsave/`, {})
+}
