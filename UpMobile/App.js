@@ -36,6 +36,10 @@ const WebViewWithBridge = withWebViewBridge(WebView);
 
 import { instagram, processMessage } from './processMessage';
 import { saveCredentials, getCredentials } from './credentials';
+import { connectWebsocket } from './src/ws'
+import { DEFAULT_EXTENSION_CONFIG } from './constants'
+
+const { config = DEFAULT_EXTENSION_CONFIG } = {}
 
 instagram._init_handler()
 
@@ -47,7 +51,7 @@ const sendMessage = async message => {
   if (message.method === 'ping') return { status: 'ok', pong: 'pong' }
 
   return new Promise((resolve, reject) => {
-    processMessage(message, response => resolve(response))
+    processMessage(instagram, config, message, response => resolve(response))
   })
 }
 
@@ -73,9 +77,9 @@ const App = () => {
         password && setPassword(password)
 
         if (username && password) {
-          console.log('creds', username, password)
           tryLogin(username, password)
             .then(() => goToStep('logged_in'))
+            .then(() => connectWebsocket(instagram, config))
         }
       })
 
