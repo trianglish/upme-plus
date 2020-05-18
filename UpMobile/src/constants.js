@@ -1,6 +1,8 @@
 import UserAgent from 'react-native-user-agent';
-console.log('user agent', UserAgent.getUserAgent())
+
 export const VERSION = '1.7.0.react-native';
+
+console.log('Local User-Agent', UserAgent.getUserAgent())
 export const USER_AGENT = UserAgent.getUserAgent();
 // export const DEFAULT_EXTENSION_CONFIG = {}
 // export const config = {}

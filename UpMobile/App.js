@@ -34,10 +34,10 @@ import { withWebViewBridge } from 'react-native-webview-bridge-seamless';
 
 const WebViewWithBridge = withWebViewBridge(WebView);
 
-import { instagram, processMessage } from './processMessage';
-import { saveCredentials, getCredentials } from './credentials';
+import { instagram, processMessage } from './src/processMessage';
+import { saveCredentials, getCredentials } from './src/credentials';
 import { connectWebsocket } from './src/ws'
-import { DEFAULT_EXTENSION_CONFIG } from './constants'
+import { DEFAULT_EXTENSION_CONFIG } from './src/constants'
 
 const { config = DEFAULT_EXTENSION_CONFIG } = {}
 

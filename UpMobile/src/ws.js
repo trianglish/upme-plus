@@ -1,6 +1,6 @@
-import { VERSION, USER_AGENT } from '../constants'
+import { VERSION, USER_AGENT } from './constants'
 
-import processMessage from '../processMessage'
+import processMessage from './processMessage'
 import getRemoteConfig from './config'
 
 window.connection = null

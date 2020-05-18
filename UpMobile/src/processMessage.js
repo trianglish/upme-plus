@@ -1,13 +1,13 @@
-import Instagram from './src/instagram/';
 import UserAgent from 'react-native-user-agent';
 
+import Instagram from './instagram/';
 export const instagram = new Instagram()
 
 import { VERSION, USER_AGENT, DEFAULT_EXTENSION_CONFIG } from './constants'
 
 import { getCredentials } from './credentials'
 // eslint-disable-next-line no-unused-vars
-import { updateWSData, restartConnection } from './src/ws'
+import { updateWSData, restartConnection } from './ws'
 // import stats from './storage/instagram_stats'
 
 export const processMessage = async (instagram, config, message, sendResponse) => {
