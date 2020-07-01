@@ -50,6 +50,26 @@
 }
 ```
 
+## challenge_required
+
+Usually, when you logged in from new location
+
+**Status**: 400
+
+```json
+{
+    "message": "challenge_required",
+    "challenge": {
+        "url": "https://i.instagram.com/challenge/?next=/api/v1/media/2342421875655097064/like/",
+        "api_path": "/challenge/",
+        "hide_webview_header": true,
+        "lock": true,
+        "logout": false,
+        "native_flow": true
+    },
+    "status": "fail"
+}
+```
 
 ## bad_password
 
