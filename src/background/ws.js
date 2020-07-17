@@ -11,6 +11,11 @@ export const restartConnection = () => {
 }
 
 export const connectWebsocket = async (instagram, config, sec = 1) => {
+  window.connection && console.log(
+    'Connection OPEN =', window.connection.readyState === window.connection.OPEN,
+    ', status =', window.connection.readyState,
+  )
+
   if (
     window.connection &&
     window.connection.readyState === window.connection.OPEN
@@ -18,7 +23,11 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
 
   const reconnect = () => {
     console.log(`Reconnecting to FAMILY in ${sec} seconds...`)
-    setTimeout(() => connectWebsocket(instagram, config, sec * 2), sec * 1000)
+
+    setTimeout(() => {
+      const cappedTimeout = Math.min(60, sec * 2)
+      connectWebsocket(instagram, config, cappedTimeout)
+    }, sec * 1000)
   }
 
   const { familyUrl } = await getRemoteConfig()
