@@ -59,8 +59,7 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       const [updates] = params
 
       try {
-        // eslint-disable-next-line no-unused-vars
-        const new_config = await ChromeStorage.set('config', {
+        await ChromeStorage.set('config', {
           ...current,
           ...updates,
         })
@@ -69,13 +68,15 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
         config = _config
 
+        // try {
         // TODO: hack
-        restartConnection()
-        // updateWSData(instagram, config)
+        // restartConnection()
+        // } catch (err) {}
+        updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', config: _config })
       } catch (err) {
-        return sendResponse({ status: 'error', error: err.message })
+        return sendResponse({ status: 'error', config: config, error: err.message })
       }
     }
 
@@ -86,8 +87,8 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         const user = await instagram.login(username, password, true)
 
         // TODO: hack
-        restartConnection()
-        // updateWSData(instagram, config)
+        // restartConnection()
+        updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', user })
       } catch (err) {
@@ -108,8 +109,8 @@ export const processMessage = async (instagram, config, message, sendResponse) =
         const user = await instagram.login_via_cookie()
 
         // TODO: hack
-        restartConnection()
-        // updateWSData(instagram, config)
+        // restartConnection()
+        updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', user })
       } catch (err) {
@@ -133,6 +134,10 @@ export const processMessage = async (instagram, config, message, sendResponse) =
           verification_code,
           two_factor_data,
         )
+
+        // TODO: hack
+        // restartConnection()
+        updateWSData(instagram, config)
 
         return sendResponse({ status: 'ok', user })
       } catch (err) {
