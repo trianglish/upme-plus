@@ -65,6 +65,10 @@ export const get_user_feed = (self, user_id, max_id = '') => {
   return self.send_request(url)
 }
 
+export const search_hashtag = (self, hashtag) => {
+  return self.send_request(`tags/search?q=${hashtag}`)
+}
+
 export const get_hashtag_feed = (self, hashtag, max_id = '') => {
   const rank_token = self.rank_token()
   const url = `feed/tag/${hashtag}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
@@ -75,6 +79,14 @@ export const get_location_feed = (self, location_id, max_id = '') => {
   const rank_token = self.rank_token()
   const url = `feed/location/${location_id}/?max_id=${max_id}&rank_token=${rank_token}&ranked_content=true&`
   return self.send_request(url)
+}
+
+export const get_location_info = (self, location_id) => {
+  return self.send_request(`locations/${location_id}/location_info/`)
+}
+
+export const get_location_story = (self, location_id) => {
+  return self.send_request(`locations/${location_id}/story/`)
 }
 
 export const media_info = (self, media_id) => {
