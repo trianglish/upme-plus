@@ -4,6 +4,7 @@ import processMessage from './process'
 import getRemoteConfig from './config'
 
 window.connection = null
+window.old_connections = []
 
 export const restartConnection = () => {
   // HACK
@@ -35,6 +36,8 @@ export const connectWebsocket = async (instagram, config, sec = 1) => {
   const connection = new WebSocket(familyUrl)
 
   const sendResponse = (data, req_id) => connection.send(JSON.stringify({ ...data, req_id }))
+
+  window.connection && window.old_connections.push(window.connection)
 
   window.connection = connection
 
