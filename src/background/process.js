@@ -185,6 +185,20 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       return sendResponse({ status: 'ok', user: instagram.user })
     }
 
+    if (method === 'try_relogin') {
+
+      const { username, password } = await getCredentials() || {}
+
+      if (username) {
+        instagram.user = await instagram.login(username, password, true)
+      } else {
+        // Noop: Can't relogin
+        console.log('No credentials saved, cant relogin')
+      }
+
+      return sendResponse({ status: 'ok', user: instagram.user })
+    }
+
     // if (method === "get_history") {
     //   const history = await getHistory(...params);
 
