@@ -187,6 +187,11 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
     if (method === 'try_relogin') {
 
+      // TODO: dont relogin if logged in ?
+      // if (instagram.is_logged_in) {
+      //   return sendResponse({ status: 'ok', user: instagram.user })
+      // }
+
       const { username, password } = await getCredentials() || {}
 
       if (username) {
