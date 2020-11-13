@@ -29,6 +29,11 @@ export const processMessage = async (instagram, config, message, sendResponse) =
       return sendResponse({ status: 'ok' })
     }
 
+    if (method === '_UNSAFE_restart') {
+      chrome.extension.getBackgroundPage().window.location.reload()
+      return sendResponse({ status: 'ok' })
+    }
+
     if (method === 'version' || method === 'info') {
       return sendResponse({
         status: 'ok',
