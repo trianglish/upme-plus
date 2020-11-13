@@ -201,6 +201,8 @@ export const processMessage = async (instagram, config, message, sendResponse) =
 
       if (username) {
         instagram.user = await instagram.login(username, password, true)
+
+        updateWSData(instagram, config)
       } else {
         // Noop: Can't relogin
         console.log('No credentials saved, cant relogin')
