@@ -128,7 +128,7 @@ export const updateWSData = async (instagram, config) => {
           user_agent: instagram.user_agent,
           phone_id: instagram.phone_id,
           uuid: instagram.uuid,
-          // rank_token: instagram.rank_token(),
+          device_id: instagram.device_id,
         },
         constants: instagram.constants,
         config: config,
