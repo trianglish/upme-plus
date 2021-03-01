@@ -9,7 +9,7 @@
   },
   "background": {
     "scripts": [
-      "build/background.js"
+      "build/background/index.js"
     ]
   },
   "browser_action": {

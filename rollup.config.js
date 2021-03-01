@@ -3,9 +3,11 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
-import css from 'rollup-plugin-css-only'
+import cleaner from 'rollup-plugin-cleaner'
 
-// import typescript from "@rollup/plugin-typescript";
+import css from 'rollup-plugin-css-only'
+import execute from 'rollup-plugin-execute'
+
 import pkg from './package.json'
 import manifest from './chrome-ext/manifest.json'
 
@@ -23,21 +25,24 @@ if (pkg.version !== manifest.version) {
   throw new Error(`VERSIONS DON'T MATCH: ${pkg.version} != ${manifest.version}`)
 }
 
-const config = ({ inFile, outFile }) => ({
+const config = ({ inFile, outDir, outFile, plugins = [] }) => ({
   input: inFile,
   output: {
     name: '_GramUp',
-    file: outFile,
+    file: `${outDir}${outFile}`, // sorry you need to put / yourself
     format: 'umd',
     sourcemap: true,
   },
   plugins: [
+    isProduction && cleaner({
+      targets: [outDir],
+    }),
     resolve({ browser: true, preferBuiltins: true }),
     commonjs(),
     nodePolyfills(),
     // typescript(),
-    css({ output: 'style.css' }),
     json(),
+    ...plugins,
     isProduction && terser(), // minify, but only in production
   ],
 })
@@ -45,10 +50,16 @@ const config = ({ inFile, outFile }) => ({
 export default [
   config({
     inFile: 'src/background/index.js',
-    outFile: 'chrome-ext/build/background.js',
+    outDir: 'chrome-ext/build/background/',
+    outFile: 'index.js',
   }),
   config({
     inFile: 'src/popup/index.js',
-    outFile: 'chrome-ext/build/popup.js',
+    outDir: 'chrome-ext/build/popup/',
+    outFile: 'index.js',
+    plugins: [
+      css({ output: 'style.css' }),
+      execute('cp node_modules/bootstrap/dist/css/bootstrap.min.css ./chrome-ext/build/popup/'),
+    ],
   }),
 ]
