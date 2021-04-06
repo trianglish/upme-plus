@@ -11,7 +11,7 @@ Up! - We Automate boring social network stuff for you. Start to get followers fo
 <a href="https://www.producthunt.com/posts/gram-up?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-gram-up" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=152224&theme=light" alt="GramUp! - Automate boring social network stuff with your browser for free. | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 
 [![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/okhlopkov/10)
-[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://patreon.com/join/morejust)
+[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://sowl.co/vNxUQ)
 
 ----
 
@@ -28,7 +28,7 @@ There are a lot of ways to automate your activity in social networks but you hav
 
 We found a hack that allowed to insert all automation scripts into a browser. As a result, we don’t need a backend and your private data - your passwords never left your browser. And we made this tool completely free and open source. Miracle? Reality!
 
-If you find our free tool useful or just want more features available, please donate [Paypal](https://paypal.me/okhlopkov/500) or become our [Patron](https://patreon.com/morejust).
+If you find our free tool useful or just want more features available, please donate [Paypal](https://paypal.me/okhlopkov/500) or become our [Patron](https://sowl.co/vNxUQ).
 
 ### Features
 
@@ -126,5 +126,5 @@ Get free real followers and likes with our open source Chrome extension app. We'
 <a href="https://www.buymeacoffee.com/okhlopkov" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 [![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/okhlopkov/10)
-[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://patreon.com/morejust)
+[![patreon](https://camo.githubusercontent.com/6446a7907a4d4f8de024ec85750feb07d7914658/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70617472656f6e2d646f6e6174652d79656c6c6f772e737667)](https://sowl.co/vNxUQ)
 ----------
